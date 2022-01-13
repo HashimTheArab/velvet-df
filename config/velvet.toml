@@ -1,0 +1,44 @@
+# Entries should be the XUID of the player
+[Staff]
+  # These players will have permission to every command
+  Admins = ["2535468189561157", "2535416555113439", "2535420468412444", "2535447554541624", "2535421302499765"]
+  # These players will have access to basic staff commands
+  Staff = []
+  [Owner]
+    Name = "xPrim69x"
+    XUID = "2535468189561157"
+
+
+# World names
+[World]
+  NoDebuff = "nodebuff"
+  Diamond = "diamond"
+  Build = "build"
+
+[Chat]
+  Basic = "§a%v§f: %v"
+
+[Message]
+  GameModeInvalid = "§cThat is not a valid gamemode."
+  GameModeSetByPlayer = "§b%v §7has set your gamemode to §b%v!"
+  GameModeSetBySelf = "§7Your gamemode has been set to §b%v!"
+  GameModeSetOther = "§7You have set §b%v's §7gamemode to §b%v!"
+  TeleportSelfToPos = "§7You have been teleported to §b%v."
+  TeleportSelfToPlayer = "§7You have been teleported to §b%v."
+  TeleportTargetToPos = "§7You have teleported §b%v §7to §b%v."
+  TeleportTargetToTarget = "§7You have teleported §b%v §7to §b%v."
+  AntiCheatKick = "§7[§4AntiCheat§7] §cYou were kicked for §e%v (%v)"
+  AntiCheatKickBroadcast = "§7[§4AntiCheat§7] §c%v §7was kicked for §c%v (%v)"
+  AntiCheatBan = ""
+  AntiCheatBanBroadcast = ""
+  BuildTooManyPlayers = "§cYou cannot specify more than one player."
+  SelfInBuilderMode = "§aYou are now in builder mode."
+  SelfNotInBuilderMode = "§cYou are no longer in builder mode."
+  SetBuilderModeByPlayer = "§b%v §7has set you in builder mode."
+  SetPlayerInBuilderMode = "§7You have set §b%v §7in builder mode."
+  UnsetBuilderModeByPlayer = "§b%v §7has set you out of builder mode."
+  UnsetPlayerInBuilderMode = "§7You have set §b%v §7out of builder mode."
+  ModeUnavailable = "§cThat mode is currently unavailable."
+  KickedPlayer = "§cYou were kicked by §e%v\n§cReason: §e%v"
+  KickedPlayerBroadcast = "§a%v §chas kicked §e%v §cfor §a%v."
+  CannotPunishPlayer = "§cYou cannot punish that player."
