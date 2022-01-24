@@ -78,7 +78,7 @@ func parseFields(data []byte, fields map[string]*string, memory bool) {
 		}
 		if val, ok := fields[line[:index]]; ok {
 			if memory {
-				*val = strings.TrimSpace(strings.TrimSuffix(line[:index+1], "kB"))
+				*val = strings.TrimSpace(strings.TrimRight(line[index+1:], "kB"))
 			} else {
 				// todo
 			}
@@ -90,8 +90,8 @@ func (d *statusData) format() {
 	var memory []int
 	formatStorage := func(s *string) {
 		if n, err := strconv.Atoi(*s); err == nil {
-			*s = strconv.Itoa(n*1024) + "MB"
-			memory = append(memory, n*1024)
+			*s = strconv.Itoa(n/1000) + "MB"
+			memory = append(memory, n/1000)
 		} else {
 			*s = "Unavailable"
 		}
@@ -99,7 +99,7 @@ func (d *statusData) format() {
 	formatStorage(&d.memory.Free)
 	formatStorage(&d.memory.Total)
 	if len(memory) >= 2 {
-		d.memory.Used = strconv.Itoa(memory[1]-memory[0]) + "MB"
+		d.memory.Used = strconv.Itoa(memory[1]-memory[0]) + " MB"
 	} else {
 		d.memory.Used = "Unavailable"
 	}
