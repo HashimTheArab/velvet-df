@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/davecgh/go-spew v1.1.1
-	github.com/df-mc/dragonfly v0.5.2-0.20220120145046-b4a12b46f39d
+	github.com/df-mc/dragonfly v0.5.2-0.20220122125012-15d7cef7ff2a
 	github.com/emperials/df-worldmanager v0.0.0-20210810032941-29fc34569fb4
 	github.com/go-gl/mathgl v1.0.0
 	github.com/jmoiron/sqlx v1.3.4
@@ -37,6 +37,6 @@ require (
 	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
 )
 
-replace github.com/df-mc/dragonfly => ../dragonfly
+//replace github.com/df-mc/dragonfly => ../dragonfly
 
 replace github.com/emperials/df-worldmanager => ../df-worldmanager

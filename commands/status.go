@@ -58,10 +58,10 @@ func getStatusData() statusData {
 	var s statusData
 	switch runtime.GOOS {
 	case "linux", "android":
-		if d, err := os.ReadFile("/proc/meminfo"); err != nil {
+		if d, err := os.ReadFile("/proc/meminfo"); err == nil {
 			_ = json.Unmarshal(d, &s.memory)
 		}
-		if d, err := os.ReadFile("/proc/cpuinfo"); err != nil {
+		if d, err := os.ReadFile("/proc/cpuinfo"); err == nil {
 			_ = json.Unmarshal(d, &s.cpu)
 		}
 	}
