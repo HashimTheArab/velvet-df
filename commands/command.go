@@ -32,6 +32,7 @@ func init() {
 		cmd.New("transfer", "§cTransfer a player to another server", nil, Transfer{}),
 		cmd.New("tell", "§bSend a message to another player", []string{"w"}, Tell{}),
 		cmd.New("time", "§bChange the time of the world you're in", nil, TimeSet{}),
+		cmd.New("status", "§cView the status of the server", nil, Status{}),
 		//cmd.New("kill", "§bKill another player", nil, Kill{}),
 	} {
 		cmd.Register(command)
