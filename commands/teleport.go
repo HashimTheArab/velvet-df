@@ -29,43 +29,32 @@ type TeleportTargetToPos struct {
 }
 
 func (t TeleportToPos) Run(source cmd.Source, output *cmd.Output) {
-	if p, ok := source.(*player.Player); ok {
-		if !session.Get(p).HasFlag(session.Staff) {
-			output.Error(NoPermission)
-			return
-		}
-		p.Teleport(t.Destination)
-		output.Printf(utils.Config.Message.TeleportSelfToPos, t.Destination)
-	}
+	source.(*player.Player).Teleport(t.Destination)
+	output.Printf(utils.Config.Message.TeleportSelfToPos, t.Destination)
 }
 
 func (t TeleportToTarget) Run(source cmd.Source, output *cmd.Output) {
-	if p, ok := source.(*player.Player); ok {
-		if !session.Get(p).HasFlag(session.Staff) {
-			output.Error(NoPermission)
-			return
-		}
-		tg, ok := t.Player[0].(*player.Player)
-		if !ok {
-			output.Error(PlayerNotOnline)
-			return
-		}
-		if p.World().Name() != tg.World().Name() {
-			tg.World().AddEntity(p)
-		}
-		p.Teleport(tg.Position())
-		output.Printf(utils.Config.Message.TeleportSelfToPlayer, t.Player[0].Name())
+	p := source.(*player.Player)
+	tg, ok := t.Player[0].(*player.Player)
+	if !ok {
+		output.Error(PlayerNotOnline)
+		return
 	}
+	if p.World() != tg.World() {
+		tg.World().AddEntity(p)
+	}
+	p.Teleport(tg.Position())
+	output.Printf(utils.Config.Message.TeleportSelfToPlayer, t.Player[0].Name())
 }
 
 func (t TeleportTargetToTarget) Run(source cmd.Source, output *cmd.Output) {
-	p := source.(*player.Player)
-	if !session.Get(p).HasFlag(session.Staff) {
+	p, ok := source.(*player.Player)
+	if len(t.Players) > 1 && ok && !session.Get(p).HasFlag(session.Admin) {
 		output.Error(NoPermission)
 		return
 	}
-	if len(t.Players) > 1 && !session.Get(p).HasFlag(session.Admin) {
-		output.Error(NoPermission)
+	if len(t.Targets) > 1 {
+		output.Error("§cYou cannot have more than one destination.")
 		return
 	}
 	tg, ok := t.Targets[0].(*player.Player)
@@ -73,20 +62,15 @@ func (t TeleportTargetToTarget) Run(source cmd.Source, output *cmd.Output) {
 		output.Error(PlayerNotOnline)
 		return
 	}
-	output.Printf(utils.Config.Message.TeleportTargetToTarget, teleportTargets(t.Targets, tg.Position(), tg.World()), t.Targets[0].Name())
+	output.Printf(utils.Config.Message.TeleportTargetToTarget, teleportTargets(t.Players, tg.Position(), tg.World()), tg.Name())
 }
 
 func (t TeleportTargetToPos) Run(source cmd.Source, output *cmd.Output) {
-	if p, ok := source.(*player.Player); ok {
-		s := session.Get(p)
-		if !s.HasFlag(session.Staff) {
-			output.Error(NoPermission)
-			return
-		}
-		if len(t.Players) > 1 && !s.HasFlag(session.Admin) {
-			output.Error(NoPermission)
-			return
-		}
+	p, ok := source.(*player.Player)
+	s := session.Get(p)
+	if len(t.Players) > 1 && ok && !s.HasFlag(session.Admin) {
+		output.Error(NoPermission)
+		return
 	}
 	output.Printf(utils.Config.Message.TeleportTargetToPos, teleportTargets(t.Players, t.Destination, nil), t.Destination)
 }
@@ -108,3 +92,8 @@ func teleportTargets(targets []cmd.Target, destination mgl64.Vec3, w *world.Worl
 	}
 	return targets[0].Name()
 }
+
+func (TeleportToPos) Allow(s cmd.Source) bool          { return !checkConsole(s) && checkStaff(s) }
+func (TeleportToTarget) Allow(s cmd.Source) bool       { return !checkConsole(s) && checkStaff(s) }
+func (TeleportTargetToTarget) Allow(s cmd.Source) bool { return checkStaff(s) }
+func (TeleportTargetToPos) Allow(s cmd.Source) bool    { return checkStaff(s) }

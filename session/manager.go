@@ -5,11 +5,11 @@ import (
 )
 
 var sessions = map[string]*Session{}
+var staff = map[string]*Session{}
 
-func New(p *player.Player) *Session {
-	session := &Session{Player: p}
-	sessions[p.Name()] = session
-	session.OnJoin()
+func New(name string) *Session {
+	session := &Session{}
+	sessions[name] = session
 	return session
 }
 
@@ -24,4 +24,8 @@ func (s *Session) Close() {
 
 func All() map[string]*Session {
 	return sessions
+}
+
+func AllStaff() map[string]*Session {
+	return staff
 }

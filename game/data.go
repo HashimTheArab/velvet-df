@@ -15,4 +15,6 @@ const (
 	Build    = "build"
 )
 
-var defaultKB = kb{0.398, 0.405}
+var (
+	defaultKB = kb{0.398, 0.405}
+)

@@ -4,7 +4,7 @@ import (
 	"github.com/df-mc/dragonfly/server/player"
 	"github.com/df-mc/dragonfly/server/player/scoreboard"
 	"github.com/df-mc/dragonfly/server/player/title"
-	"github.com/df-mc/dragonfly/server/world"
+	"github.com/df-mc/dragonfly/server/session"
 	"strconv"
 	"strings"
 	"time"
@@ -14,37 +14,53 @@ import (
 )
 
 type Session struct {
-	Player   *player.Player
-	Flags    uint32
-	clicks   []time.Time
-	scoreTag struct {
+	Player         *player.Player
+	Flags          uint32
+	clicks         []time.Time
+	NetworkSession *session.Session
+	Stats          db.PlayerStats
+	scoreTag       struct {
 		healthText string
 		cpsText    string
 		osText     string
 	}
-	stats db.PlayerStats
+	CombatTime uint8
+
+	scoreboard *scoreboard.Scoreboard
 }
 
+// OnJoin is called when the player joins.
 func (s *Session) OnJoin() {
+	s.NetworkSession = player_session(s.Player)
+	s.Load()
 	s.DefaultFlags()
 	s.Player.SendTitle(title.New("§l§dVelvet").WithSubtitle("§bSeason 3 - Reformed"))
 	s.UpdateScoreTag(true, true)
-	s.UpdateScoreboard(false, true)
+	s.SaveScoreboard()
+	s.Player.EnableInstantRespawn()
+	utils.OnlineCount.Add(1)
+	for _, ses := range All() {
+		ses.UpdateScoreboard(true, false)
+	}
 	game.DefaultKit(s.Player)
 }
 
+// OnQuit is called when the session leaves.
 func (s *Session) OnQuit() {
-
+	s.Save()
 }
 
+// SetFlag sets a bit flag for the session, or unsets if the session already has the flag. A list of flags can be seen in flags.go
 func (s *Session) SetFlag(flag uint32) {
 	s.Flags ^= 1 << flag
 }
 
+// HasFlag returns whether the session has a specified bitflag.
 func (s *Session) HasFlag(flag uint32) bool {
 	return s.Flags&(1<<flag) > 0
 }
 
+// IsStaff returns whether a player is a mod. If CheckAdmin is true it will return if a player is an admin.
 func (s *Session) IsStaff(CheckAdmin bool) bool {
 	xuid := s.Player.XUID()
 	if CheckAdmin {
@@ -55,7 +71,7 @@ func (s *Session) IsStaff(CheckAdmin bool) bool {
 		}
 		return false
 	}
-	for _, v := range utils.Config.Staff.Staff {
+	for _, v := range utils.Config.Staff.Mods {
 		if v == xuid {
 			return true
 		}
@@ -63,10 +79,12 @@ func (s *Session) IsStaff(CheckAdmin bool) bool {
 	return false
 }
 
+// DefaultFlags will set the default bitflags for the session.
 func (s *Session) DefaultFlags() {
 	if s.IsStaff(true) {
 		s.SetFlag(Admin)
 		s.SetFlag(Staff)
+		staff[s.Player.Name()] = s
 	} else if s.IsStaff(false) {
 		s.SetFlag(Staff)
 	}
@@ -94,19 +112,9 @@ func (s *Session) CPS() int {
 	return clicks
 }
 
+// TeleportToSpawn will teleport the player to the server spawn.
 func (s *Session) TeleportToSpawn() {
-	s.ChangeWorld(utils.Srv.World())
-}
-
-func (s *Session) ChangeWorld(w *world.World) {
-	w.AddEntity(s.Player)
-	s.Player.Teleport(w.Spawn().Vec3())
-	g := game.FromWorld(s.Player.World().Name())
-	if g != nil {
-		g.Kit(s.Player)
-	} else if s.Player.World().Name() == utils.Srv.World().Name() {
-		game.DefaultKit(s.Player)
-	}
+	utils.Srv.World().AddEntity(s.Player)
 }
 
 func (s *Session) UpdateScoreTag(health, cps bool) {
@@ -120,35 +128,48 @@ func (s *Session) UpdateScoreTag(health, cps bool) {
 	}
 	tag = s.scoreTag.healthText
 	if cps {
-		s.scoreTag.cpsText += " §bCPS " + strconv.Itoa(s.CPS())
+		s.scoreTag.cpsText = " §bCPS " + strconv.Itoa(s.CPS())
 	}
 	tag += s.scoreTag.cpsText
 	s.Player.SetScoreTag(tag)
 }
 
-func (s *Session) UpdateScoreboard(online, kd bool) { // todo: actually use these parameters
-	sb := scoreboard.New("§l§dVelvet")
-	sb.WriteString("Name " + s.Player.Name() + "\n" + "Online " + utils.OnlineCount.String() + "\n" + "K " + strconv.Itoa(int(s.stats.Kills)) + " D " + strconv.Itoa(int(s.stats.Deaths)) + "\n§dvelvetpractice.tk")
-	//_ = sb.Set(0, "Name "+s.Player.Name())
-	//_ = sb.Set(1, "Online "+utils.OnlineCount.String())
-	//_ = sb.Set(2, "K "+strconv.Itoa(int(s.stats.Kills))+"D "+strconv.Itoa(int(s.stats.Deaths)))
-	//_ = sb.Set(3, "§dvelvetpractice.tk")
-	s.Player.SendScoreboard(sb)
+func (s *Session) SaveScoreboard() {
+	s.scoreboard = scoreboard.New("§l§dVelvet")
+	lines := []string{
+		"§dName:§a " + s.Player.Name(),
+		"§dOnline: §a" + utils.OnlineCount.String(),
+		"§dK: §a" + strconv.Itoa(int(s.Stats.Kills.Load())) + " §dD: §a" + strconv.Itoa(int(s.Stats.Deaths.Load())),
+		"§avelvetpractice.tk",
+	}
+	_, _ = s.scoreboard.WriteString(strings.Join(lines, "\n"))
+	s.Player.SendScoreboard(s.scoreboard)
 }
 
-func (s *Session) AddKills(kills uint) {
-	s.stats.Kills += kills
+func (s *Session) UpdateScoreboard(online, kd bool) {
+	if online {
+		_ = s.scoreboard.Set(1, "§dOnline: §a"+utils.OnlineCount.String())
+	}
+	if kd {
+		_ = s.scoreboard.Set(2, "§dK: §a"+strconv.Itoa(int(s.Stats.Kills.Load()))+" §dD: §a"+strconv.Itoa(int(s.Stats.Deaths.Load())))
+	}
+	s.Player.SendScoreboard(s.scoreboard)
+}
+
+func (s *Session) AddKills(kills uint32) {
+	s.Stats.Kills.Add(kills)
 	s.UpdateScoreboard(false, true)
 }
 
-func (s *Session) AddDeaths(deaths uint) {
-	s.stats.Deaths += deaths
+func (s *Session) AddDeaths(deaths uint32) {
+	s.Stats.Deaths.Add(deaths)
 	s.UpdateScoreboard(false, true)
 }
 
+// KDR returns the formatted kill-death ratio of the player.
 func (s *Session) KDR() string {
-	if s.stats.Deaths == 0 || s.stats.Kills == 0 {
+	if s.Stats.Deaths.Load() == 0 || s.Stats.Kills.Load() == 0 {
 		return "0.0"
 	}
-	return strconv.FormatFloat(float64(s.stats.Kills/s.stats.Deaths), 'f', 2, 32)
+	return strconv.FormatFloat(float64(s.Stats.Kills.Load()/s.Stats.Deaths.Load()), 'f', 2, 32)
 }

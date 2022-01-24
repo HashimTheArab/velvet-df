@@ -6,7 +6,6 @@ import (
 	"strconv"
 	"strings"
 	"velvet/game"
-	"velvet/session"
 	"velvet/utils"
 )
 
@@ -34,7 +33,7 @@ func (f ffa) Submit(_ form.Submitter, pressed form.Button) {
 		return
 	}
 
-	session.Get(f.p).ChangeWorld(w)
+	w.AddEntity(f.p)
 	f.p.Message("§7Welcome to " + g.Name + ".")
 }
 

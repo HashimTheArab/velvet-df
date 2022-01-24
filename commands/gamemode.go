@@ -5,23 +5,19 @@ import (
 	"github.com/df-mc/dragonfly/server/player"
 	"github.com/df-mc/dragonfly/server/world"
 	"strings"
-	"velvet/session"
 	"velvet/utils"
 )
 
 type GameModeType string
 
 type GameMode struct {
-	GameMode GameModeType
-	Player   []cmd.Target `optional:""`
+	GameMode GameModeType `name:"mode"`
+	Player   []cmd.Target `optional:"" name:"target"`
 }
 
 func (t GameMode) Run(source cmd.Source, output *cmd.Output) {
-	p, ok := source.(*player.Player)
-	if ok && !session.Get(p).HasFlag(session.Admin) {
-		p.Message(NoPermission)
-		return
-	}
+	p := source.(*player.Player)
+
 	var gm world.GameMode
 	switch strings.ToLower(string(t.GameMode)) {
 	case "survival", "0", "s":
@@ -33,7 +29,6 @@ func (t GameMode) Run(source cmd.Source, output *cmd.Output) {
 	case "spectator", "3", "sp":
 		gm = world.GameModeSpectator
 	default:
-		output.Error(utils.Config.Message.GameModeInvalid)
 		return
 	}
 
@@ -62,3 +57,5 @@ func (GameModeType) Options(cmd.Source) []string {
 		"spectator", "3", "sp",
 	}
 }
+
+func (GameMode) Allow(s cmd.Source) bool { return checkAdmin(s) }

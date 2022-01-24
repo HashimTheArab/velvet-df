@@ -8,26 +8,18 @@ import (
 )
 
 type Build struct {
-	Player []cmd.Target `optional:"" name:"target"`
+	Player []cmd.Target `optional:"" name:"victim"`
 }
 
 func (t Build) Run(source cmd.Source, output *cmd.Output) {
 	p, ok := source.(*player.Player)
-	var s *session.Session
-	if ok {
-		s = session.Get(p)
-		if !s.HasFlag(session.Admin) && !s.HasFlag(session.Building) {
-			p.Message(NoPermission)
-			return
-		}
-	}
 	if len(t.Player) > 0 {
 		if len(t.Player) > 1 {
 			output.Error(utils.Config.Message.BuildTooManyPlayers)
 			return
 		}
 		if target, ok := t.Player[0].(*player.Player); ok {
-			s = session.Get(target)
+			s := session.Get(target)
 			if s.HasFlag(session.Building) {
 				target.Messagef(utils.Config.Message.UnsetBuilderModeByPlayer, p.Name())
 				output.Printf(utils.Config.Message.UnsetPlayerInBuilderMode, target.Name())
@@ -42,6 +34,7 @@ func (t Build) Run(source cmd.Source, output *cmd.Output) {
 		return
 	}
 	if ok {
+		s := session.Get(p)
 		if s.HasFlag(session.Building) {
 			output.Print(utils.Config.Message.SelfNotInBuilderMode)
 		} else {
@@ -50,3 +43,5 @@ func (t Build) Run(source cmd.Source, output *cmd.Output) {
 		s.SetFlag(session.Building)
 	}
 }
+
+func (Build) Allow(s cmd.Source) bool { return checkAdmin(s) }

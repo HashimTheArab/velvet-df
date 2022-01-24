@@ -9,37 +9,22 @@ import (
 	"velvet/utils"
 )
 
-type kickReason string
-
 type Kick struct {
-	Player []cmd.Target
-	Reason kickReason
+	Player []cmd.Target `name:"victim"`
+	Reason cmd.Varargs  `name:"reason"`
 }
 
 func (t Kick) Run(source cmd.Source, output *cmd.Output) {
-	p, ok := source.(*player.Player)
-	if ok && !session.Get(p).HasFlag(session.Staff) {
-		p.Message(NoPermission)
-		return
-	}
-
 	if target, ok := t.Player[0].(*player.Player); ok {
-		if (session.Get(target).HasFlag(session.Staff) || target.Name() == p.Name()) && p.Name() != utils.Config.Staff.Owner.Name {
-			p.Message(utils.Config.Message.CannotPunishPlayer)
+		if target.Name() == source.Name() || (source.Name() != utils.Config.Staff.Owner.Name && session.Get(target).HasFlag(session.Staff)) {
+			output.Print(utils.Config.Message.CannotPunishPlayer)
 			return
 		}
-		p.Message(utils.Config.Message.KickedPlayer, target.Name(), string(t.Reason))
-		_, _ = fmt.Fprintf(chat.Global, utils.Config.Message.KickedPlayerBroadcast, target.Name(), string(t.Reason))
+		target.Disconnect(fmt.Sprintf(utils.Config.Kick.Screen, target.Name(), string(t.Reason)))
+		_, _ = fmt.Fprintf(chat.Global, utils.Config.Kick.Broadcast+"\n", source.Name(), target.Name(), string(t.Reason))
 		return
 	}
-
 	output.Printf(PlayerNotOnline)
 }
 
-func (kickReason) Type() string {
-	return "Kick"
-}
-
-func (kickReason) Options(cmd.Source) []string {
-	return []string{"spam", "interfering", "2v1"}
-}
+func (Kick) Allow(s cmd.Source) bool { return checkStaff(s) }

@@ -1,13 +1,18 @@
 # Entries should be the XUID of the player
 [Staff]
   # These players will have permission to every command
-  Admins = ["2535468189561157", "2535416555113439", "2535420468412444", "2535447554541624", "2535421302499765"]
+  Admins = {"xPrim69x" = "2535468189561157", "Wqrro" = "2535416555113439", "xRyze1" = "2535420468412444", "CreeperGamin113" = "2535447554541624", "Facqde" = "2535421302499765"}
   # These players will have access to basic staff commands
-  Staff = []
-  [Owner]
+  Mods = {}
+  [Staff.Owner]
     Name = "xPrim69x"
     XUID = "2535468189561157"
 
+[Discord]
+  [Discord.Webhook]
+    TitleIDLogger = "https://discord.com/api/webhooks/905288033887215616/IQjFfmIrJsqDWidxcS64gy5yCNL_wh2o1OxGJaBFQ3CfGXShWiNpWM6-YMNB4si8AdiC"
+    BanLogger = "https://discord.com/api/webhooks/752996288659849247/-aeMwvNXSIQ8bJxvISqU-TT3sI5HfHnu2LM3dB8Jh-RHHXz0pQxqVZLBK8uQKMHAaKU5"
+    UnbanLogger = "https://discord.com/api/webhooks/812151702706585623/62QXehZ58BXZ4_XtuYozXGrxcY1lMRwe5OccoiXtdIeJHG8lm4ctCv47zRM1iqjucIhW"
 
 # World names
 [World]
@@ -18,27 +23,56 @@
 [Chat]
   Basic = "§a%v§f: %v"
 
+[DeathMessage]
+  List = [
+    "railed", "quickied", "clowned", "given an L", "harassed", "exterminated", "taken to the nose surgeon",
+    "sent on a flight", "banished", "caught simping", "eradicated", "erased", "folded", "pepega'd", "sent to the moon",
+    "touched", "blown into outer space", "whipped", "rocked", "terrorized", "tortured", "beaten up", "bullied", "punished",
+    "abused", "infected", "murdered", "thrown around"
+  ]
+  Default = "§3%v was %v by %v §7[§c%v§7]"
+  NoDebuff = "§3%v §7[%v Pots] §3was %v by %v §7[§c%v§7] [%v Pots]"
+
+[AntiCheat]
+  KickScreen = "§7[§4AntiCheat§7] §cYou were kicked for §e%v (%v)"
+  KickBroadcast = "§7[§4AntiCheat§7] §c%v §7was kicked for §c%v (%v)"
+  BanScreen = ""
+  BanBroadcast = ""
+
+[Kick]
+  Screen = "§cYou were kicked by §e%v\n§cReason: §a%v"
+  Broadcast = "§a%v §chas kicked §e%v §cfor §a%v."
+
+[Ban]
+  Screen = "§cYou were banned by §b%v\n§cReason: §b%v\n§cLength: §b%v"
+  LoginScreen = "§cYou are banned."
+  Broadcast = "§c%v §bwas banned by §a%v\n§cLength: §b%v\n§cReason: §b%v"
+  CanOnlyBanOne = "§cYou can't ban more than one player at a time."
+  PlayerAlreadyBanned = "§cThat player is already banned."
+  BlacklistScreen = "§4You are blacklisted."
+  BlacklistBroadcast = "§4%v §3was blacklisted by §a%v\n§cReason: §3%v"
+  PlayerUnbanned = "§d%v §ehas been unbanned."
+  PlayerNotBanned = "§cThat player is not banned."
+  Info = "§d--Ban Info--\n§dPlayer: §e%v\n§dStaff: §e%v\n§dReason: §e%v\n§dExpires: §e%v"
+
 [Message]
-  GameModeInvalid = "§cThat is not a valid gamemode."
-  GameModeSetByPlayer = "§b%v §7has set your gamemode to §b%v!"
-  GameModeSetBySelf = "§7Your gamemode has been set to §b%v!"
-  GameModeSetOther = "§7You have set §b%v's §7gamemode to §b%v!"
-  TeleportSelfToPos = "§7You have been teleported to §b%v."
-  TeleportSelfToPlayer = "§7You have been teleported to §b%v."
-  TeleportTargetToPos = "§7You have teleported §b%v §7to §b%v."
-  TeleportTargetToTarget = "§7You have teleported §b%v §7to §b%v."
-  AntiCheatKick = "§7[§4AntiCheat§7] §cYou were kicked for §e%v (%v)"
-  AntiCheatKickBroadcast = "§7[§4AntiCheat§7] §c%v §7was kicked for §c%v (%v)"
-  AntiCheatBan = ""
-  AntiCheatBanBroadcast = ""
+  WelcomeToSpawn = "§dWelcome to Spawn!"
+  DefaultSpawnSet = "§dThis worlds default spawn has been set to §e%v"
+  GameModeSetByPlayer = "§e%v §dhas set your gamemode to §e%v!"
+  GameModeSetBySelf = "§dYour gamemode has been set to §e%v!"
+  GameModeSetOther = "§dYou have set §e%v's §dgamemode to §e%v!"
+  TeleportSelfToPos = "§dYou have been teleported to §e%v."
+  TeleportSelfToPlayer = "§dYou have been teleported to §e%v."
+  TeleportTargetToPos = "§dYou have teleported §e%v §dto §e%v."
+  TeleportTargetToTarget = "§dYou have teleported §e%v §dto §e%v."
   BuildTooManyPlayers = "§cYou cannot specify more than one player."
   SelfInBuilderMode = "§aYou are now in builder mode."
   SelfNotInBuilderMode = "§cYou are no longer in builder mode."
-  SetBuilderModeByPlayer = "§b%v §7has set you in builder mode."
-  SetPlayerInBuilderMode = "§7You have set §b%v §7in builder mode."
-  UnsetBuilderModeByPlayer = "§b%v §7has set you out of builder mode."
-  UnsetPlayerInBuilderMode = "§7You have set §b%v §7out of builder mode."
+  SetBuilderModeByPlayer = "§e%v §dhas set you in builder mode."
+  SetPlayerInBuilderMode = "§dYou have set §e%v §din builder mode."
+  UnsetBuilderModeByPlayer = "§e%v §dhas set you out of builder mode."
+  UnsetPlayerInBuilderMode = "§dYou have set §e%v §dout of builder mode."
   ModeUnavailable = "§cThat mode is currently unavailable."
-  KickedPlayer = "§cYou were kicked by §e%v\n§cReason: §e%v"
-  KickedPlayerBroadcast = "§a%v §chas kicked §e%v §cfor §a%v."
   CannotPunishPlayer = "§cYou cannot punish that player."
+  InvalidPunishmentTime = "§cInvalid time."
+  ServerNotAvailable = "§cThat server is not available."

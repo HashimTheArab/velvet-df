@@ -5,6 +5,7 @@ import (
 	"github.com/df-mc/dragonfly/server/block/cube"
 	"github.com/df-mc/dragonfly/server/entity"
 	"github.com/df-mc/dragonfly/server/entity/damage"
+	"github.com/df-mc/dragonfly/server/entity/healing"
 	"github.com/df-mc/dragonfly/server/event"
 	"github.com/df-mc/dragonfly/server/item"
 	"github.com/df-mc/dragonfly/server/player"
@@ -14,6 +15,7 @@ import (
 	"strings"
 	"velvet/form"
 	"velvet/game"
+	vitem "velvet/item"
 	"velvet/session"
 	"velvet/utils"
 )
@@ -21,8 +23,6 @@ import (
 type PlayerHandler struct {
 	player.NopHandler
 	Session *session.Session
-	//PaletteHandler *palette.Handler
-	//BrushHandler   *brush.Handler
 }
 
 func (p *PlayerHandler) HandleAttackEntity(_ *event.Context, _ world.Entity, h *float64, v *float64, critical *bool) {
@@ -46,7 +46,6 @@ func (p *PlayerHandler) HandleBlockBreak(ctx *event.Context, pos cube.Pos, _ *[]
 	if !p.Session.HasFlag(session.Building) {
 		ctx.Cancel()
 	}
-	//p.PaletteHandler.HandleBlockBreak(ctx, pos)
 }
 
 func (p *PlayerHandler) HandleBlockPlace(ctx *event.Context, _ cube.Pos, _ world.Block) {
@@ -59,13 +58,33 @@ func (*PlayerHandler) HandleItemDrop(ctx *event.Context, _ *entity.Item) {
 	ctx.Cancel()
 }
 
-func (p *PlayerHandler) HandleHurt(ctx *event.Context, _ *float64, source damage.Source) {
+func (p *PlayerHandler) HandleHurt(ctx *event.Context, dmg *float64, source damage.Source) {
+	pl := p.Session.Player
 	if source == (damage.SourceVoid{}) {
 		ctx.Cancel()
 		p.Session.TeleportToSpawn()
-	} else if /* p.Session.Player.World().Name() == utils.Srv.World().Name() ||*/ source == (damage.SourceFall{}) {
+	} else if pl.World().Name() == utils.Srv.World().Name() || source == (damage.SourceFall{}) {
 		ctx.Cancel()
+	} else if source, ok := source.(damage.SourceEntityAttack); ok && pl.Health()-pl.FinalDamageFrom(*dmg, source) <= 0 {
+		ctx.Cancel()
+		g := game.FromWorld(p.Session.Player.World().Name())
+		if g == nil {
+			_, _ = fmt.Fprintf(chat.Global, "§c%v was killed by %v", pl.Name(), source.Attacker.Name())
+		} else {
+			g.BroadcastDeathMessage(p.Session.Player, source.Attacker.(*player.Player))
+		}
+		p.Session.UpdateScoreTag(true, true)
+		pl.Heal(pl.MaxHealth(), healing.SourceCustom{})
+		pl.Inventory().Clear()
+		pl.Armour().Clear()
+		p.HandleRespawn(nil)
 	}
+	if !ctx.Cancelled() {
+		p.Session.UpdateScoreTag(true, false)
+	}
+}
+
+func (p *PlayerHandler) HandleHeal(ctx *event.Context, _ *float64, _ healing.Source) {
 	if !ctx.Cancelled() {
 		p.Session.UpdateScoreTag(true, false)
 	}
@@ -75,14 +94,23 @@ func (*PlayerHandler) HandleFoodLoss(ctx *event.Context, _ int, _ int) {
 	ctx.Cancel()
 }
 
-func (p *PlayerHandler) HandleRespawn(*mgl64.Vec3) {
-	game.DefaultKit(p.Session.Player)
+func (p *PlayerHandler) HandleChangeWorld(_, new *world.World) {
+	p.Session.Player.Teleport(new.Spawn().Vec3())
+	g := game.FromWorld(new.Name())
+	if g != nil {
+		g.Kit(p.Session.Player)
+	} else if new.Name() == utils.Srv.World().Name() {
+		game.DefaultKit(p.Session.Player)
+	}
 }
 
-func (p *PlayerHandler) HandleDeath(src damage.Source) {
-	if s, ok := src.(damage.SourceEntityAttack); ok {
-		_, _ = fmt.Fprintf(chat.Global, "§c%v §ewas killed by §a%v\n", p.Session.Player.Name(), s.Attacker.Name())
-	}
+func (p *PlayerHandler) HandleRespawn(*mgl64.Vec3) {
+	game.DefaultKit(p.Session.Player)
+	p.Session.TeleportToSpawn()
+}
+
+func (p *PlayerHandler) HandleDeath(_ damage.Source) {
+	_, _ = fmt.Fprintf(chat.Global, "§c%v died.", p.Session.Player.Name())
 }
 
 func (p *PlayerHandler) HandleChat(ctx *event.Context, message *string) {
@@ -94,9 +122,10 @@ func (p *PlayerHandler) HandleChat(ctx *event.Context, message *string) {
 	_, _ = fmt.Fprintf(chat.Global, utils.Config.Chat.Basic+"\n", p.Session.Player.Name(), *message)
 }
 
-func (p *PlayerHandler) HandleItemUse(_ *event.Context) {
+func (p *PlayerHandler) HandleItemUse(ctx *event.Context) {
 	pl := p.Session.Player
 	itm, _ := pl.HeldItems()
+	vitem.Override(p.Session, ctx)
 	if pl.World().Name() == utils.Srv.World().Name() {
 		if t, ok := itm.Value("tool"); ok {
 			switch t {
@@ -107,17 +136,10 @@ func (p *PlayerHandler) HandleItemUse(_ *event.Context) {
 	}
 }
 
-//
-//func (p *PlayerHandler) HandleItemUseOnBlock(ctx *event.Context, pos cube.Pos, face cube.Face, vec mgl64.Vec3) {
-//	p.PaletteHandler.HandleItemUseOnBlock(ctx, pos, face, vec)
-//}
-
 func (p *PlayerHandler) HandleQuit() {
 	p.Session.Close()
 	utils.OnlineCount.Store(utils.OnlineCount.Load() - 1)
 	for _, s := range session.All() {
 		s.UpdateScoreboard(true, false)
 	}
-	//p.PaletteHandler.HandleQuit()
-	//p.BrushHandler.HandleQuit()
 }

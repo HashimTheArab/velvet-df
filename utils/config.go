@@ -10,11 +10,18 @@ import (
 
 type config struct {
 	Staff struct {
-		Admins []string
-		Staff  []string
+		Admins map[string]string
+		Mods   map[string]string
 		Owner  struct {
 			Name string
 			XUID string
+		}
+	}
+	Discord struct {
+		Webhook struct {
+			TitleIDLogger string
+			BanLogger     string
+			UnbanLogger   string
 		}
 	}
 	World struct {
@@ -25,14 +32,30 @@ type config struct {
 	Chat struct {
 		Basic string
 	}
+	AntiCheat struct {
+		KickScreen, KickBroadcast string
+		BanScreen, BanBroadcast   string
+	}
+	Kick struct {
+		Screen, Broadcast string
+	}
+	Ban struct {
+		Screen, LoginScreen, Broadcast                                      string
+		BlacklistScreen, BlacklistBroadcast                                 string
+		CanOnlyBanOne, PlayerAlreadyBanned, PlayerNotBanned, PlayerUnbanned string
+		Info                                                                string
+	}
 	Message struct {
-		GameModeInvalid, GameModeSetByPlayer, GameModeSetBySelf, GameModeSetOther            string
+		WelcomeToSpawn, DefaultSpawnSet                                                      string
+		GameModeSetByPlayer, GameModeSetBySelf, GameModeSetOther                             string
 		TeleportSelfToPos, TeleportSelfToPlayer, TeleportTargetToPos, TeleportTargetToTarget string
-		AntiCheatKick, AntiCheatKickBroadcast, AntiCheatBan, AntiCheatBanBroadcast           string
 		BuildTooManyPlayers, SelfNotInBuilderMode, SelfInBuilderMode, SetPlayerInBuilderMode,
 		SetBuilderModeByPlayer, UnsetBuilderModeByPlayer, UnsetPlayerInBuilderMode string
-		ModeUnavailable                                         string
-		KickedPlayer, KickedPlayerBroadcast, CannotPunishPlayer string
+		ModeUnavailable, CannotPunishPlayer, InvalidPunishmentTime, ServerNotAvailable string
+	}
+	DeathMessage struct {
+		List              []string
+		Default, NoDebuff string
 	}
 }
 

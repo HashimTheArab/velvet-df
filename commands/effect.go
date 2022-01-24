@@ -11,10 +11,10 @@ import (
 type EffectType string
 
 type Effect struct {
-	Target          []cmd.Target
-	EffectName      EffectType
-	EffectAmplifier int
-	EffectLength    uint32
+	Target          []cmd.Target `name:"target"`
+	EffectName      EffectType   `name:"effect"`
+	EffectLength    uint32       `name:"length"`
+	EffectAmplifier int          `name:"amplifier"`
 }
 
 var effectIdMap = map[string]effect.Type{
@@ -51,11 +51,9 @@ var effectIdMap = map[string]effect.Type{
 	"healing":        effect.InstantHealth{},
 }
 
-func (t Effect) Run(source cmd.Source, _ *cmd.Output) {
-	p, _ := source.(*player.Player)
-
+func (t Effect) Run(_ cmd.Source, output *cmd.Output) {
 	if t.EffectAmplifier <= 0 {
-		p.Message("§cEffect amplifier must be greater than 0.")
+		output.Print("§cEffect amplifier must be greater than 0.")
 		return
 	}
 
@@ -74,7 +72,7 @@ func (t Effect) Run(source cmd.Source, _ *cmd.Output) {
 		}
 		return
 	}
-	p.Message("§cThat effect was not found.")
+	output.Print("§cThat effect was not found.")
 }
 
 func (EffectType) Type() string {
@@ -83,8 +81,10 @@ func (EffectType) Type() string {
 
 func (EffectType) Options(cmd.Source) []string {
 	var e []string
-	for name, _ := range effectIdMap {
+	for name := range effectIdMap {
 		e = append(e, name)
 	}
 	return e
 }
+
+func (Effect) Allow(s cmd.Source) bool { return checkAdmin(s) }

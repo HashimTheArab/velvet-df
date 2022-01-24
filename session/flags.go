@@ -1,7 +1,7 @@
 package session
 
 const (
-	Admin = iota
+	Admin uint32 = iota
 	Builder
 	Staff
 	Vanished

@@ -12,7 +12,11 @@ type Check struct {
 	Subtype       string
 	Description   string
 	Punishment    Punishment
-	MaxViolations uint8
+	MaxViolations byte
+	ID            byte
+}
+
+type Session struct {
 }
 
 type Punishment byte
@@ -23,12 +27,17 @@ const (
 	Ban
 )
 
+func (c *Check) Flag(s *session.Session) {
+
+}
+
 func (c *Check) Punish(s *session.Session) {
 	if c.Punishment == Kick {
 		name := s.Player.Name()
-		s.Player.Disconnect(utils.Config.Message.AntiCheatKick, c.Name, c.Subtype)
-		_, _ = fmt.Fprintf(chat.Global, utils.Config.Message.AntiCheatKickBroadcast, name, c.Name, c.Subtype)
+		s.Player.Disconnect(fmt.Sprintf(utils.Config.AntiCheat.KickScreen, c.Name, c.Subtype))
+		_, _ = fmt.Fprintf(chat.Global, utils.Config.AntiCheat.KickBroadcast+"\n", name, c.Name, c.Subtype)
 		return
 	}
-	// todo: bans
+	s.Player.Disconnect(fmt.Sprintf(utils.Config.AntiCheat.BanScreen, c.Name, c.Subtype))
+	_, _ = fmt.Fprintf(chat.Global, utils.Config.AntiCheat.KickBroadcast+"\n", s.Player.Name(), c.Name, c.Subtype)
 }

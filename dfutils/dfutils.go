@@ -8,13 +8,16 @@ import (
 	worldmanager "github.com/emperials/df-worldmanager"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
+	"time"
 	"velvet/handlers"
 	"velvet/session"
 	"velvet/utils"
 )
 
+var log = logrus.New()
+
+// todo: handle disconnect packets
 func StartServer() {
-	log := logrus.New()
 	log.Formatter = &logrus.TextFormatter{ForceColors: true}
 	log.Level = logrus.DebugLevel
 
@@ -26,6 +29,8 @@ func StartServer() {
 	}
 
 	srv := server.New(&config, log)
+	srv.SetName("Velvet")
+	srv.Allow(allower{})
 	srv.CloseOnProgramEnd()
 	if err := srv.Start(); err != nil {
 		log.Fatalln(err)
@@ -33,8 +38,8 @@ func StartServer() {
 
 	utils.Srv = srv
 	utils.WorldMG = worldmanager.New(srv, "worlds/", log)
+	utils.Started = time.Now().Unix()
 
-	// todo: make this auto load all gamemode worlds
 	if files, err := ioutil.ReadDir("worlds"); err == nil {
 		for _, f := range files {
 			if f.Name() != "world" {
@@ -60,16 +65,9 @@ func StartServer() {
 			return
 		}
 
-		s := session.New(p)
-		p.Handle(&handlers.PlayerHandler{
-			Session: s,
-			//PaletteHandler: palette.NewHandler(p),
-			//BrushHandler:   brush.NewHandler(p),
-		})
-		p.EnableInstantRespawn()
-		utils.OnlineCount.Add(1)
-		for _, s := range session.All() {
-			s.UpdateScoreboard(true, false)
-		}
+		s := session.Get(p)
+		s.Player = p
+		s.OnJoin()
+		p.Handle(&handlers.PlayerHandler{Session: s})
 	}
 }
