@@ -2,7 +2,6 @@ package commands
 
 import (
 	"fmt"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/df-mc/dragonfly/server/cmd"
 	"github.com/df-mc/dragonfly/server/player"
 	"os"
@@ -36,7 +35,7 @@ func (Status) Run(_ cmd.Source, output *cmd.Output) {
 
 	add("Uptime", (time.Second * time.Duration(time.Now().Unix()-utils.Started)).String())
 	add("CPU Model", s.cpu.Model)
-	add("Memory", fmt.Sprintf("§d(§c%v§d/§a%v", s.memory.Used, s.memory.Total))
+	add("Memory", fmt.Sprintf("§d(§c%v§d/§a%v)", s.memory.Used, s.memory.Total))
 	for _, w := range utils.WorldMG.Worlds() {
 		players := 0
 		for _, v := range w.Entities() {
@@ -44,13 +43,9 @@ func (Status) Run(_ cmd.Source, output *cmd.Output) {
 				players++
 			}
 		}
-		add("World ("+w.Name()+")", strconv.Itoa(players)+" §dPlayers, "+strconv.Itoa(len(w.Entities()))+" §dTotal Entities")
+		add("World ("+w.Name()+")", strconv.Itoa(players)+" §dPlayers, §e"+strconv.Itoa(len(w.Entities()))+" §dTotal Entities")
 	}
 	output.Printf(status)
-}
-
-func init() {
-	spew.Dump(getStatusData())
 }
 
 func getStatusData() statusData {
@@ -88,7 +83,7 @@ func (d *statusData) format() {
 	var memory []int
 	formatStorage := func(s *string) {
 		if n, err := strconv.Atoi(*s); err == nil {
-			*s = strconv.Itoa(n/1000) + "MB"
+			*s = strconv.Itoa(n/1000) + " MB"
 			memory = append(memory, n/1000)
 		} else {
 			*s = "Unavailable"
