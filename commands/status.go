@@ -27,28 +27,26 @@ type statusData struct {
 }
 
 func (Status) Run(_ cmd.Source, output *cmd.Output) {
-	go func() {
-		status := "§e--§dServer Status§e--\n"
-		add := func(name, value string) {
-			status += "§d" + name + ": §e" + value + "\n"
-		}
-		s := getStatusData()
-		s.format()
+	status := "§e--§dServer Status§e--\n"
+	add := func(name, value string) {
+		status += "§d" + name + ": §e" + value + "\n"
+	}
+	s := getStatusData()
+	s.format()
 
-		add("Uptime", (time.Second * time.Duration(time.Now().Unix()-utils.Started)).String())
-		add("CPU Model", s.cpu.Model)
-		add("Memory", fmt.Sprintf("§d(§c%v§d/§a%v", s.memory.Used, s.memory.Total))
-		for _, w := range utils.WorldMG.Worlds() {
-			players := 0
-			for _, v := range w.Entities() {
-				if _, ok := v.(*player.Player); ok {
-					players++
-				}
+	add("Uptime", (time.Second * time.Duration(time.Now().Unix()-utils.Started)).String())
+	add("CPU Model", s.cpu.Model)
+	add("Memory", fmt.Sprintf("§d(§c%v§d/§a%v", s.memory.Used, s.memory.Total))
+	for _, w := range utils.WorldMG.Worlds() {
+		players := 0
+		for _, v := range w.Entities() {
+			if _, ok := v.(*player.Player); ok {
+				players++
 			}
-			add("World ("+w.Name()+")", strconv.Itoa(players)+" §dPlayers, "+strconv.Itoa(len(w.Entities()))+" §dTotal Entities")
 		}
-		output.Printf(status)
-	}()
+		add("World ("+w.Name()+")", strconv.Itoa(players)+" §dPlayers, "+strconv.Itoa(len(w.Entities()))+" §dTotal Entities")
+	}
+	output.Printf(status)
 }
 
 func init() {
