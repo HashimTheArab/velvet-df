@@ -43,7 +43,7 @@ func (Status) Run(_ cmd.Source, output *cmd.Output) {
 				players++
 			}
 		}
-		add("World §e\""+w.Name()+"\"", strconv.Itoa(players)+" §dPlayers, §e"+strconv.Itoa(len(w.Entities()))+" §dTotal Entities")
+		add("World §e\""+w.Name()+"\"§d", strconv.Itoa(players)+" §dPlayers, §e"+strconv.Itoa(len(w.Entities()))+" §dTotal Entities")
 	}
 	output.Printf(status)
 }
@@ -57,6 +57,8 @@ func getStatusData() statusData {
 		}
 		if d, err := os.ReadFile("/proc/cpuinfo"); err == nil {
 			parseFields(d, map[string]*string{"model name": &s.cpu.Model}, false)
+		} else {
+			fmt.Println(err.Error())
 		}
 	}
 	return s
@@ -68,6 +70,9 @@ func parseFields(data []byte, fields map[string]*string, memory bool) {
 		index := strings.IndexRune(line, ':')
 		if index == -1 {
 			continue
+		}
+		if !memory {
+			fmt.Println("yes")
 		}
 		if val, ok := fields[line[:index]]; ok {
 			if memory {
