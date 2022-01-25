@@ -56,7 +56,7 @@ func getStatusData() statusData {
 			parseFields(d, map[string]*string{"MemAvailable": &s.memory.Free, "MemTotal": &s.memory.Total}, true)
 		}
 		if d, err := os.ReadFile("/proc/cpuinfo"); err == nil {
-			parseFields(d, map[string]*string{"modelname": &s.cpu.Model}, false)
+			parseFields(d, map[string]*string{"model name": &s.cpu.Model}, false)
 		}
 	}
 	return s
