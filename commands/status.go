@@ -35,7 +35,7 @@ func (Status) Run(_ cmd.Source, output *cmd.Output) {
 
 	add("Uptime", (time.Second * time.Duration(time.Now().Unix()-utils.Started)).String())
 	add("CPU Model", s.cpu.Model)
-	add("Memory", fmt.Sprintf("§d(§c%v§d/§a%v)", s.memory.Used, s.memory.Total))
+	add("Memory", fmt.Sprintf("§c%v§d/§a%v§d", s.memory.Used, s.memory.Total))
 	for _, w := range utils.WorldMG.Worlds() {
 		players := 0
 		for _, v := range w.Entities() {
@@ -43,7 +43,7 @@ func (Status) Run(_ cmd.Source, output *cmd.Output) {
 				players++
 			}
 		}
-		add("World ("+w.Name()+")", strconv.Itoa(players)+" §dPlayers, §e"+strconv.Itoa(len(w.Entities()))+" §dTotal Entities")
+		add("World §e\""+w.Name()+"\"", strconv.Itoa(players)+" §dPlayers, §e"+strconv.Itoa(len(w.Entities()))+" §dTotal Entities")
 	}
 	output.Printf(status)
 }
@@ -73,7 +73,11 @@ func parseFields(data []byte, fields map[string]*string, memory bool) {
 			if memory {
 				*val = strings.TrimSpace(strings.TrimRight(line[index+1:], "kB"))
 			} else {
-				// todo
+				if len(line) > index+2 {
+					*val = line[index+2:]
+				} else {
+					*val = "Unavailable"
+				}
 			}
 		}
 	}
