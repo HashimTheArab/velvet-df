@@ -6,4 +6,5 @@ const (
 	Staff
 	Vanished
 	Building
+	ChatCD
 )

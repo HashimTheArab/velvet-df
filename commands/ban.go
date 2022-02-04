@@ -5,6 +5,7 @@ import (
 	"github.com/df-mc/dragonfly/server/cmd"
 	"github.com/df-mc/dragonfly/server/player"
 	"time"
+	"velvet/console"
 	"velvet/db"
 	"velvet/discord/webhook"
 	"velvet/session"
@@ -32,17 +33,17 @@ type BanInfo struct {
 }
 
 func (t Ban) Run(source cmd.Source, output *cmd.Output) {
-	p := source.(*player.Player)
-
 	if len(t.Player) > 1 {
 		output.Print(utils.Config.Ban.CanOnlyBanOne)
 		return
 	}
 
 	if target, ok := t.Player[0].(*player.Player); ok {
-		if target.Name() == source.Name() || (source.Name() != utils.Config.Staff.Owner.Name && session.Get(target).HasFlag(session.Staff)) {
-			output.Print(utils.Config.Message.CannotPunishPlayer)
-			return
+		if _, ok := source.(*console.CommandSender); !ok {
+			if target.Name() == source.Name() || (source.Name() != utils.Config.Staff.Owner.Name && session.Get(target).HasFlag(session.Staff)) {
+				output.Print(utils.Config.Message.CannotPunishPlayer)
+				return
+			}
 		}
 		if t.Reason == "" {
 			output.Print("§cProvide a reason.")
@@ -53,18 +54,20 @@ func (t Ban) Run(source cmd.Source, output *cmd.Output) {
 			output.Print(utils.Config.Message.InvalidPunishmentTime)
 			return
 		}
-		ban(p, target.Name(), string(t.Reason), duration)
+		ban(source, output, target.Name(), string(t.Reason), duration)
 	}
 }
 
 func (t BanOffline) Run(source cmd.Source, output *cmd.Output) {
-	p := source.(*player.Player)
+	p, _ := source.(*player.Player)
 
 	_, mod := utils.Config.Staff.Mods[t.Player]
 	_, admin := utils.Config.Staff.Admins[t.Player]
-	if t.Player == source.Name() || ((mod || admin) && p.XUID() != utils.Config.Staff.Owner.XUID) {
-		output.Print(utils.Config.Message.CannotPunishPlayer)
-		return
+	if _, ok := source.(*console.CommandSender); !ok {
+		if t.Player == source.Name() || ((mod || admin) && p.XUID() != utils.Config.Staff.Owner.XUID) {
+			output.Print(utils.Config.Message.CannotPunishPlayer)
+			return
+		}
 	}
 	if t.Reason == "" {
 		output.Print("§cProvide a reason.")
@@ -75,18 +78,18 @@ func (t BanOffline) Run(source cmd.Source, output *cmd.Output) {
 		output.Print(utils.Config.Message.InvalidPunishmentTime)
 		return
 	}
-	ban(p, t.Player, string(t.Reason), duration)
+	ban(source, output, t.Player, string(t.Reason), duration)
 }
 
 func (t BanLift) Run(_ cmd.Source, output *cmd.Output) {
-	ban := db.GetBan(t.Player)
-	if ban != nil {
+	b := db.GetBan(t.Player)
+	if b != nil {
 		db.UnbanPlayer(t.Player)
-		output.Printf(utils.Config.Ban.PlayerUnbanned, ban.IGN)
+		output.Printf(utils.Config.Ban.PlayerUnbanned, b.IGN)
 		webhook.Send(utils.Config.Discord.Webhook.UnbanLogger, webhook.Message{
 			Embeds: []webhook.Embed{{
 				Title:       "Player Pardoned",
-				Description: fmt.Sprintf("**Player:** %v\n**Staff:** %v\n", ban.IGN, ban.Mod),
+				Description: fmt.Sprintf("**Player:** %v\n**Staff:** %v\n", b.IGN, b.Mod),
 				Color:       0xFF8900,
 			}},
 		})
@@ -96,23 +99,27 @@ func (t BanLift) Run(_ cmd.Source, output *cmd.Output) {
 }
 
 func (t BanInfo) Run(_ cmd.Source, output *cmd.Output) {
-	ban := db.GetBan(t.Player)
-	if ban != nil {
-		output.Printf(utils.Config.Ban.Info, ban.IGN, ban.Mod, ban.Reason, ban.FormattedExpiration())
+	b := db.GetBan(t.Player)
+	if b != nil {
+		output.Printf(utils.Config.Ban.Info, b.IGN, b.Mod, b.Reason, b.FormattedExpiration())
 	} else {
 		output.Print(utils.Config.Ban.PlayerNotBanned)
 	}
 }
 
-func ban(p *player.Player, target, reason string, length time.Duration) {
+func ban(p cmd.Source, output *cmd.Output, target, reason string, length time.Duration) {
 	if db.GetBan(target) != nil {
-		p.Message(utils.Config.Ban.PlayerAlreadyBanned)
+		output.Print(utils.Config.Ban.PlayerAlreadyBanned)
+		return
+	}
+	if reason == "" {
+		output.Print(utils.Config.Message.SpecifyReason)
 		return
 	}
 	db.BanPlayer(target, p.Name(), reason, length)
 }
 
-func (Ban) Allow(s cmd.Source) bool        { return checkStaff(s) }
-func (BanOffline) Allow(s cmd.Source) bool { return checkStaff(s) }
-func (BanLift) Allow(s cmd.Source) bool    { return checkStaff(s) }
-func (BanInfo) Allow(s cmd.Source) bool    { return checkStaff(s) }
+func (Ban) Allow(s cmd.Source) bool        { return checkStaff(s) || checkConsole(s) }
+func (BanOffline) Allow(s cmd.Source) bool { return checkStaff(s) || checkConsole(s) }
+func (BanLift) Allow(s cmd.Source) bool    { return checkStaff(s) || checkConsole(s) }
+func (BanInfo) Allow(s cmd.Source) bool    { return checkStaff(s) || checkConsole(s) }

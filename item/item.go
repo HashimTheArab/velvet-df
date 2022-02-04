@@ -14,35 +14,38 @@ var items = map[world.Item]item.Usable{
 	item.SplashPotion{}: Potion{},
 }
 
-// thank you so much tal
+// Override
+// Thank you so much, Tal
 func Override(s *session.Session, ctx *event.Context) {
-	p := s.Player
+	if !ctx.Cancelled() {
+		p := s.Player
 
-	held, left := p.HeldItems()
+		held, left := p.HeldItems()
 
-	// Clear meta that may prevent the item from being overridden.
-	name, _ := held.Item().EncodeItem()
-	itemToCheck, _ := world.ItemByName(name, 0)
-	if replacement, ok := items[itemToCheck]; ok && !ctx.Cancelled() {
-		it := held.Item()
-		w := p.World()
-		if p.HasCooldown(it) {
-			return
-		}
+		// Clear meta that may prevent the item from being overridden.
+		name, _ := held.Item().EncodeItem()
+		itemToCheck, _ := world.ItemByName(name, 0)
+		if replacement, ok := items[itemToCheck]; ok {
+			it := held.Item()
+			w := p.World()
+			if p.HasCooldown(it) {
+				return
+			}
 
-		ctx.Cancel()
-		if cooldown, ok := it.(item.Cooldown); ok {
-			p.SetCooldown(it, cooldown.Cooldown())
-		}
+			ctx.Cancel()
+			if cooldown, ok := it.(item.Cooldown); ok {
+				p.SetCooldown(it, cooldown.Cooldown())
+			}
 
-		ctx := player_useContext(p)
-		if replacement.Use(w, p, ctx) {
-			// We only swing the player's arm if the item held actually does something. If it doesn't, there is no
-			// reason to swing the arm.
-			p.SwingArm()
+			ctx := player_useContext(p)
+			if replacement.Use(w, p, ctx) {
+				// We only swing the player's arm if the item held actually does something. If it doesn't, there is no
+				// reason to swing the arm.
+				p.SwingArm()
 
-			p.SetHeldItems(player_subtractItem(p, player_damageItem(p, held, ctx.Damage), ctx.CountSub), left)
-			player_addNewItem(p, ctx)
+				p.SetHeldItems(player_subtractItem(p, player_damageItem(p, held, ctx.Damage), ctx.CountSub), left)
+				player_addNewItem(p, ctx)
+			}
 		}
 	}
 }

@@ -26,6 +26,6 @@ func All() map[string]*Session {
 	return sessions
 }
 
-func AllStaff() map[string]*Session {
+func AllStaff() map[string]*Session { // todo: why did i add this again?
 	return staff
 }

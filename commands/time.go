@@ -23,7 +23,4 @@ func (set) SubName() string {
 	return "set"
 }
 
-func (TimeSet) Allow(s cmd.Source) bool {
-	_, ok := s.(*player.Player)
-	return ok && checkStaff(s)
-}
+func (TimeSet) Allow(s cmd.Source) bool { return checkStaff(s) }

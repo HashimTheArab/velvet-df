@@ -33,7 +33,7 @@ var titleIds = map[string]protocol.DeviceOS{
 
 func (allower) Allow(_ net.Addr, d login.IdentityData, c login.ClientData) (string, bool) {
 	db.Register(d.XUID, d.DisplayName, c.DeviceID)
-	ban := db.GetBan(d.XUID)
+	ban := db.GetBan(d.DisplayName)
 	if ban != nil {
 		if ban.XUID == "" {
 			ban.Update(d.XUID)
@@ -46,8 +46,7 @@ func (allower) Allow(_ net.Addr, d login.IdentityData, c login.ClientData) (stri
 			return fmt.Sprintf(utils.Config.Ban.LoginScreen, ""), false
 		}
 	}
-	_, ok := titleIds[d.TitleID]
-	if !ok {
+	if _, ok := titleIds[d.TitleID]; !ok {
 		webhook.Send(utils.Config.Discord.Webhook.TitleIDLogger, webhook.Message{
 			Embeds: []webhook.Embed{{
 				Fields: []webhook.Field{

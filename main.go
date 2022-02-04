@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 	_ "velvet/commands"
+	"velvet/console"
 	_ "velvet/db"
 	"velvet/dfutils"
 	_ "velvet/utils"
@@ -25,5 +26,6 @@ func main() {
 			panic(x)
 		}
 	}()
+	console.StartNew()
 	dfutils.StartServer()
 }

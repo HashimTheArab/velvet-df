@@ -7,6 +7,7 @@ import (
 	"github.com/df-mc/dragonfly/server/session"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 	"velvet/db"
 	"velvet/game"
@@ -24,13 +25,19 @@ type Session struct {
 		cpsText    string
 		osText     string
 	}
-	CombatTime uint8
-
-	scoreboard *scoreboard.Scoreboard
+	combat      combat
+	combatMu    sync.Mutex
+	cooldowns   cooldownMap
+	cooldownsMu sync.Mutex
+	scoreboard  *scoreboard.Scoreboard
 }
 
 // OnJoin is called when the player joins.
 func (s *Session) OnJoin() {
+	s.cooldowns = map[cooldownType]*Cooldown{
+		CooldownTypePearl: {length: time.Second * 15},
+		CooldownTypeChat:  {length: time.Second * 3},
+	}
 	s.NetworkSession = player_session(s.Player)
 	s.Load()
 	s.DefaultFlags()
@@ -43,6 +50,18 @@ func (s *Session) OnJoin() {
 		ses.UpdateScoreboard(true, false)
 	}
 	game.DefaultKit(s.Player)
+	go func() {
+		for {
+			s.UpdateScoreTag(true, true)
+			if s.Combat().Tagged() {
+				s.Combat().time--
+				if !s.Combat().Tagged() {
+					s.Player.Message("§aYou are no longer in combat!")
+				}
+			}
+			time.Sleep(time.Second)
+		}
+	}()
 }
 
 // OnQuit is called when the session leaves.
@@ -81,12 +100,14 @@ func (s *Session) IsStaff(CheckAdmin bool) bool {
 
 // DefaultFlags will set the default bitflags for the session.
 func (s *Session) DefaultFlags() {
-	if s.IsStaff(true) {
-		s.SetFlag(Admin)
+	if s.IsStaff(true) || s.IsStaff(false) {
 		s.SetFlag(Staff)
 		staff[s.Player.Name()] = s
-	} else if s.IsStaff(false) {
-		s.SetFlag(Staff)
+		if s.IsStaff(true) {
+			s.SetFlag(Admin)
+		}
+	} else {
+		s.SetFlag(ChatCD)
 	}
 }
 
@@ -97,7 +118,7 @@ func (s *Session) Click() {
 	if len(s.clicks) > 49 {
 		s.clicks = s.clicks[1:]
 	}
-	s.Player.SendTip("§dCPS §b" + strconv.Itoa(s.CPS()))
+	s.Player.SendTip("§6CPS §b" + strconv.Itoa(s.CPS()))
 	s.UpdateScoreTag(false, true)
 }
 
@@ -135,12 +156,12 @@ func (s *Session) UpdateScoreTag(health, cps bool) {
 }
 
 func (s *Session) SaveScoreboard() {
-	s.scoreboard = scoreboard.New("§l§dVelvet")
+	s.scoreboard = scoreboard.New("§l§6Velvet")
 	lines := []string{
-		"§dName:§a " + s.Player.Name(),
-		"§dOnline: §a" + utils.OnlineCount.String(),
-		"§dK: §a" + strconv.Itoa(int(s.Stats.Kills.Load())) + " §dD: §a" + strconv.Itoa(int(s.Stats.Deaths.Load())),
-		"§avelvetpractice.tk",
+		"§6Name: §b" + s.Player.Name(),
+		"§6Online: §b" + utils.OnlineCount.String(),
+		"§6K: §b" + strconv.Itoa(int(s.Stats.Kills.Load())) + " §6D: §b" + strconv.Itoa(int(s.Stats.Deaths.Load())),
+		"§bvelvetpractice.tk",
 	}
 	_, _ = s.scoreboard.WriteString(strings.Join(lines, "\n"))
 	s.Player.SendScoreboard(s.scoreboard)
@@ -148,10 +169,10 @@ func (s *Session) SaveScoreboard() {
 
 func (s *Session) UpdateScoreboard(online, kd bool) {
 	if online {
-		_ = s.scoreboard.Set(1, "§dOnline: §a"+utils.OnlineCount.String())
+		_ = s.scoreboard.Set(1, "§6Online: §b"+utils.OnlineCount.String())
 	}
 	if kd {
-		_ = s.scoreboard.Set(2, "§dK: §a"+strconv.Itoa(int(s.Stats.Kills.Load()))+" §dD: §a"+strconv.Itoa(int(s.Stats.Deaths.Load())))
+		_ = s.scoreboard.Set(2, "§6K: §b"+strconv.Itoa(int(s.Stats.Kills.Load()))+" §6D: §b"+strconv.Itoa(int(s.Stats.Deaths.Load())))
 	}
 	s.Player.SendScoreboard(s.scoreboard)
 }
@@ -172,4 +193,16 @@ func (s *Session) KDR() string {
 		return "0.0"
 	}
 	return strconv.FormatFloat(float64(s.Stats.Kills.Load()/s.Stats.Deaths.Load()), 'f', 2, 32)
+}
+
+func (s *Session) Combat() *combat {
+	s.combatMu.Lock()
+	defer s.combatMu.Unlock()
+	return &s.combat
+}
+
+func (s *Session) Cooldowns() *cooldownMap {
+	s.cooldownsMu.Lock()
+	defer s.cooldownsMu.Unlock()
+	return &s.cooldowns
 }

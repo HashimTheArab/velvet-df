@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"github.com/df-mc/dragonfly/server/block/cube"
+	"github.com/df-mc/dragonfly/server/cmd"
 	"github.com/df-mc/dragonfly/server/entity"
 	"github.com/df-mc/dragonfly/server/entity/damage"
 	"github.com/df-mc/dragonfly/server/entity/healing"
@@ -42,7 +43,7 @@ func (p *PlayerHandler) HandlePunchAir(_ *event.Context) {
 	p.Session.Click()
 }
 
-func (p *PlayerHandler) HandleBlockBreak(ctx *event.Context, pos cube.Pos, _ *[]item.Stack) {
+func (p *PlayerHandler) HandleBlockBreak(ctx *event.Context, _ cube.Pos, _ *[]item.Stack) {
 	if !p.Session.HasFlag(session.Building) {
 		ctx.Cancel()
 	}
@@ -58,29 +59,28 @@ func (*PlayerHandler) HandleItemDrop(ctx *event.Context, _ *entity.Item) {
 	ctx.Cancel()
 }
 
-func (p *PlayerHandler) HandleHurt(ctx *event.Context, dmg *float64, source damage.Source) {
-	pl := p.Session.Player
+func (p *PlayerHandler) HandleHurt(ctx *event.Context, _ *float64, source damage.Source) {
 	if source == (damage.SourceVoid{}) {
 		ctx.Cancel()
 		p.Session.TeleportToSpawn()
-	} else if pl.World().Name() == utils.Srv.World().Name() || source == (damage.SourceFall{}) {
+	} else if p.Session.Player.World().Name() == utils.Srv.World().Name() || source == (damage.SourceFall{}) {
 		ctx.Cancel()
-	} else if source, ok := source.(damage.SourceEntityAttack); ok && pl.Health()-pl.FinalDamageFrom(*dmg, source) <= 0 {
-		ctx.Cancel()
-		g := game.FromWorld(p.Session.Player.World().Name())
-		if g == nil {
-			_, _ = fmt.Fprintf(chat.Global, "§c%v was killed by %v", pl.Name(), source.Attacker.Name())
-		} else {
-			g.BroadcastDeathMessage(p.Session.Player, source.Attacker.(*player.Player))
-		}
-		p.Session.UpdateScoreTag(true, true)
-		pl.Heal(pl.MaxHealth(), healing.SourceCustom{})
-		pl.Inventory().Clear()
-		pl.Armour().Clear()
-		p.HandleRespawn(nil)
 	}
 	if !ctx.Cancelled() {
 		p.Session.UpdateScoreTag(true, false)
+		if source, ok := source.(damage.SourceEntityAttack); ok {
+			if pl, ok := source.Attacker.(*player.Player); ok {
+				s := session.Get(pl)
+				if !s.Combat().Tagged() {
+					s.Player.Message("§cYou are now in combat.")
+				}
+				if !p.Session.Combat().Tagged() {
+					p.Session.Player.Message("§cYou are now in combat.")
+				}
+				s.Combat().Tag(true)
+				p.Session.Combat().Tag(true)
+			}
+		}
 	}
 }
 
@@ -100,6 +100,8 @@ func (p *PlayerHandler) HandleChangeWorld(_, new *world.World) {
 	if g != nil {
 		g.Kit(p.Session.Player)
 	} else if new.Name() == utils.Srv.World().Name() {
+		p.Session.Player.Armour().Clear()
+		p.Session.Player.Inventory().Clear()
 		game.DefaultKit(p.Session.Player)
 	}
 }
@@ -109,34 +111,69 @@ func (p *PlayerHandler) HandleRespawn(*mgl64.Vec3) {
 	p.Session.TeleportToSpawn()
 }
 
-func (p *PlayerHandler) HandleDeath(_ damage.Source) {
-	_, _ = fmt.Fprintf(chat.Global, "§c%v died.", p.Session.Player.Name())
+func (p *PlayerHandler) HandleDeath(source damage.Source) {
+	g := game.FromWorld(p.Session.Player.World().Name())
+	if source, ok := source.(damage.SourceEntityAttack); ok {
+		if g == nil {
+			_, _ = fmt.Fprintf(chat.Global, "§c%v was killed by %v", p.Session.Player.Name(), source.Attacker.Name())
+		} else {
+			g.BroadcastDeathMessage(p.Session.Player, source.Attacker.(*player.Player))
+		}
+	} else {
+		_, _ = fmt.Fprintf(chat.Global, "§c%v died.", p.Session.Player.Name())
+	}
+	p.Session.UpdateScoreTag(true, true)
+	if p.Session.Combat().Tagged() {
+		p.Session.Combat().Tag(false)
+	}
+}
+
+func (p *PlayerHandler) HandleCommandExecution(ctx *event.Context, command cmd.Command, _ []string) {
+	if p.Session.Combat().Tagged() {
+		for _, v := range session.CombatBannedCommands {
+			if command.Name() == v {
+				ctx.Cancel()
+				p.Session.Player.Message("§cYou cannot use this command while in combat.")
+			}
+		}
+	}
 }
 
 func (p *PlayerHandler) HandleChat(ctx *event.Context, message *string) {
+	if p.Session.HasFlag(session.ChatCD) {
+		p.Session.Cooldowns().Handle(ctx, p.Session.Player, session.CooldownTypeChat)
+	}
+	if !ctx.Cancelled() {
+		_, _ = fmt.Fprintf(chat.Global, utils.Config.Chat.Basic+"\n", p.Session.Player.Name(), *message)
+	}
 	ctx.Cancel()
 	if strings.Contains(strings.ToLower(*message), "kkkkkkkk") {
-		p.Session.Player.Message("por favor, não spam")
+		p.Session.Player.Message("no spam pls")
 		return
 	}
-	_, _ = fmt.Fprintf(chat.Global, utils.Config.Chat.Basic+"\n", p.Session.Player.Name(), *message)
 }
 
 func (p *PlayerHandler) HandleItemUse(ctx *event.Context) {
 	pl := p.Session.Player
 	itm, _ := pl.HeldItems()
+	if itm.Item() == (item.EnderPearl{}) {
+		p.Session.Cooldowns().Handle(ctx, pl, session.CooldownTypePearl)
+	}
 	vitem.Override(p.Session, ctx)
 	if pl.World().Name() == utils.Srv.World().Name() {
 		if t, ok := itm.Value("tool"); ok {
 			switch t {
 			case game.ArenaItemNbt:
-				pl.SendForm(form.FFA(p.Session.Player))
+				pl.SendForm(form.FFA(pl))
 			}
 		}
 	}
 }
 
 func (p *PlayerHandler) HandleQuit() {
+	if p.Session.Combat().Tagged() {
+		p.Session.Player.Hurt(p.Session.Player.MaxHealth(), damage.SourceCustom{})
+	}
 	p.Session.Close()
 	utils.OnlineCount.Store(utils.OnlineCount.Load() - 1)
 	for _, s := range session.All() {

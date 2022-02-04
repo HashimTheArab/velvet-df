@@ -43,7 +43,7 @@ var Games = map[string]*Game{
 	Build: {
 		Name:        "Build",
 		DisplayName: "§l§6Build",
-		WorldName:   utils.Config.World.Diamond,
+		WorldName:   utils.Config.World.Build,
 		FormData: form{
 			ResourcePath: "textures/items/diamond_pickaxe",
 		},
@@ -70,6 +70,10 @@ func FromWorld(name string) *Game {
 	switch name {
 	case utils.Config.World.NoDebuff:
 		return Get(NoDebuff)
+	case utils.Config.World.Diamond:
+		return Get(Diamond)
+	case utils.Config.World.Build:
+		return Get(Build)
 	}
 	return nil
 }

@@ -28,16 +28,10 @@
     "railed", "quickied", "clowned", "given an L", "harassed", "exterminated", "taken to the nose surgeon",
     "sent on a flight", "banished", "caught simping", "eradicated", "erased", "folded", "pepega'd", "sent to the moon",
     "touched", "blown into outer space", "whipped", "rocked", "terrorized", "tortured", "beaten up", "bullied", "punished",
-    "abused", "infected", "murdered", "thrown around"
+    "abused", "infected", "murdered", "thrown around", "coughed on", "made bitchless"
   ]
   Default = "§3%v was %v by %v §7[§c%v§7]"
   NoDebuff = "§3%v §7[%v Pots] §3was %v by %v §7[§c%v§7] [%v Pots]"
-
-[AntiCheat]
-  KickScreen = "§7[§4AntiCheat§7] §cYou were kicked for §e%v (%v)"
-  KickBroadcast = "§7[§4AntiCheat§7] §c%v §7was kicked for §c%v (%v)"
-  BanScreen = ""
-  BanBroadcast = ""
 
 [Kick]
   Screen = "§cYou were kicked by §e%v\n§cReason: §a%v"
@@ -45,12 +39,12 @@
 
 [Ban]
   Screen = "§cYou were banned by §b%v\n§cReason: §b%v\n§cLength: §b%v"
-  LoginScreen = "§cYou are banned."
-  Broadcast = "§c%v §bwas banned by §a%v\n§cLength: §b%v\n§cReason: §b%v"
+  LoginScreen = "§6You are banned!\n§6Reason: §b%v\n§6Expires: §b"
+  Broadcast = "§b%v §6was banned by §b%v\n§6Length: §b%v\n§6Reason: §b%v"
   CanOnlyBanOne = "§cYou can't ban more than one player at a time."
   PlayerAlreadyBanned = "§cThat player is already banned."
   BlacklistScreen = "§4You are blacklisted."
-  BlacklistBroadcast = "§4%v §3was blacklisted by §a%v\n§cReason: §3%v"
+  BlacklistBroadcast = "§b%v §6was blacklisted by §a%v\n§6Reason: §b%v"
   PlayerUnbanned = "§d%v §ehas been unbanned."
   PlayerNotBanned = "§cThat player is not banned."
   Info = "§d--Ban Info--\n§dPlayer: §e%v\n§dStaff: §e%v\n§dReason: §e%v\n§dExpires: §e%v"
@@ -76,3 +70,4 @@
   CannotPunishPlayer = "§cYou cannot punish that player."
   InvalidPunishmentTime = "§cInvalid time."
   ServerNotAvailable = "§cThat server is not available."
+  SpecifyReason = "§cYou need to specify a reason."

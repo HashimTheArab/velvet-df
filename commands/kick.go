@@ -27,4 +27,4 @@ func (t Kick) Run(source cmd.Source, output *cmd.Output) {
 	output.Printf(PlayerNotOnline)
 }
 
-func (Kick) Allow(s cmd.Source) bool { return checkStaff(s) }
+func (Kick) Allow(s cmd.Source) bool { return checkStaff(s) || checkConsole(s) }

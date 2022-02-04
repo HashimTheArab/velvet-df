@@ -102,4 +102,4 @@ func (d *statusData) format() {
 	}
 }
 
-func (Status) Allow(s cmd.Source) bool { return checkStaff(s) }
+func (Status) Allow(s cmd.Source) bool { return checkStaff(s) || checkConsole(s) }

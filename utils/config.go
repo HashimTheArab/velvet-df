@@ -32,10 +32,6 @@ type config struct {
 	Chat struct {
 		Basic string
 	}
-	AntiCheat struct {
-		KickScreen, KickBroadcast string
-		BanScreen, BanBroadcast   string
-	}
 	Kick struct {
 		Screen, Broadcast string
 	}
@@ -52,6 +48,7 @@ type config struct {
 		BuildTooManyPlayers, SelfNotInBuilderMode, SelfInBuilderMode, SetPlayerInBuilderMode,
 		SetBuilderModeByPlayer, UnsetBuilderModeByPlayer, UnsetPlayerInBuilderMode string
 		ModeUnavailable, CannotPunishPlayer, InvalidPunishmentTime, ServerNotAvailable string
+		SpecifyReason                                                                  string
 	}
 	DeathMessage struct {
 		List              []string

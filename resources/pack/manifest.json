@@ -1,0 +1,17 @@
+{
+    "header": {
+        "version": [1, 0, 0],
+		"name": "Pack",
+        "description": "Pack",
+        "uuid": "e229310f-b60b-4e03-b727-652c3753cff4"
+    },
+    "modules": [
+        {
+			"version": [1, 0, 0],
+			"type": "resources",
+            "description": "Pack",
+            "uuid": "e229310f-b60b-4e03-b727-652c3753cff4"
+        }
+    ],
+	"format_version": 1
+}
