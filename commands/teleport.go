@@ -37,7 +37,7 @@ func (t TeleportToTarget) Run(source cmd.Source, output *cmd.Output) {
 	p := source.(*player.Player)
 	tg, ok := t.Player[0].(*player.Player)
 	if !ok {
-		output.Error(PlayerNotOnline)
+		output.Error(PlayerNotFound)
 		return
 	}
 	if p.World() != tg.World() {
@@ -49,7 +49,7 @@ func (t TeleportToTarget) Run(source cmd.Source, output *cmd.Output) {
 
 func (t TeleportTargetToTarget) Run(source cmd.Source, output *cmd.Output) {
 	p, ok := source.(*player.Player)
-	if len(t.Players) > 1 && ok && !session.Get(p).HasFlag(session.Admin) {
+	if len(t.Players) > 1 && ok && !session.Get(p).HasFlag(session.FlagAdmin) {
 		output.Error(NoPermission)
 		return
 	}
@@ -59,7 +59,7 @@ func (t TeleportTargetToTarget) Run(source cmd.Source, output *cmd.Output) {
 	}
 	tg, ok := t.Targets[0].(*player.Player)
 	if !ok {
-		output.Error(PlayerNotOnline)
+		output.Error(PlayerNotFound)
 		return
 	}
 	output.Printf(utils.Config.Message.TeleportTargetToTarget, teleportTargets(t.Players, tg.Position(), tg.World()), tg.Name())
@@ -68,7 +68,7 @@ func (t TeleportTargetToTarget) Run(source cmd.Source, output *cmd.Output) {
 func (t TeleportTargetToPos) Run(source cmd.Source, output *cmd.Output) {
 	p, ok := source.(*player.Player)
 	s := session.Get(p)
-	if len(t.Players) > 1 && ok && !s.HasFlag(session.Admin) {
+	if len(t.Players) > 1 && ok && !s.HasFlag(session.FlagAdmin) {
 		output.Error(NoPermission)
 		return
 	}

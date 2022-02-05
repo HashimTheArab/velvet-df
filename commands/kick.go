@@ -16,7 +16,7 @@ type Kick struct {
 
 func (t Kick) Run(source cmd.Source, output *cmd.Output) {
 	if target, ok := t.Player[0].(*player.Player); ok {
-		if target.Name() == source.Name() || (source.Name() != utils.Config.Staff.Owner.Name && session.Get(target).HasFlag(session.Staff)) {
+		if target.Name() == source.Name() || (source.Name() != utils.Config.Staff.Owner.Name && session.Get(target).HasFlag(session.FlagStaff)) {
 			output.Print(utils.Config.Message.CannotPunishPlayer)
 			return
 		}
@@ -24,7 +24,7 @@ func (t Kick) Run(source cmd.Source, output *cmd.Output) {
 		_, _ = fmt.Fprintf(chat.Global, utils.Config.Kick.Broadcast+"\n", source.Name(), target.Name(), string(t.Reason))
 		return
 	}
-	output.Printf(PlayerNotOnline)
+	output.Printf(PlayerNotFound)
 }
 
 func (Kick) Allow(s cmd.Source) bool { return checkStaff(s) || checkConsole(s) }

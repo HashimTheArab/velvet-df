@@ -45,20 +45,22 @@ func (p *PlayerHandler) HandlePunchAir(_ *event.Context) {
 
 func (p *PlayerHandler) HandleBlockBreak(ctx *event.Context, pos cube.Pos, _ *[]item.Stack) {
 	if p.Session.Player.World().Name() == utils.Config.World.Build {
-		if _, ok := utils.PlacedBuildBlocks[pos]; ok {
-			delete(utils.PlacedBuildBlocks, pos)
+		utils.BuildBlocks.Mutex.Lock()
+		defer utils.BuildBlocks.Mutex.Unlock()
+		if _, ok := utils.BuildBlocks.Blocks[pos]; ok {
+			delete(utils.BuildBlocks.Blocks, pos)
 			return
 		}
 	}
-	if !p.Session.HasFlag(session.Building) {
+	if !p.Session.HasFlag(session.FlagBuilding) {
 		ctx.Cancel()
 	}
 }
 
-func (p *PlayerHandler) HandleBlockPlace(ctx *event.Context, pos cube.Pos, block world.Block) {
+func (p *PlayerHandler) HandleBlockPlace(ctx *event.Context, pos cube.Pos, _ world.Block) {
 	if p.Session.Player.World().Name() == utils.Config.World.Build {
-		utils.PlacedBuildBlocks[pos] = block
-	} else if !p.Session.HasFlag(session.Building) {
+		utils.BuildBlocks.Set(pos)
+	} else if !p.Session.HasFlag(session.FlagBuilding) {
 		ctx.Cancel()
 	}
 }
@@ -124,12 +126,17 @@ func (p *PlayerHandler) HandleDeath(source damage.Source) {
 	if source, ok := source.(damage.SourceEntityAttack); ok {
 		if g == nil {
 			_, _ = fmt.Fprintf(chat.Global, "§c%v was killed by %v", p.Session.Player.Name(), source.Attacker.Name())
+			if pl, ok := source.Attacker.(*player.Player); ok {
+				g.Kit(pl)
+			}
 		} else {
 			g.BroadcastDeathMessage(p.Session.Player, source.Attacker.(*player.Player))
 		}
 	} else {
 		_, _ = fmt.Fprintf(chat.Global, "§c%v died.", p.Session.Player.Name())
 	}
+	p.Session.Player.Armour().Clear()
+	p.Session.Player.Inventory().Clear()
 	p.Session.UpdateScoreTag(true, true)
 	if p.Session.Combat().Tagged() {
 		p.Session.Combat().Tag(false)
@@ -148,16 +155,16 @@ func (p *PlayerHandler) HandleCommandExecution(ctx *event.Context, command cmd.C
 }
 
 func (p *PlayerHandler) HandleChat(ctx *event.Context, message *string) {
-	if p.Session.HasFlag(session.ChatCD) {
+	if p.Session.HasFlag(session.FlagHasChatCD) {
 		p.Session.Cooldowns().Handle(ctx, p.Session.Player, session.CooldownTypeChat)
-	}
-	if !ctx.Cancelled() {
-		_, _ = fmt.Fprintf(chat.Global, utils.Config.Chat.Basic+"\n", p.Session.Player.Name(), *message)
 	}
 	ctx.Cancel()
 	if strings.Contains(strings.ToLower(*message), "kkkkkkkk") {
 		p.Session.Player.Message("no spam pls")
 		return
+	}
+	if !ctx.Cancelled() {
+		_, _ = fmt.Fprintf(chat.Global, utils.Config.Chat.Basic+"\n", p.Session.Player.Name(), *message)
 	}
 }
 

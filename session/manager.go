@@ -5,7 +5,6 @@ import (
 )
 
 var sessions = map[string]*Session{}
-var staff = map[string]*Session{}
 
 func New(name string) *Session {
 	session := &Session{}
@@ -18,14 +17,13 @@ func Get(p *player.Player) *Session {
 }
 
 func (s *Session) Close() {
-	s.OnQuit()
+	s.Save()
+	if s.HasFlag(FlagStaff) {
+		delete(sessions, s.Player.Name())
+	}
 	delete(sessions, s.Player.Name())
 }
 
 func All() map[string]*Session {
 	return sessions
-}
-
-func AllStaff() map[string]*Session { // todo: why did i add this again?
-	return staff
 }

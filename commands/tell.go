@@ -11,13 +11,13 @@ type Tell struct {
 }
 
 func (t Tell) Run(source cmd.Source, output *cmd.Output) {
-	if len(t.Target) > 0 {
+	if len(t.Target) > 1 {
 		output.Print("§cYou can only message one player at a time.")
 		return
 	}
 	p, ok := t.Target[0].(*player.Player)
 	if !ok {
-		output.Printf(PlayerNotOnline, t.Target[0].Name())
+		output.Printf(PlayerNotFound)
 		return
 	}
 	p.Messagef("§7[§d%v §7-> §dYou§7]: §e%v", source.Name(), string(t.Message))

@@ -40,7 +40,7 @@ func (t Ban) Run(source cmd.Source, output *cmd.Output) {
 
 	if target, ok := t.Player[0].(*player.Player); ok {
 		if _, ok := source.(*console.CommandSender); !ok {
-			if target.Name() == source.Name() || (source.Name() != utils.Config.Staff.Owner.Name && session.Get(target).HasFlag(session.Staff)) {
+			if target.Name() == source.Name() || (source.Name() != utils.Config.Staff.Owner.Name && session.Get(target).HasFlag(session.FlagStaff)) {
 				output.Print(utils.Config.Message.CannotPunishPlayer)
 				return
 			}

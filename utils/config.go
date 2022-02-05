@@ -48,7 +48,7 @@ type config struct {
 		BuildTooManyPlayers, SelfNotInBuilderMode, SelfInBuilderMode, SetPlayerInBuilderMode,
 		SetBuilderModeByPlayer, UnsetBuilderModeByPlayer, UnsetPlayerInBuilderMode string
 		ModeUnavailable, CannotPunishPlayer, InvalidPunishmentTime, ServerNotAvailable string
-		SpecifyReason                                                                  string
+		SpecifyReason, Alias, NeverJoined                                              string
 	}
 	DeathMessage struct {
 		List              []string

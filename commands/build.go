@@ -20,27 +20,27 @@ func (t Build) Run(source cmd.Source, output *cmd.Output) {
 		}
 		if target, ok := t.Player[0].(*player.Player); ok {
 			s := session.Get(target)
-			if s.HasFlag(session.Building) {
+			if s.HasFlag(session.FlagBuilding) {
 				target.Messagef(utils.Config.Message.UnsetBuilderModeByPlayer, p.Name())
 				output.Printf(utils.Config.Message.UnsetPlayerInBuilderMode, target.Name())
 			} else {
 				target.Messagef(utils.Config.Message.SetBuilderModeByPlayer, p.Name())
 				output.Printf(utils.Config.Message.SetPlayerInBuilderMode, target.Name())
 			}
-			s.SetFlag(session.Building)
+			s.SetFlag(session.FlagBuilding)
 			return
 		}
-		output.Errorf(PlayerNotOnline, t.Player[0].Name())
+		output.Errorf(PlayerNotFound)
 		return
 	}
 	if ok {
 		s := session.Get(p)
-		if s.HasFlag(session.Building) {
+		if s.HasFlag(session.FlagBuilding) {
 			output.Print(utils.Config.Message.SelfNotInBuilderMode)
 		} else {
 			output.Print(utils.Config.Message.SelfInBuilderMode)
 		}
-		s.SetFlag(session.Building)
+		s.SetFlag(session.FlagBuilding)
 	}
 }
 

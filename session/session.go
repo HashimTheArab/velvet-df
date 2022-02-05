@@ -5,6 +5,7 @@ import (
 	"github.com/df-mc/dragonfly/server/player/scoreboard"
 	"github.com/df-mc/dragonfly/server/player/title"
 	"github.com/df-mc/dragonfly/server/session"
+	"github.com/df-mc/dragonfly/server/world"
 	"strconv"
 	"strings"
 	"sync"
@@ -59,14 +60,18 @@ func (s *Session) OnJoin() {
 					s.Player.Message("§aYou are no longer in combat!")
 				}
 			}
+			if s.HasFlag(FlagVanished) {
+				for _, e := range s.Player.World().Entities() {
+					if pl, ok := e.(*player.Player); ok {
+						if !Get(pl).HasFlag(FlagStaff) {
+							pl.HideEntity(s.Player)
+						}
+					}
+				}
+			}
 			time.Sleep(time.Second)
 		}
 	}()
-}
-
-// OnQuit is called when the session leaves.
-func (s *Session) OnQuit() {
-	s.Save()
 }
 
 // SetFlag sets a bit flag for the session, or unsets if the session already has the flag. A list of flags can be seen in flags.go
@@ -101,13 +106,13 @@ func (s *Session) IsStaff(CheckAdmin bool) bool {
 // DefaultFlags will set the default bitflags for the session.
 func (s *Session) DefaultFlags() {
 	if s.IsStaff(true) || s.IsStaff(false) {
-		s.SetFlag(Staff)
+		s.SetFlag(FlagStaff)
 		staff[s.Player.Name()] = s
 		if s.IsStaff(true) {
-			s.SetFlag(Admin)
+			s.SetFlag(FlagAdmin)
 		}
 	} else {
-		s.SetFlag(ChatCD)
+		s.SetFlag(FlagHasChatCD)
 	}
 }
 
@@ -175,6 +180,34 @@ func (s *Session) UpdateScoreboard(online, kd bool) {
 		_ = s.scoreboard.Set(2, "§6K: §b"+strconv.Itoa(int(s.Stats.Kills.Load()))+" §6D: §b"+strconv.Itoa(int(s.Stats.Deaths.Load())))
 	}
 	s.Player.SendScoreboard(s.scoreboard)
+}
+
+func (s *Session) Vanish() {
+	p := s.Player
+	s.SetFlag(FlagVanished)
+	if s.HasFlag(FlagVanished) {
+		p.SetNameTag(vanishPrefix + p.NameTag())
+		p.Message("§aYou are now vanished!")
+		AllStaff().Whisper("%v vanished", p.Name())
+		p.SetGameMode(vanish{})
+		for _, e := range p.World().Entities() {
+			if pl, ok := e.(*player.Player); ok {
+				if !Get(pl).HasFlag(FlagStaff) {
+					pl.HideEntity(p)
+				}
+			}
+		}
+	} else {
+		p.SetNameTag(strings.TrimPrefix(p.NameTag(), vanishPrefix))
+		p.Message("§cYou are no longer vanished.")
+		AllStaff().Whisper("%v unvanished", p.Name())
+		p.SetGameMode(world.GameModeSurvival)
+		for _, e := range p.World().Entities() {
+			if pl, ok := e.(*player.Player); ok {
+				pl.ShowEntity(p)
+			}
+		}
+	}
 }
 
 func (s *Session) AddKills(kills uint32) {

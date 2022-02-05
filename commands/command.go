@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	NoPermission    = "§4You do not have permission to use this command!"
-	PlayerNotOnline = "§c%v is not online."
+	NoPermission   = "§4You do not have permission to use this command!"
+	PlayerNotFound = "§cPlayer not found."
 )
 
 func init() {
@@ -33,6 +33,9 @@ func init() {
 		cmd.New("tell", "§bSend a message to another player", []string{"w"}, Tell{}),
 		cmd.New("time", "§bChange the time of the world you're in", nil, TimeSet{}),
 		cmd.New("status", "§cView the status of the server", nil, Status{}),
+		cmd.New("clearbuild", "§aClear the build ffa arena", []string{"cb"}, ClearBuild{}),
+		cmd.New("vanish", "§bHide yourself from other players", []string{"v"}, Vanish{}),
+		cmd.New("alias", "§aView the alts of a player", nil, Alias{}, AliasOffline{}),
 		//cmd.StartNew("kill", "§bKill another player", nil, Kill{}),
 	} {
 		cmd.Register(command)
@@ -40,11 +43,11 @@ func init() {
 }
 
 func checkStaff(s cmd.Source) bool {
-	return checkPerms(s, session.Staff)
+	return checkPerms(s, session.FlagStaff)
 }
 
 func checkAdmin(s cmd.Source) bool {
-	return checkPerms(s, session.Admin)
+	return checkPerms(s, session.FlagAdmin)
 }
 
 func checkConsole(s cmd.Source) bool {

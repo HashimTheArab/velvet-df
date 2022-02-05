@@ -7,7 +7,7 @@ import (
 
 type Clear struct {
 	Targets []cmd.Target `optional:"" name:"victim"`
-	Armour  bool         `optional:"" name:"armor""`
+	Armour  bool         `optional:"" name:"armor"`
 }
 
 func (t Clear) Run(source cmd.Source, output *cmd.Output) {

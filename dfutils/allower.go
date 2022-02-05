@@ -33,18 +33,24 @@ var titleIds = map[string]protocol.DeviceOS{
 
 func (allower) Allow(_ net.Addr, d login.IdentityData, c login.ClientData) (string, bool) {
 	db.Register(d.XUID, d.DisplayName, c.DeviceID)
-	ban := db.GetBan(d.DisplayName)
-	if ban != nil {
+	if ban := db.GetBan(d.DisplayName); ban != nil {
 		if ban.XUID == "" {
 			ban.Update(d.XUID)
 		}
 		if ban.Blacklist() {
 			log.Infof("%v tried joining but is BLACKLISTED.", d.DisplayName)
 			return fmt.Sprintf(utils.Config.Ban.BlacklistScreen, ""), false
-		} else {
-			log.Infof("%v tried joining but is banned.", d.DisplayName)
-			return fmt.Sprintf(utils.Config.Ban.LoginScreen, ""), false
 		}
+		log.Infof("%v tried joining but is banned.", d.DisplayName)
+		return fmt.Sprintf(utils.Config.Ban.LoginScreen, ban.Reason, ban.FormattedExpiration()), false
+	}
+	if ban := db.DeviceBan(c.DeviceID); ban != nil {
+		if ban.Blacklist() {
+			log.Infof("%v tried joining but is BLACKLISTED on another account.", d.DisplayName)
+			return fmt.Sprintf(utils.Config.Ban.BlacklistScreen, ""), false
+		}
+		log.Infof("%v tried joining but is banned on another account.", d.DisplayName)
+		return fmt.Sprintf(utils.Config.Ban.LoginScreen, ban.Reason, ban.FormattedExpiration()), false
 	}
 	if _, ok := titleIds[d.TitleID]; !ok {
 		webhook.Send(utils.Config.Discord.Webhook.TitleIDLogger, webhook.Message{

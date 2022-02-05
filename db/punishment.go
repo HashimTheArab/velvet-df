@@ -11,8 +11,7 @@ import (
 // GetBan returns the ban of a player, or nil if the player is not banned.
 func GetBan(id string) *BanEntry {
 	var entry BanEntry
-	err := db.QueryRowx("SELECT * FROM Bans WHERE XUID=? OR IGN=?", id, id).StructScan(&entry)
-	if err != nil {
+	if err := db.QueryRowx("SELECT * FROM Bans WHERE XUID=? OR IGN=?", id, id).StructScan(&entry); err != nil {
 		return nil
 	}
 	if !entry.Blacklist() && time.Now().Unix() >= entry.Expires {
@@ -75,10 +74,26 @@ func UnbanPlayer(id string) {
 	_, _ = db.Exec("DELETE FROM Bans WHERE XUID=? OR IGN=?", id, id)
 }
 
-// IsDeviceBanned returns whether a player has a banned account on their current device id.
-func IsDeviceBanned(deviceID string) bool { // todo
-	var xuid string
-	var ign string
-	_ = db.QueryRowx("SELECT XUID, IGN FROM Players WHERE DeviceID=?", deviceID).Scan(&xuid, &ign)
-	return true
+// DeviceBan will return an existing ban with the given device id or nil.
+func DeviceBan(deviceID string) *BanEntry {
+	if rows, err := db.Query("SELECT XUID, IGN FROM Players WHERE DeviceID=?", deviceID); err == nil { // get all players with that device id
+		var xuids, names []string
+		for rows.Next() {
+			var xuid, name string
+			if err := rows.Scan(&xuid, &name); err == nil {
+				xuids, names = append(xuids, xuid), append(names, name)
+			}
+		}
+		var entry *BanEntry
+		if err := db.QueryRowx("SELECT * FROM Bans WHERE XUID IN (?) OR IGN IN (?)", xuids, names).StructScan(entry); err != nil { // get the first ban with any of the names or xuids
+			return nil
+		}
+		if !entry.Blacklist() && time.Now().Unix() >= entry.Expires { // unban if the ban has expired
+			UnbanPlayer(entry.IGN)
+			UnbanPlayer(entry.XUID)
+			return nil
+		}
+		return entry
+	}
+	return nil
 }

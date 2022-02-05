@@ -71,3 +71,5 @@
   InvalidPunishmentTime = "§cInvalid time."
   ServerNotAvailable = "§cThat server is not available."
   SpecifyReason = "§cYou need to specify a reason."
+  Alias = "§d--Alias Info--\n§dPlayer: §e%v\n§dDevice ID: §e%v\n§dAccounts: §e%v\n"
+  NeverJoined = "§c%v has never joined the server."

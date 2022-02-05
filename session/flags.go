@@ -1,10 +1,10 @@
 package session
 
 const (
-	Admin uint32 = iota
-	Builder
-	Staff
-	Vanished
-	Building
-	ChatCD
+	FlagAdmin uint32 = iota
+	FlagBuilder
+	FlagStaff
+	FlagVanished
+	FlagBuilding
+	FlagHasChatCD
 )
