@@ -13,9 +13,9 @@
 
 [Server]
   AuthEnabled = true
-  JoinMessage = "§a[+] %v"
+  JoinMessage = "§l§a✔ %v"
   Name = "Velvet"
-  QuitMessage = "§4[-] %v"
+  QuitMessage = "§l§4✘ %v"
   ShutdownMessage = "Server closed."
 
 [World]

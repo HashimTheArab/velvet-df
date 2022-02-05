@@ -43,14 +43,22 @@ func (p *PlayerHandler) HandlePunchAir(_ *event.Context) {
 	p.Session.Click()
 }
 
-func (p *PlayerHandler) HandleBlockBreak(ctx *event.Context, _ cube.Pos, _ *[]item.Stack) {
+func (p *PlayerHandler) HandleBlockBreak(ctx *event.Context, pos cube.Pos, _ *[]item.Stack) {
+	if p.Session.Player.World().Name() == utils.Config.World.Build {
+		if _, ok := utils.PlacedBuildBlocks[pos]; ok {
+			delete(utils.PlacedBuildBlocks, pos)
+			return
+		}
+	}
 	if !p.Session.HasFlag(session.Building) {
 		ctx.Cancel()
 	}
 }
 
-func (p *PlayerHandler) HandleBlockPlace(ctx *event.Context, _ cube.Pos, _ world.Block) {
-	if !p.Session.HasFlag(session.Building) {
+func (p *PlayerHandler) HandleBlockPlace(ctx *event.Context, pos cube.Pos, block world.Block) {
+	if p.Session.Player.World().Name() == utils.Config.World.Build {
+		utils.PlacedBuildBlocks[pos] = block
+	} else if !p.Session.HasFlag(session.Building) {
 		ctx.Cancel()
 	}
 }

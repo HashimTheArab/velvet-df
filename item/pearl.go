@@ -14,7 +14,7 @@ type Pearl struct{}
 // Use ...
 func (v Pearl) Use(w *world.World, user item.User, ctx *item.UseContext) bool {
 	yaw, pitch := user.Rotation()
-	e := ve.NewEnderPearl(entity.EyePosition(user), entity.DirectionVector(user).Mul(1.9), yaw, pitch, user)
+	e := ve.NewEnderPearl(entity.EyePosition(user), entity.DirectionVector(user).Mul(2.3), yaw, pitch, user)
 	w.AddEntity(e)
 
 	w.PlaySound(user.Position(), sound.ItemThrow{})

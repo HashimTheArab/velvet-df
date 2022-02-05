@@ -38,7 +38,7 @@ func NewEnderPearl(pos, vel mgl64.Vec3, yaw, pitch float64, owner world.Entity) 
 		yaw:   yaw,
 		pitch: pitch,
 		c: &entity.ProjectileComputer{MovementComputer: &entity.MovementComputer{
-			Gravity:           0.095, // 0.085
+			Gravity:           0.09, // 0.085
 			Drag:              0.01,
 			DragBeforeGravity: true,
 		}},

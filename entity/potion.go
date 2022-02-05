@@ -44,7 +44,7 @@ func NewSplashPotion(pos, vel mgl64.Vec3, yaw, pitch float64, t potion.Potion, o
 		t: t,
 		c: &entity.ProjectileComputer{MovementComputer: &entity.MovementComputer{
 			Gravity:           0.06,
-			Drag:              0.003, //0.0025
+			Drag:              0.01, //0.0025
 			DragBeforeGravity: true,
 		}},
 	}
