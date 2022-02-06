@@ -49,6 +49,10 @@
   PlayerNotBanned = "§cThat player is not banned."
   Info = "§d--Ban Info--\n§dPlayer: §e%v\n§dStaff: §e%v\n§dReason: §e%v\n§dExpires: §e%v"
 
+[Rank]
+  Set = "§dThe rank for §e%v §dhas been set to §e%v."
+  Removed = "§dThe rank for §e%v §dhas been removed."
+
 [Message]
   WelcomeToSpawn = "§dWelcome to Spawn!"
   DefaultSpawnSet = "§dThis worlds default spawn has been set to §e%v"

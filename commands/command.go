@@ -36,6 +36,7 @@ func init() {
 		cmd.New("clearbuild", "§aClear the build ffa arena", []string{"cb"}, ClearBuild{}),
 		cmd.New("vanish", "§bHide yourself from other players", []string{"v"}, Vanish{}),
 		cmd.New("alias", "§aView the alts of a player", nil, Alias{}, AliasOffline{}),
+		cmd.New("rank", "§cManage ranks", nil, SetRank{}, RemoveRank{}, SetRankOffline{}, RemoveRankOffline{}),
 		//cmd.StartNew("kill", "§bKill another player", nil, Kill{}),
 	} {
 		cmd.Register(command)

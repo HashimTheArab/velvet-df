@@ -8,7 +8,7 @@ require (
 	github.com/emperials/df-worldmanager v0.0.0-20210810032941-29fc34569fb4
 	github.com/go-gl/mathgl v1.0.0
 	github.com/jmoiron/sqlx v1.3.4
-	github.com/mattn/go-sqlite3 v1.14.6
+	github.com/mattn/go-sqlite3 v1.14.11
 	github.com/pelletier/go-toml v1.9.3
 	github.com/sandertv/gophertunnel v1.18.2
 	github.com/sirupsen/logrus v1.8.1

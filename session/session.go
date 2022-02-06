@@ -6,12 +6,14 @@ import (
 	"github.com/df-mc/dragonfly/server/player/title"
 	"github.com/df-mc/dragonfly/server/session"
 	"github.com/df-mc/dragonfly/server/world"
+	"go.uber.org/atomic"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 	"velvet/db"
 	"velvet/game"
+	"velvet/perm"
 	"velvet/utils"
 )
 
@@ -20,7 +22,7 @@ type Session struct {
 	Flags          uint32
 	clicks         []time.Time
 	NetworkSession *session.Session
-	Stats          db.PlayerStats
+	Stats          *db.PlayerStats
 	scoreTag       struct {
 		healthText string
 		cpsText    string
@@ -31,6 +33,8 @@ type Session struct {
 	cooldowns   cooldownMap
 	cooldownsMu sync.Mutex
 	scoreboard  *scoreboard.Scoreboard
+	rank        *perm.Rank
+	perms       atomic.Uint32
 }
 
 // OnJoin is called when the player joins.
@@ -39,6 +43,7 @@ func (s *Session) OnJoin() {
 		CooldownTypePearl: {length: time.Second * 15},
 		CooldownTypeChat:  {length: time.Second * 3},
 	}
+	s.Stats = &db.PlayerStats{}
 	s.NetworkSession = player_session(s.Player)
 	s.Load()
 	s.DefaultFlags()
@@ -112,7 +117,9 @@ func (s *Session) DefaultFlags() {
 			s.SetFlag(FlagAdmin)
 		}
 	} else {
-		s.SetFlag(FlagHasChatCD)
+		if s.Rank() == nil {
+			s.SetFlag(FlagHasChatCD)
+		}
 	}
 }
 
@@ -162,12 +169,14 @@ func (s *Session) UpdateScoreTag(health, cps bool) {
 
 func (s *Session) SaveScoreboard() {
 	s.scoreboard = scoreboard.New("§l§6Velvet")
+	s.Stats.Mutex.Lock()
 	lines := []string{
 		"§6Name: §b" + s.Player.Name(),
 		"§6Online: §b" + utils.OnlineCount.String(),
-		"§6K: §b" + strconv.Itoa(int(s.Stats.Kills.Load())) + " §6D: §b" + strconv.Itoa(int(s.Stats.Deaths.Load())),
+		"§6K: §b" + strconv.Itoa(int(s.Stats.Kills)) + " §6D: §b" + strconv.Itoa(int(s.Stats.Deaths)),
 		"§bvelvetpractice.tk",
 	}
+	s.Stats.Mutex.Unlock()
 	_, _ = s.scoreboard.WriteString(strings.Join(lines, "\n"))
 	s.Player.SendScoreboard(s.scoreboard)
 }
@@ -177,7 +186,7 @@ func (s *Session) UpdateScoreboard(online, kd bool) {
 		_ = s.scoreboard.Set(1, "§6Online: §b"+utils.OnlineCount.String())
 	}
 	if kd {
-		_ = s.scoreboard.Set(2, "§6K: §b"+strconv.Itoa(int(s.Stats.Kills.Load()))+" §6D: §b"+strconv.Itoa(int(s.Stats.Deaths.Load())))
+		_ = s.scoreboard.Set(2, "§6K: §b"+strconv.Itoa(int(s.Stats.Kills))+" §6D: §b"+strconv.Itoa(int(s.Stats.Deaths)))
 	}
 	s.Player.SendScoreboard(s.scoreboard)
 }
@@ -211,21 +220,21 @@ func (s *Session) Vanish() {
 }
 
 func (s *Session) AddKills(kills uint32) {
-	s.Stats.Kills.Add(kills)
+	s.Stats.AddKills(kills)
 	s.UpdateScoreboard(false, true)
 }
 
 func (s *Session) AddDeaths(deaths uint32) {
-	s.Stats.Deaths.Add(deaths)
+	s.Stats.AddDeaths(deaths)
 	s.UpdateScoreboard(false, true)
 }
 
 // KDR returns the formatted kill-death ratio of the player.
 func (s *Session) KDR() string {
-	if s.Stats.Deaths.Load() == 0 || s.Stats.Kills.Load() == 0 {
+	if s.Stats.GetDeaths() == 0 || s.Stats.GetKills() == 0 {
 		return "0.0"
 	}
-	return strconv.FormatFloat(float64(s.Stats.Kills.Load()/s.Stats.Deaths.Load()), 'f', 2, 32)
+	return strconv.FormatFloat(float64(s.Stats.GetKills()/s.Stats.GetDeaths()), 'f', 2, 32)
 }
 
 func (s *Session) Combat() *combat {
@@ -238,4 +247,35 @@ func (s *Session) Cooldowns() *cooldownMap {
 	s.cooldownsMu.Lock()
 	defer s.cooldownsMu.Unlock()
 	return &s.cooldowns
+}
+
+// Rank will return the rank of the session.
+func (s *Session) Rank() *perm.Rank {
+	return s.rank
+}
+
+// SetRank will set the rank for a session and return the new rank.
+func (s *Session) SetRank(rank *perm.Rank) *perm.Rank {
+	s.rank = rank
+	return s.rank
+}
+
+// SetPerms will set the permissions of a session.
+func (s *Session) SetPerms(perms uint32) {
+	s.perms.Store(perms)
+}
+
+// SetPerm will set or remove a specific permission for a session
+func (s *Session) SetPerm(perm perm.Permission) {
+	s.perms.Store(s.Perms() ^ 1<<perm)
+}
+
+// HasPerm will return if a session has a permission.
+func (s *Session) HasPerm(perm perm.Permission) bool {
+	return s.Perms()&(1<<perm) > 0
+}
+
+// Perms will return the permissions of a session.
+func (s *Session) Perms() uint32 {
+	return s.perms.Load()
 }

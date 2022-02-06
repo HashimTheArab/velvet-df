@@ -12,3 +12,5 @@ func (vanish) HasCollision() bool       { return false }
 func (vanish) AllowsFlying() bool       { return true }
 func (vanish) AllowsInteraction() bool  { return true }
 func (vanish) Visible() bool            { return true }
+
+// todo: fix vanish!

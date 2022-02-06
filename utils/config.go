@@ -41,6 +41,9 @@ type config struct {
 		CanOnlyBanOne, PlayerAlreadyBanned, PlayerNotBanned, PlayerUnbanned string
 		Info                                                                string
 	}
+	Rank struct {
+		Removed, Set string
+	}
 	Message struct {
 		WelcomeToSpawn, DefaultSpawnSet                                                      string
 		GameModeSetByPlayer, GameModeSetBySelf, GameModeSetOther                             string

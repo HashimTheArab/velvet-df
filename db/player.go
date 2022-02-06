@@ -1,8 +1,19 @@
 package db
 
+import (
+	"velvet/perm"
+)
+
 // Register registers a player into the database.
 func Register(xuid, ign, deviceId string) {
-	_, _ = db.Exec("REPLACE INTO Players (XUID, IGN, DeviceID) VALUES (?, ?, ?)", xuid, ign, deviceId)
+	_, _ = db.Exec("INSERT INTO Players(XUID, IGN, DeviceID) VALUES (?, ?, ?) ON CONFLICT DO UPDATE SET IGN=?, DeviceID=?", xuid, ign, deviceId, ign, deviceId)
+}
+
+// Registered returns whether a player is registered
+func Registered(id string) bool {
+	var r bool
+	_ = db.QueryRowx("SELECT EXISTS(SELECT IGN FROM Players WHERE IGN=? OR XUID=?)", id, id).Scan(&r)
+	return r
 }
 
 // GetDeviceID will return the device id for the given ign or an empty string if that player has never joined before.
@@ -45,4 +56,16 @@ func GetAlias(ign string) (deviceID string, names []string) {
 		}
 	}
 	return
+}
+
+// SetRank will set the rank for a player.
+func SetRank(id, rank string) {
+	_, _ = db.Exec("UPDATE Players set PlayerRank=? WHERE IGN=? OR XUID=?", rank, id, id)
+}
+
+// GetRank will return the rank of a player or nil.
+func GetRank(id string) *perm.Rank {
+	var rank string
+	_ = db.QueryRowx("SELECT PlayerRank FROM Players WHERE IGN=? OR XUID=?", rank, id, id).Scan(&rank)
+	return perm.GetRank(rank)
 }

@@ -132,6 +132,10 @@ func (p *PlayerHandler) HandleDeath(source damage.Source) {
 		} else {
 			g.BroadcastDeathMessage(p.Session.Player, source.Attacker.(*player.Player))
 		}
+		if pl, ok := source.Attacker.(*player.Player); ok {
+			session.Get(pl).AddKills(1)
+		}
+		p.Session.AddDeaths(1)
 	} else {
 		_, _ = fmt.Fprintf(chat.Global, "§c%v died.", p.Session.Player.Name())
 	}
@@ -158,13 +162,19 @@ func (p *PlayerHandler) HandleChat(ctx *event.Context, message *string) {
 	if p.Session.HasFlag(session.FlagHasChatCD) {
 		p.Session.Cooldowns().Handle(ctx, p.Session.Player, session.CooldownTypeChat)
 	}
-	ctx.Cancel()
 	if strings.Contains(strings.ToLower(*message), "kkkkkkkk") {
 		p.Session.Player.Message("no spam pls")
+		ctx.Cancel()
 		return
 	}
 	if !ctx.Cancelled() {
-		_, _ = fmt.Fprintf(chat.Global, utils.Config.Chat.Basic+"\n", p.Session.Player.Name(), *message)
+		ctx.Cancel()
+		rank := p.Session.Rank()
+		if rank != nil {
+			_, _ = fmt.Fprintf(chat.Global, rank.ChatFormat+"\n", p.Session.Player.Name(), *message)
+		} else {
+			_, _ = fmt.Fprintf(chat.Global, utils.Config.Chat.Basic+"\n", p.Session.Player.Name(), *message)
+		}
 	}
 }
 
