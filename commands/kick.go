@@ -20,7 +20,7 @@ func (t Kick) Run(source cmd.Source, output *cmd.Output) {
 			output.Print(utils.Config.Message.CannotPunishPlayer)
 			return
 		}
-		target.Disconnect(fmt.Sprintf(utils.Config.Kick.Screen, target.Name(), string(t.Reason)))
+		target.Disconnect(fmt.Sprintf(utils.Config.Kick.Screen, source.Name(), string(t.Reason)))
 		_, _ = fmt.Fprintf(chat.Global, utils.Config.Kick.Broadcast+"\n", source.Name(), target.Name(), string(t.Reason))
 		return
 	}

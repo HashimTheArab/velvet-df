@@ -16,7 +16,6 @@ import (
 
 var log = logrus.New()
 
-// todo: handle disconnect packets
 func StartServer() {
 	log.Formatter = &logrus.TextFormatter{ForceColors: true}
 	log.Level = logrus.DebugLevel

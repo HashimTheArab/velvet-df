@@ -6,14 +6,14 @@ import (
 )
 
 type buildBlocks struct {
-	Blocks map[cube.Pos]uint8
+	Blocks map[cube.Pos]struct{}
 	Mutex  sync.Mutex
 }
 
-var BuildBlocks = buildBlocks{Blocks: map[cube.Pos]uint8{}}
+var BuildBlocks = buildBlocks{Blocks: map[cube.Pos]struct{}{}}
 
 func (b *buildBlocks) Set(pos cube.Pos) {
 	b.Mutex.Lock()
 	defer b.Mutex.Unlock()
-	b.Blocks[pos] = 0
+	b.Blocks[pos] = struct{}{}
 }

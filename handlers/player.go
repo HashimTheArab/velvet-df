@@ -126,10 +126,10 @@ func (p *PlayerHandler) HandleDeath(source damage.Source) {
 	if source, ok := source.(damage.SourceEntityAttack); ok {
 		if g == nil {
 			_, _ = fmt.Fprintf(chat.Global, "§c%v was killed by %v", p.Session.Player.Name(), source.Attacker.Name())
+		} else {
 			if pl, ok := source.Attacker.(*player.Player); ok {
 				g.Kit(pl)
 			}
-		} else {
 			g.BroadcastDeathMessage(p.Session.Player, source.Attacker.(*player.Player))
 		}
 		if pl, ok := source.Attacker.(*player.Player); ok {

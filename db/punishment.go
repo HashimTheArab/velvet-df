@@ -33,7 +33,7 @@ func BanPlayer(target, mod, reason string, length time.Duration) {
 		if blacklist {
 			p.Disconnect(utils.Config.Ban.BlacklistScreen)
 		} else {
-			p.Disconnect(fmt.Sprintf(utils.Config.Ban.Screen, reason, lengthString))
+			p.Disconnect(fmt.Sprintf(utils.Config.Ban.Screen, mod, reason, lengthString))
 		}
 	}
 	if blacklist {
