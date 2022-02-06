@@ -73,6 +73,7 @@ func (s *Session) OnJoin() {
 						}
 					}
 				}
+				s.Player.SendTitle(title.New("").WithActionText("§aYou are vanished."))
 			}
 			time.Sleep(time.Second)
 		}
