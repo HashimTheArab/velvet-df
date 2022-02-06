@@ -12,38 +12,14 @@ const (
 )
 
 var ranks = map[string]*Rank{
-	Owner: {
-		Color:      "§4",
-		ChatFormat: "§o§4Owner §r§a%v: §f%v",
-	},
-	Admin: {
-		Color:      "§d",
-		ChatFormat: "Admin §r§a%v: §f%v",
-	},
-	Mod: {
-		Color:      "§2",
-		ChatFormat: "Mod §r§a%v: §f%v",
-	},
-	Famous: {
-		Color:      "§c",
-		ChatFormat: "Famous §r§a%v: §f%v",
-	},
-	YouTube: {
-		Color:      "§b",
-		ChatFormat: "Media §r§a%v: §f%v",
-	},
-	Hyperedge: {
-		Color:      "§6",
-		ChatFormat: "Hyperedge §r§a%v: §f%v",
-	},
-	Ravager: {
-		Color:      "§4",
-		ChatFormat: "Ravager §r§a%v: §f%v",
-	},
-	VIP: {
-		Color:      "§9",
-		ChatFormat: "VIP §r§a%v: §f%v",
-	},
+	Owner:     {Color: "§4"},
+	Admin:     {Color: "§d"},
+	Mod:       {Color: "§2"},
+	Famous:    {Color: "§c"},
+	YouTube:   {Color: "§b"},
+	Hyperedge: {Color: "§6"},
+	Ravager:   {Color: "§4"},
+	VIP:       {Color: "§9"},
 }
 
 func init() {

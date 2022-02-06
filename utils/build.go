@@ -10,7 +10,7 @@ type buildBlocks struct {
 	Mutex  sync.Mutex
 }
 
-var BuildBlocks buildBlocks
+var BuildBlocks = buildBlocks{Blocks: map[cube.Pos]uint8{}}
 
 func (b *buildBlocks) Set(pos cube.Pos) {
 	b.Mutex.Lock()
