@@ -35,6 +35,7 @@ func diamond_kit(p *player.Player) {
 	_ = p.Inventory().SetItem(0, item.NewStack(item.Sword{Tier: item.ToolTierDiamond}, 1).WithCustomName(name))
 	_ = p.Inventory().SetItem(1, item.NewStack(item.Bow{}, 1))
 	_ = p.Inventory().SetItem(9, item.NewStack(item.Arrow{}, 1))
+	_ = p.Inventory().SetItem(8, item.NewStack(item.Spyglass{}, 1))
 	p.Armour().SetBoots(item.NewStack(item.Boots{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name))
 	p.Armour().SetLeggings(item.NewStack(item.Leggings{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name))
 	p.Armour().SetChestplate(item.NewStack(item.Chestplate{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name))

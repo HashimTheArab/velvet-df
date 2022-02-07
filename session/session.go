@@ -94,12 +94,18 @@ func (s *Session) HasFlag(flag uint32) bool {
 func (s *Session) IsStaff(CheckAdmin bool) bool {
 	xuid := s.Player.XUID()
 	if CheckAdmin {
+		if s.Rank().Name == perm.Admin {
+			return true
+		}
 		for _, v := range utils.Config.Staff.Admins {
 			if v == xuid {
 				return true
 			}
 		}
 		return false
+	}
+	if s.Rank().Name == perm.Mod {
+		return true
 	}
 	for _, v := range utils.Config.Staff.Mods {
 		if v == xuid {
