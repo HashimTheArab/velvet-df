@@ -1,7 +1,7 @@
 package session
 
 const (
-	FlagAdmin uint32 = iota
+	FlagAdmin uint32 = 1 << iota
 	FlagBuilder
 	FlagStaff
 	FlagVanished

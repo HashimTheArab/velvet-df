@@ -82,12 +82,12 @@ func (s *Session) OnJoin() {
 
 // SetFlag sets a bit flag for the session, or unsets if the session already has the flag. A list of flags can be seen in flags.go
 func (s *Session) SetFlag(flag uint32) {
-	s.Flags ^= 1 << flag
+	s.Flags ^= flag
 }
 
 // HasFlag returns whether the session has a specified bitflag.
 func (s *Session) HasFlag(flag uint32) bool {
-	return s.Flags&(1<<flag) > 0
+	return s.Flags&flag > 0
 }
 
 // IsStaff returns whether a player is a mod. If CheckAdmin is true it will return if a player is an admin.
@@ -274,12 +274,12 @@ func (s *Session) SetPerms(perms uint32) {
 
 // SetPerm will set or remove a specific permission for a session
 func (s *Session) SetPerm(perm perm.Permission) {
-	s.perms.Store(s.Perms() ^ 1<<perm)
+	s.perms.Store(s.Perms() ^ uint32(perm))
 }
 
 // HasPerm will return if a session has a permission.
 func (s *Session) HasPerm(perm perm.Permission) bool {
-	return s.Perms()&(1<<perm) > 0
+	return s.Perms()&uint32(perm) > 0
 }
 
 // Perms will return the permissions of a session.
