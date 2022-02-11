@@ -28,11 +28,11 @@ func (s *Session) Close() {
 	delete(sessions, s.Player.Name())
 }
 
-func (s *Session) CloseWithoutSaving() {
+func (s *Session) CloseWithoutSaving(name string) {
 	if s.HasFlag(FlagStaff) {
-		delete(sessions, s.Player.Name())
+		delete(sessions, name)
 	}
-	delete(sessions, s.Player.Name())
+	delete(sessions, name)
 }
 
 func All() map[string]*Session {

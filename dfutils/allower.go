@@ -70,7 +70,7 @@ func (allower) Allow(_ net.Addr, d login.IdentityData, c login.ClientData) (stri
 	time.AfterFunc(time.Second*35, func() {
 		if _, ok := utils.Srv.PlayerByName(name); !ok {
 			if s := session.FromName(name); s != nil {
-				s.CloseWithoutSaving()
+				s.CloseWithoutSaving(name)
 			}
 		}
 	})
