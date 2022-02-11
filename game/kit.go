@@ -18,7 +18,7 @@ func nodebuff_kit(p *player.Player) {
 	name := "§l§9Nodebuff"
 
 	unbreaking := enchantment.Unbreaking{}.WithLevel(3)
-	_ = p.Inventory().SetItem(0, item.NewStack(item.Sword{Tier: item.ToolTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking, enchantment.Sharpness{}))
+	_ = p.Inventory().SetItem(0, item.NewStack(item.Sword{Tier: item.ToolTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking, enchantment.Sharpness{}.WithLevel(1)))
 	_ = p.Inventory().SetItem(1, item.NewStack(item.EnderPearl{}, 16))
 	_, _ = p.Inventory().AddItem(item.NewStack(item.SplashPotion{Type: potion.StrongHealing()}, 34))
 	p.Armour().SetBoots(item.NewStack(item.Boots{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking))
@@ -48,8 +48,8 @@ func build_kit(p *player.Player) {
 	name := "§l§6Build"
 	unbreaking := enchantment.Unbreaking{}.WithLevel(3)
 
-	_ = p.Inventory().SetItem(0, item.NewStack(item.Sword{Tier: item.ToolTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking, enchantment.Sharpness{}))
-	_ = p.Inventory().SetItem(1, item.NewStack(item.Bow{}, 1).WithCustomName(name).WithEnchantments(unbreaking, enchantment.Unbreaking{}))
+	_ = p.Inventory().SetItem(0, item.NewStack(item.Sword{Tier: item.ToolTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking, enchantment.Sharpness{}.WithLevel(1)))
+	_ = p.Inventory().SetItem(1, item.NewStack(item.Bow{}, 1).WithCustomName(name).WithEnchantments(unbreaking))
 	_ = p.Inventory().SetItem(2, item.NewStack(item.GoldenApple{}, 10))
 	_ = p.Inventory().SetItem(3, item.NewStack(item.EnderPearl{}, 10))
 	_ = p.Inventory().SetItem(4, item.NewStack(item.Axe{Tier: item.ToolTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking, enchantment.Efficiency{}.WithLevel(3)))
