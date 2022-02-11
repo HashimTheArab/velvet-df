@@ -47,6 +47,11 @@ func StartServer() {
 					fmt.Println("Error loading world " + f.Name() + ": " + err.Error())
 				} else {
 					fmt.Println("Loaded world: " + f.Name())
+					if f.Name() == utils.Config.World.Build {
+						if w, ok := utils.WorldMG.World(f.Name()); ok {
+							w.ReadOnly()
+						}
+					}
 				}
 			}
 		}
