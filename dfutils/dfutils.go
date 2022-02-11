@@ -18,7 +18,7 @@ var log = logrus.New()
 
 func StartServer() {
 	log.Formatter = &logrus.TextFormatter{ForceColors: true}
-	log.Level = logrus.DebugLevel
+	log.Level = logrus.InfoLevel
 
 	chat.Global.Subscribe(chat.StdoutSubscriber{})
 
