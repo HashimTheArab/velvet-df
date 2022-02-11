@@ -94,7 +94,7 @@ func (s *Session) HasFlag(flag uint32) bool {
 func (s *Session) IsStaff(CheckAdmin bool) bool {
 	xuid := s.Player.XUID()
 	if CheckAdmin {
-		if s.Rank().Name == perm.Admin {
+		if s.Rank() != nil && s.Rank().Name == perm.Admin {
 			return true
 		}
 		for _, v := range utils.Config.Staff.Admins {
