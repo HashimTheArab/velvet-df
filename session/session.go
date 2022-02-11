@@ -104,7 +104,7 @@ func (s *Session) IsStaff(CheckAdmin bool) bool {
 		}
 		return false
 	}
-	if s.Rank().Name == perm.Mod {
+	if s.Rank() != nil && s.Rank().Name == perm.Mod {
 		return true
 	}
 	for _, v := range utils.Config.Staff.Mods {
