@@ -21,5 +21,5 @@ func (t Tell) Run(source cmd.Source, output *cmd.Output) {
 		return
 	}
 	p.Messagef("§7[§d%v §7-> §dYou§7]: §e%v", source.Name(), string(t.Message))
-	output.Printf("§7[§dYou §7-> §d%v§7]: §e%v", string(t.Message))
+	output.Printf("§7[§dYou §7-> §d%v§7]: §e%v", p.Name(), string(t.Message))
 }
