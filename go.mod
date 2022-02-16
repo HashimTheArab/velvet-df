@@ -3,13 +3,13 @@ module velvet
 go 1.17
 
 require (
-	github.com/df-mc/dragonfly v0.5.2-0.20220206230232-5ac88dcd93d5
+	github.com/df-mc/dragonfly v0.5.2-0.20220213131513-a0bb8dde26bc
 	github.com/emperials/df-worldmanager v0.0.0-20210810032941-29fc34569fb4
 	github.com/go-gl/mathgl v1.0.0
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/mattn/go-sqlite3 v1.14.11
 	github.com/pelletier/go-toml v1.9.3
-	github.com/sandertv/gophertunnel v1.18.2
+	github.com/sandertv/gophertunnel v1.19.0
 	github.com/sirupsen/logrus v1.8.1
 	go.uber.org/atomic v1.9.0
 )
@@ -22,13 +22,14 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.3 // indirect
 	github.com/google/uuid v1.3.0 // indirect
+	github.com/justtaldevelops/oomph v0.0.0-20220216040759-297a91935ac3 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/muhammadmuzzammil1998/jsonc v0.0.0-20201229145248-615b0916ca38 // indirect
 	github.com/sandertv/go-raknet v1.10.2 // indirect
 	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97 // indirect
 	golang.org/x/image v0.0.0-20210628002857-a66eb6448b8d // indirect
 	golang.org/x/net v0.0.0-20210716203947-853a461950ff // indirect
-	golang.org/x/oauth2 v0.0.0-20210628180205-a41e5a781914 // indirect
+	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
 	golang.org/x/sys v0.0.0-20210615035016-665e8c7367d1 // indirect
 	golang.org/x/text v0.3.6 // indirect
 	google.golang.org/appengine v1.6.7 // indirect

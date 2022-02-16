@@ -6,8 +6,10 @@ import (
 	"github.com/df-mc/dragonfly/server/player/chat"
 	"github.com/df-mc/dragonfly/server/world"
 	worldmanager "github.com/emperials/df-worldmanager"
+	"github.com/justtaldevelops/oomph"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
+	"strings"
 	"time"
 	"velvet/handlers"
 	"velvet/session"
@@ -62,6 +64,23 @@ func StartServer() {
 	w.SetRandomTickSpeed(0)
 	w.SetTime(0)
 	w.StopTime()
+
+	// AntiCheat start
+	remoteAddr := "127.0.0.1:" + strings.Split(config.Network.Address, ":")[1]
+	go func() {
+		o := oomph.New()
+		if err := o.Start(remoteAddr, "127.0.0.1:19132"); err != nil {
+			panic(err)
+		}
+		for {
+			p, err := o.Accept()
+			if err != nil {
+				panic(err)
+			}
+			p.Handle(handlers.NewACHandler(p))
+		}
+	}()
+	// AntiCheat end
 
 	for {
 		p, err := srv.Accept()

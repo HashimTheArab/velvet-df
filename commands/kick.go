@@ -21,7 +21,7 @@ func (t Kick) Run(source cmd.Source, output *cmd.Output) {
 			return
 		}
 		target.Disconnect(fmt.Sprintf(utils.Config.Kick.Screen, source.Name(), string(t.Reason)))
-		_, _ = fmt.Fprintf(chat.Global, utils.Config.Kick.Broadcast+"\n", source.Name(), target.Name(), string(t.Reason))
+		_, _ = fmt.Fprintf(chat.Global, utils.Config.Kick.Broadcast+"\n", target.Name(), source.Name(), string(t.Reason))
 		return
 	}
 	output.Printf(PlayerNotFound)

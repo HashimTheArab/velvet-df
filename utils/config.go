@@ -19,9 +19,10 @@ type config struct {
 	}
 	Discord struct {
 		Webhook struct {
-			TitleIDLogger string
-			BanLogger     string
-			UnbanLogger   string
+			TitleIDLogger   string
+			BanLogger       string
+			UnbanLogger     string
+			AntiCheatLogger string
 		}
 	}
 	World struct {

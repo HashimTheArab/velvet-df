@@ -13,6 +13,7 @@
     TitleIDLogger = "https://discord.com/api/webhooks/905288033887215616/IQjFfmIrJsqDWidxcS64gy5yCNL_wh2o1OxGJaBFQ3CfGXShWiNpWM6-YMNB4si8AdiC"
     BanLogger = "https://discord.com/api/webhooks/752996288659849247/-aeMwvNXSIQ8bJxvISqU-TT3sI5HfHnu2LM3dB8Jh-RHHXz0pQxqVZLBK8uQKMHAaKU5"
     UnbanLogger = "https://discord.com/api/webhooks/812151702706585623/62QXehZ58BXZ4_XtuYozXGrxcY1lMRwe5OccoiXtdIeJHG8lm4ctCv47zRM1iqjucIhW"
+    AntiCheatLogger = "https://discord.com/api/webhooks/767569955348283402/RAVAUKOYGEokCM4Tw_OynnyXPIIhVeDaChbLo5X8_3dYHX9mwrljo9oZdQIEfff6V8ts"
 
 # World names
 [World]
@@ -35,7 +36,7 @@
 
 [Kick]
   Screen = "§cYou were kicked by §e%v\n§cReason: §a%v"
-  Broadcast = "§a%v §chas kicked §e%v §cfor §a%v."
+  Broadcast = "§b%v §6was kicked by §b%v\n§6Reason: §b%v"
 
 [Ban]
   Screen = "§cYou were banned by §b%v\n§cReason: §b%v\n§cLength: §b%v"
