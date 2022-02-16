@@ -12,7 +12,7 @@
   Folder = "resources_"
 
 [Server]
-  AuthEnabled = true
+  AuthEnabled = false
   JoinMessage = "§l§a✔ %v"
   Name = "Velvet"
   QuitMessage = "§l§4✘ %v"
