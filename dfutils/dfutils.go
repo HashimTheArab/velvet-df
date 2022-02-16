@@ -69,7 +69,7 @@ func StartServer() {
 	go func() {
 		ac := oomph.New()
 		go func() {
-			if err := ac.Start(strings.Split(config.Network.Address, ":")[1], ":19132"); err != nil {
+			if err := ac.Start(":"+strings.Split(config.Network.Address, ":")[1], ":19132"); err != nil {
 				panic(err)
 			}
 		}()
