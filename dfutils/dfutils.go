@@ -68,12 +68,14 @@ func StartServer() {
 	// AntiCheat start
 	remoteAddr := "127.0.0.1:" + strings.Split(config.Network.Address, ":")[1]
 	go func() {
-		o := oomph.New()
-		if err := o.Start(remoteAddr, "127.0.0.1:19132"); err != nil {
-			panic(err)
-		}
+		ac := oomph.New()
+		go func() {
+			if err := ac.Start(remoteAddr, "127.0.0.1:19132"); err != nil {
+				panic(err)
+			}
+		}()
 		for {
-			p, err := o.Accept()
+			p, err := ac.Accept()
 			if err != nil {
 				panic(err)
 			}
