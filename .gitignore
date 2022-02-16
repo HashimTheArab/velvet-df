@@ -1,3 +1,4 @@
 velvet.exe
 .idea
-./worlds/
+worlds
+errors
