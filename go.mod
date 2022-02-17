@@ -22,7 +22,7 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.3 // indirect
 	github.com/google/uuid v1.3.0 // indirect
-	github.com/justtaldevelops/oomph v0.0.0-20220216050218-128cafbfe6d4 // indirect
+	github.com/justtaldevelops/oomph v0.0.0-20220217191229-2ef2d4bf5a59 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/muhammadmuzzammil1998/jsonc v0.0.0-20201229145248-615b0916ca38 // indirect
 	github.com/sandertv/go-raknet v1.10.2 // indirect

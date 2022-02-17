@@ -11,7 +11,6 @@ import (
 	"time"
 	"velvet/db"
 	"velvet/discord/webhook"
-	"velvet/session"
 	vu "velvet/utils"
 )
 
@@ -56,7 +55,8 @@ func (a AntiCheatHandler) HandlePunishment(ctx *event.Context, c check.Check) {
 func (a AntiCheatHandler) HandleFlag(ctx *event.Context, c check.Check, params map[string]interface{}) {
 	ctx.Cancel()
 	name, sub := c.Name()
-	session.AllStaff().Messagef("§7[§cOomph§7] §b%v §6flagged §b%v (%v) §6(§cx%v§6) %v", a.p.Name(), name, sub, c.Violations(), utils.PrettyParams(params))
+	_, _ = fmt.Fprintf(chat.Global, "§7[§cOomph§7] §b%v §6flagged §b%v (%v) §6(§cx%v§6) %v", a.p.Name(), name, sub, c.Violations(), utils.PrettyParams(params))
+	//session.AllStaff().Messagef("§7[§cOomph§7] §b%v §6flagged §b%v (%v) §6(§cx%v§6) %v", a.p.Name(), name, sub, c.Violations(), utils.PrettyParams(params))
 }
 
 func (a AntiCheatHandler) HandleDebug(ctx *event.Context, _ check.Check, _ map[string]interface{}) {
