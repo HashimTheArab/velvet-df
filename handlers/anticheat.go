@@ -26,31 +26,31 @@ func NewACHandler(p *player.Player) *AntiCheatHandler {
 
 func (a AntiCheatHandler) HandlePunishment(ctx *event.Context, c check.Check) {
 	ctx.Cancel()
-	punishmentString := "Kick"
-	name, sub := c.Name()
-	reason := name + "(" + sub + ")"
-	if c.Punishment() == punishment.Ban() {
-		if pl, ok := vu.Srv.PlayerByName(a.p.Name()); ok {
+	if pl, ok := vu.Srv.PlayerByName(a.p.Name()); ok {
+		if session.Get(pl).Staff() {
+			return
+		}
+		punishmentString := "Kick"
+		name, sub := c.Name()
+		reason := name + "(" + sub + ")"
+		if c.Punishment() == punishment.Ban() {
 			pl.Disconnect(fmt.Sprintf("§6[§bOomph§6] Caught yo ass lackin!\n§6Reason: §b%v", reason))
 			db.BanPlayer(pl.Name(), session.Get(pl).XUID, "Oomph", reason, time.Hour*24*14)
-		}
-	} else if c.Punishment() == punishment.Kick() {
-		if pl, ok := vu.Srv.PlayerByName(a.p.Name()); ok {
+		} else if c.Punishment() == punishment.Kick() {
 			_, _ = fmt.Fprintf(chat.Global, vu.Config.Kick.Broadcast, pl.Name(), "Oomph", reason)
 			pl.Disconnect(fmt.Sprintf("§6[§bOomph§6] Caught yo ass lackin!\n§6Reason: §b%v", reason))
+		} else {
+			return
 		}
-	} else {
-		return
+		webhook.Send(vu.Config.Discord.Webhook.AntiCheatLogger, webhook.Message{
+			Embeds: []webhook.Embed{{
+				Title:       "**Oomph Punishment**",
+				Description: fmt.Sprintf("Player: %v\nPunishment: %v\nCheck:%v\nViolations: %v", a.p.Name(), punishmentString, reason, c.Violations()),
+				Color:       0xFF009F,
+				Footer:      webhook.Footer{Text: time.Now().Format("01/02/06 @ 03:04:05 PM")},
+			}},
+		})
 	}
-
-	webhook.Send(vu.Config.Discord.Webhook.AntiCheatLogger, webhook.Message{
-		Embeds: []webhook.Embed{{
-			Title:       "**Oomph Punishment**",
-			Description: fmt.Sprintf("Player: %v\nPunishment: %v\nCheck: %v (%v)\nViolations: %v", a.p.Name(), punishmentString, name, sub, c.Violations()),
-			Color:       0xFF009F,
-			Footer:      webhook.Footer{Text: time.Now().Format("01/02/06 @ 03:04:05 PM")},
-		}},
-	})
 }
 
 func (a AntiCheatHandler) HandleFlag(ctx *event.Context, c check.Check, params map[string]interface{}) {

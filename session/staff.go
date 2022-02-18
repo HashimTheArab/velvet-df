@@ -21,13 +21,13 @@ func (StaffMap) Message(a ...interface{}) {
 // Messagef will send a formatted message to all online staff.
 func (StaffMap) Messagef(f string, a ...interface{}) {
 	for _, v := range staff {
-		v.Player.Messagef(f, a)
+		v.Player.Messagef(f, a...)
 	}
 }
 
 // Whisper will send a gray italic message to all online staff.
 func (StaffMap) Whisper(f string, a ...interface{}) {
 	for _, v := range staff {
-		v.Player.Messagef("§7§o["+f+"]", a)
+		v.Player.Messagef("§7§o["+f+"]", a...)
 	}
 }

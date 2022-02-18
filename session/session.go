@@ -91,19 +91,26 @@ func (s *Session) HasFlag(flag uint32) bool {
 	return s.Flags&flag > 0
 }
 
-// IsStaff returns whether a player is a mod. If CheckAdmin is true it will return if a player is an admin.
-func (s *Session) IsStaff(CheckAdmin bool) bool {
-	if CheckAdmin {
-		if s.Rank() != nil && s.Rank().Name == perm.Admin {
+// Staff returns true if a player is a staff member.
+func (s *Session) Staff() bool {
+	if s.Rank() != nil && s.Rank().Name == perm.Admin || s.Rank().Name == perm.Mod {
+		return true
+	}
+	for _, v := range utils.Config.Staff.Admins {
+		if v == s.XUID {
 			return true
 		}
-		for _, v := range utils.Config.Staff.Admins {
-			if v == s.XUID {
-				return true
-			}
-		}
-		return false
 	}
+	for _, v := range utils.Config.Staff.Mods {
+		if v == s.XUID {
+			return true
+		}
+	}
+	return false
+}
+
+// Mod returns true if a player is a moderator.
+func (s *Session) Mod() bool {
 	if s.Rank() != nil && s.Rank().Name == perm.Mod {
 		return true
 	}
@@ -115,12 +122,25 @@ func (s *Session) IsStaff(CheckAdmin bool) bool {
 	return false
 }
 
+// Admin returns true if the player is an Admin.
+func (s *Session) Admin() bool {
+	if s.Rank() != nil && s.Rank().Name == perm.Admin {
+		return true
+	}
+	for _, v := range utils.Config.Staff.Admins {
+		if v == s.XUID {
+			return true
+		}
+	}
+	return false
+}
+
 // DefaultFlags will set the default bitflags for the session.
 func (s *Session) DefaultFlags() {
-	if s.IsStaff(true) || s.IsStaff(false) {
+	if s.Staff() {
 		s.SetFlag(FlagStaff)
 		staff[s.Player.Name()] = s
-		if s.IsStaff(true) {
+		if s.Admin() {
 			s.SetFlag(FlagAdmin)
 		}
 	} else {

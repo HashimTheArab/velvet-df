@@ -7,6 +7,7 @@ require (
 	github.com/emperials/df-worldmanager v0.0.0-20210810032941-29fc34569fb4
 	github.com/go-gl/mathgl v1.0.0
 	github.com/jmoiron/sqlx v1.3.4
+	github.com/justtaldevelops/oomph v0.0.0-20220218192349-8673e5c280de
 	github.com/mattn/go-sqlite3 v1.14.11
 	github.com/pelletier/go-toml v1.9.3
 	github.com/sandertv/gophertunnel v1.19.0
@@ -22,7 +23,6 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.3 // indirect
 	github.com/google/uuid v1.3.0 // indirect
-	github.com/justtaldevelops/oomph v0.0.0-20220218192349-8673e5c280de // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/muhammadmuzzammil1998/jsonc v0.0.0-20201229145248-615b0916ca38 // indirect
 	github.com/sandertv/go-raknet v1.10.2 // indirect
