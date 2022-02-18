@@ -62,17 +62,3 @@ func (a AntiCheatHandler) HandleFlag(ctx *event.Context, c check.Check, params m
 func (a AntiCheatHandler) HandleDebug(ctx *event.Context, _ check.Check, _ map[string]interface{}) {
 	ctx.Cancel()
 }
-
-//func (p *Player) Flag(check check.Check, params map[string]interface{}) {
-//	name, variant := check.Name()
-//	check.TrackViolation()
-//	ctx := event.C()
-//	if now, max := check.Violations(), check.MaxViolations(); now > float64(max) {
-//		p.handler().HandlePunishment(ctx, check, params)
-//		ctx.Continue(func() {
-//			p.log.Infof("%s was caught lackin for %s%s! %s", p.Name(), name, variant, utils.PrettyParams(params))
-//			p.Disconnect(fmt.Sprintf("§7[§6oomph§7] §bCaught lackin!\n§6Reason: §b%s%s", name, variant))
-//			//p.BeginCrashRoutine()
-//		})
-//		return
-//	}
