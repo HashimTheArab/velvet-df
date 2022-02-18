@@ -5,6 +5,7 @@ import (
 	"github.com/df-mc/dragonfly/server/player/chat"
 	"time"
 	"velvet/discord/webhook"
+	"velvet/session"
 	"velvet/utils"
 )
 
@@ -29,7 +30,7 @@ func BanPlayer(target, mod, reason string, length time.Duration) {
 	var xuid string
 	if ok {
 		target = p.Name()
-		xuid = p.XUID()
+		xuid = session.Get(p).XUID
 		if blacklist {
 			p.Disconnect(utils.Config.Ban.BlacklistScreen)
 		} else {

@@ -44,7 +44,7 @@ func (t SetRank) Run(_ cmd.Source, output *cmd.Output) {
 			return
 		}
 		s.SetRank(rank)
-		db.SetRank(p.XUID(), rank.Name)
+		db.SetRank(s.XUID, rank.Name)
 		output.Printf(utils.Config.Rank.Set, p.Name(), rank.Name)
 	}
 }
@@ -61,7 +61,7 @@ func (t RemoveRank) Run(_ cmd.Source, output *cmd.Output) {
 			return
 		}
 		s.SetRank(nil)
-		db.SetRank(p.XUID(), "")
+		db.SetRank(s.XUID, "")
 		output.Printf(utils.Config.Rank.Removed, p.Name())
 	}
 }

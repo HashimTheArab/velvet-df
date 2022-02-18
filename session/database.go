@@ -7,7 +7,7 @@ import (
 
 // Load loads the sessions' data from the database.
 func (s *Session) Load() {
-	data := db.GetData(s.Player.XUID())
+	data := db.GetData(s.XUID)
 	s.Stats.Kills = data.Kills
 	s.Stats.Deaths = data.Deaths
 	s.SetRank(perm.GetRank(data.Rank))
@@ -23,5 +23,5 @@ func (s *Session) Save() {
 	if s.Rank() != nil {
 		data.Rank = s.Rank().Name
 	}
-	db.SaveData(s.Player.XUID(), &data)
+	db.SaveData(s.XUID, &data)
 }

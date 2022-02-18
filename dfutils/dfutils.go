@@ -67,7 +67,10 @@ func StartServer() {
 
 	// AntiCheat start
 	go func() {
+		conn := oomphConnectionHandler{}
 		ac := oomph.New()
+		ac.SetAllower(conn)
+		ac.SetCloser(conn)
 		go func() {
 			if err := ac.Start(":"+strings.Split(config.Network.Address, ":")[1], ":19132"); err != nil {
 				panic(err)

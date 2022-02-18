@@ -35,6 +35,7 @@ type Session struct {
 	scoreboard  *scoreboard.Scoreboard
 	rank        *perm.Rank
 	perms       atomic.Uint32
+	XUID        string
 }
 
 // OnJoin is called when the player joins.
@@ -92,13 +93,12 @@ func (s *Session) HasFlag(flag uint32) bool {
 
 // IsStaff returns whether a player is a mod. If CheckAdmin is true it will return if a player is an admin.
 func (s *Session) IsStaff(CheckAdmin bool) bool {
-	xuid := s.Player.XUID()
 	if CheckAdmin {
 		if s.Rank() != nil && s.Rank().Name == perm.Admin {
 			return true
 		}
 		for _, v := range utils.Config.Staff.Admins {
-			if v == xuid {
+			if v == s.XUID {
 				return true
 			}
 		}
@@ -108,7 +108,7 @@ func (s *Session) IsStaff(CheckAdmin bool) bool {
 		return true
 	}
 	for _, v := range utils.Config.Staff.Mods {
-		if v == xuid {
+		if v == s.XUID {
 			return true
 		}
 	}

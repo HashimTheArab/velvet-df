@@ -2,11 +2,11 @@ package dfutils
 
 import (
 	"fmt"
+	"github.com/sandertv/gophertunnel/minecraft"
 	"github.com/sandertv/gophertunnel/minecraft/protocol"
 	"github.com/sandertv/gophertunnel/minecraft/protocol/login"
 	"net"
 	"strconv"
-	"time"
 	"velvet/db"
 	"velvet/discord/webhook"
 	"velvet/session"
@@ -14,6 +14,7 @@ import (
 )
 
 type allower struct{}
+type oomphConnectionHandler struct{}
 
 var titleIds = map[string]protocol.DeviceOS{
 	"1739947436": protocol.DeviceAndroid,
@@ -65,14 +66,17 @@ func (allower) Allow(_ net.Addr, d login.IdentityData, c login.ClientData) (stri
 			}},
 		})
 	}
-	session.New(d.DisplayName)
-	name := d.DisplayName
-	time.AfterFunc(time.Second*35, func() {
-		if _, ok := utils.Srv.PlayerByName(name); !ok {
-			if s := session.FromName(name); s != nil {
-				s.CloseWithoutSaving(name)
-			}
-		}
-	})
 	return "", true
+}
+
+func (oomphConnectionHandler) Allow(_ net.Addr, d login.IdentityData, _ login.ClientData) (string, bool) {
+	s := session.New(d.DisplayName)
+	s.XUID = d.XUID
+	return "", true
+}
+
+func (oomphConnectionHandler) Close(conn *minecraft.Conn) {
+	if s := session.FromName(conn.IdentityData().DisplayName); s != nil {
+		s.CloseWithoutSaving(conn.IdentityData().DisplayName)
+	}
 }

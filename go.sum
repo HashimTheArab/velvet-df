@@ -145,6 +145,12 @@ github.com/justtaldevelops/oomph v0.0.0-20220216050218-128cafbfe6d4 h1:8pZJXq+mB
 github.com/justtaldevelops/oomph v0.0.0-20220216050218-128cafbfe6d4/go.mod h1:6lidmygrH0F5HcXK7Em/JdVN5fIYmjuV4eQ4lI6C42Q=
 github.com/justtaldevelops/oomph v0.0.0-20220217191229-2ef2d4bf5a59 h1:oBO7UJmcqsvOo/KRtRGpqzhZhrG0dDQI9yBetTVNai8=
 github.com/justtaldevelops/oomph v0.0.0-20220217191229-2ef2d4bf5a59/go.mod h1:6lidmygrH0F5HcXK7Em/JdVN5fIYmjuV4eQ4lI6C42Q=
+github.com/justtaldevelops/oomph v0.0.0-20220217193644-29b74f5451f3 h1:nzxqB9vjlxQmhZQmteYt+EA8ASj0FfWeFSK+fxBs17k=
+github.com/justtaldevelops/oomph v0.0.0-20220217193644-29b74f5451f3/go.mod h1:6lidmygrH0F5HcXK7Em/JdVN5fIYmjuV4eQ4lI6C42Q=
+github.com/justtaldevelops/oomph v0.0.0-20220218001659-7beb90ddce37 h1:SBbHjLDaBmz8+NmDegK/KpFke8Hau7zqD3fI1hc84rI=
+github.com/justtaldevelops/oomph v0.0.0-20220218001659-7beb90ddce37/go.mod h1:6lidmygrH0F5HcXK7Em/JdVN5fIYmjuV4eQ4lI6C42Q=
+github.com/justtaldevelops/oomph v0.0.0-20220218011036-03ef63f2a922 h1:P/zp8e5NX+WX0RL1A7jGNWRhkXXLdFwvrkUvpmJ2H0w=
+github.com/justtaldevelops/oomph v0.0.0-20220218011036-03ef63f2a922/go.mod h1:6lidmygrH0F5HcXK7Em/JdVN5fIYmjuV4eQ4lI6C42Q=
 github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=
 github.com/klauspost/compress v1.11.1/go.mod h1:aoV0uJVorq1K+umq18yTdKaF57EivdYsUV+/s2qKfXs=
 github.com/klauspost/compress v1.13.6 h1:P76CopJELS0TiO2mebmnzgWaajssP/EszplttgQxcgc=
