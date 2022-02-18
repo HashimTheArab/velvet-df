@@ -5,7 +5,6 @@ import (
 	"github.com/df-mc/dragonfly/server/player/chat"
 	"time"
 	"velvet/discord/webhook"
-	"velvet/session"
 	"velvet/utils"
 )
 
@@ -23,14 +22,12 @@ func GetBan(id string) *BanEntry {
 }
 
 // BanPlayer bans a player and handles everything such as the disconnection, broadcasting, and webhook.
-func BanPlayer(target, mod, reason string, length time.Duration) {
+func BanPlayer(target, targetXUID, mod, reason string, length time.Duration) {
 	p, ok := utils.Srv.PlayerByName(target)
 	blacklist := length == -1
 	lengthString := utils.DurationToString(length)
-	var xuid string
 	if ok {
 		target = p.Name()
-		xuid = session.Get(p).XUID
 		if blacklist {
 			p.Disconnect(utils.Config.Ban.BlacklistScreen)
 		} else {
@@ -47,7 +44,7 @@ func BanPlayer(target, mod, reason string, length time.Duration) {
 		if length != 0 {
 			expires = time.Now().Add(length).Unix()
 		}
-		_, _ = db.Exec("INSERT INTO Bans(XUID, IGN, Mod, Reason, Expires) VALUES(?, ?, ?, ?, ?)", xuid, target, mod, reason, expires)
+		_, _ = db.Exec("INSERT INTO Bans(XUID, IGN, Mod, Reason, Expires) VALUES(?, ?, ?, ?, ?)", targetXUID, target, mod, reason, expires)
 		var msg webhook.Message
 		if blacklist {
 			msg = webhook.Message{

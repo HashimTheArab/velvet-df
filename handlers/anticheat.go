@@ -32,7 +32,7 @@ func (a AntiCheatHandler) HandlePunishment(ctx *event.Context, c check.Check) {
 	if c.Punishment() == punishment.Ban() {
 		if pl, ok := vu.Srv.PlayerByName(a.p.Name()); ok {
 			pl.Disconnect(fmt.Sprintf("§6[§bOomph§6] Caught yo ass lackin!\n§6Reason: §b%v", reason))
-			db.BanPlayer(pl.Name(), "Oomph", reason, time.Hour*24*14)
+			db.BanPlayer(pl.Name(), session.Get(pl).XUID, "Oomph", reason, time.Hour*24*14)
 		}
 	} else if c.Punishment() == punishment.Kick() {
 		if pl, ok := vu.Srv.PlayerByName(a.p.Name()); ok {

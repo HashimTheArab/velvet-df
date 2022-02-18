@@ -116,7 +116,11 @@ func ban(p cmd.Source, output *cmd.Output, target, reason string, length time.Du
 		output.Print(utils.Config.Message.SpecifyReason)
 		return
 	}
-	db.BanPlayer(target, p.Name(), reason, length)
+	var xuid string
+	if p, ok := utils.Srv.PlayerByName(target); ok {
+		xuid = session.Get(p).XUID
+	}
+	db.BanPlayer(target, xuid, p.Name(), reason, length)
 }
 
 func (Ban) Allow(s cmd.Source) bool        { return checkStaff(s) || checkConsole(s) }
