@@ -3,7 +3,6 @@ package commands
 import (
 	"github.com/df-mc/dragonfly/server/cmd"
 	"github.com/df-mc/dragonfly/server/player"
-	"github.com/df-mc/we/brush"
 	"velvet/console"
 	"velvet/session"
 )
@@ -19,7 +18,7 @@ func init() {
 		cmd.New("teleport", "§bTeleport to another player", []string{"tp"}, TeleportToPos{}, TeleportToTarget{}, TeleportTargetToTarget{}, TeleportTargetToPos{}),
 		cmd.New("build", "§bUse builder mode", nil, Build{}),
 		cmd.New("world", "§bManage worlds", nil, WorldTeleport{}, WorldList{}),
-		cmd.New("worldedit", "§bManage world edit", []string{"we"}, Wand{}, brush.BindCommand{}, brush.UnbindCommand{}, brush.UndoCommand{}),
+		//cmd.New("worldedit", "§bManage world edit", []string{"we"}, Wand{}, brush.BindCommand{}, brush.UnbindCommand{}, brush.UndoCommand{}),
 		cmd.New("newplayer", "§bSpawn a fake player", []string{"np"}, NewPlayer{}),
 		cmd.New("effect", "§bApply an effect to yourself or another player", nil, Effect{}),
 		cmd.New("kick", "§aKick a player from the server", nil, Kick{}),
