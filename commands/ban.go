@@ -64,7 +64,7 @@ func (t BanOffline) Run(source cmd.Source, output *cmd.Output) {
 	_, mod := utils.Config.Staff.Mods[t.Player]
 	_, admin := utils.Config.Staff.Admins[t.Player]
 	if _, ok := source.(*console.CommandSender); !ok {
-		if t.Player == source.Name() || ((mod || admin) && session.Get(p).XUID != utils.Config.Staff.Owner.XUID) {
+		if t.Player == source.Name() || ((mod || admin) && p.XUID() != utils.Config.Staff.Owner.XUID) {
 			output.Print(utils.Config.Message.CannotPunishPlayer)
 			return
 		}
@@ -116,11 +116,7 @@ func ban(p cmd.Source, output *cmd.Output, target, reason string, length time.Du
 		output.Print(utils.Config.Message.SpecifyReason)
 		return
 	}
-	var xuid string
-	if p, ok := utils.Srv.PlayerByName(target); ok {
-		xuid = session.Get(p).XUID
-	}
-	db.BanPlayer(target, xuid, p.Name(), reason, length)
+	db.BanPlayer(target, p.Name(), reason, length)
 }
 
 func (Ban) Allow(s cmd.Source) bool        { return checkStaff(s) || checkConsole(s) }

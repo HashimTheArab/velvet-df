@@ -35,7 +35,6 @@ type Session struct {
 	scoreboard  *scoreboard.Scoreboard
 	rank        *perm.Rank
 	perms       atomic.Uint32
-	XUID        string
 }
 
 // OnJoin is called when the player joins.
@@ -96,13 +95,14 @@ func (s *Session) Staff() bool {
 	if s.Rank() != nil && s.Rank().Name == perm.Admin || s.Rank().Name == perm.Mod {
 		return true
 	}
+	xuid := s.Player.XUID()
 	for _, v := range utils.Config.Staff.Admins {
-		if v == s.XUID {
+		if v == xuid {
 			return true
 		}
 	}
 	for _, v := range utils.Config.Staff.Mods {
-		if v == s.XUID {
+		if v == xuid {
 			return true
 		}
 	}
@@ -114,8 +114,9 @@ func (s *Session) Mod() bool {
 	if s.Rank() != nil && s.Rank().Name == perm.Mod {
 		return true
 	}
+	xuid := s.Player.XUID()
 	for _, v := range utils.Config.Staff.Mods {
-		if v == s.XUID {
+		if v == xuid {
 			return true
 		}
 	}
@@ -127,8 +128,9 @@ func (s *Session) Admin() bool {
 	if s.Rank() != nil && s.Rank().Name == perm.Admin {
 		return true
 	}
+	xuid := s.Player.XUID()
 	for _, v := range utils.Config.Staff.Admins {
-		if v == s.XUID {
+		if v == xuid {
 			return true
 		}
 	}

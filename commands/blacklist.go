@@ -41,7 +41,7 @@ func (t BlacklistOffline) Run(source cmd.Source, output *cmd.Output) {
 	_, mod := utils.Config.Staff.Mods[t.Player]
 	_, admin := utils.Config.Staff.Admins[t.Player]
 	if _, ok := source.(*console.CommandSender); !ok {
-		if t.Player == source.Name() || ((mod || admin) && session.Get(p).XUID != utils.Config.Staff.Owner.XUID) {
+		if t.Player == source.Name() || ((mod || admin) && p.XUID() != utils.Config.Staff.Owner.XUID) {
 			output.Print(utils.Config.Message.CannotPunishPlayer)
 			return
 		}

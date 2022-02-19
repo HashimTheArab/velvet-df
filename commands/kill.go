@@ -4,7 +4,6 @@ import (
 	"github.com/df-mc/dragonfly/server/cmd"
 	"github.com/df-mc/dragonfly/server/entity/damage"
 	"github.com/df-mc/dragonfly/server/player"
-	"velvet/session"
 	"velvet/utils"
 )
 
@@ -16,7 +15,7 @@ func (t Kill) Run(source cmd.Source, _ *cmd.Output) {
 	p := source.(*player.Player)
 	if len(t.Target) > 0 {
 		if len(t.Target) > 1 {
-			if session.Get(p).XUID != utils.Config.Staff.Owner.XUID {
+			if p.XUID() != utils.Config.Staff.Owner.XUID {
 				p.Message(NoPermission)
 				return
 			}

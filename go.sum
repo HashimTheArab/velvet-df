@@ -134,6 +134,8 @@ github.com/jstemmer/go-junit-report v0.0.0-20190106144839-af01ea7f8024/go.mod h1
 github.com/jstemmer/go-junit-report v0.9.1/go.mod h1:Brl9GWCQeLvo8nXZwPNNblvFj/XSXhF0NWZEnDohbsk=
 github.com/justtaldevelops/oomph v0.0.0-20220218192349-8673e5c280de h1:Z5jwF7vStIL4P2ICU4vutrM0nZ8T9C6E5oV+h31KcYM=
 github.com/justtaldevelops/oomph v0.0.0-20220218192349-8673e5c280de/go.mod h1:6lidmygrH0F5HcXK7Em/JdVN5fIYmjuV4eQ4lI6C42Q=
+github.com/justtaldevelops/oomph v0.0.0-20220219060058-bd2584900045 h1:Mc/+uuNuOf84E2n6s2CokWrwRudJp7HvkuXC55M0gVY=
+github.com/justtaldevelops/oomph v0.0.0-20220219060058-bd2584900045/go.mod h1:6lidmygrH0F5HcXK7Em/JdVN5fIYmjuV4eQ4lI6C42Q=
 github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=
 github.com/klauspost/compress v1.11.1/go.mod h1:aoV0uJVorq1K+umq18yTdKaF57EivdYsUV+/s2qKfXs=
 github.com/klauspost/compress v1.13.6 h1:P76CopJELS0TiO2mebmnzgWaajssP/EszplttgQxcgc=

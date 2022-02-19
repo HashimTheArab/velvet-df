@@ -66,12 +66,7 @@ func (allower) Allow(_ net.Addr, d login.IdentityData, c login.ClientData) (stri
 			}},
 		})
 	}
-	return "", true
-}
-
-func (oomphConnectionHandler) Allow(_ net.Addr, d login.IdentityData, _ login.ClientData) (string, bool) {
-	s := session.New(d.DisplayName)
-	s.XUID = d.XUID
+	session.New(d.DisplayName)
 	return "", true
 }
 
