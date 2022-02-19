@@ -1,0 +1,65 @@
+package commands
+
+import (
+	"github.com/df-mc/dragonfly/server/cmd"
+	"velvet/utils"
+)
+
+type WhitelistToggle struct {
+	Sub toggle
+}
+
+type WhitelistAdd struct {
+	Sub    add
+	Target string `name:"target"`
+}
+
+type WhitelistRemove struct {
+	Sub    remove
+	Target string `name:"target"`
+}
+
+func (t WhitelistToggle) Run(_ cmd.Source, output *cmd.Output) {
+	utils.Whitelist.Enabled = !utils.Whitelist.Enabled
+	output.Printf("§aWhitelist has been enabled!")
+}
+
+func (t WhitelistAdd) Run(_ cmd.Source, output *cmd.Output) {
+	if !utils.Whitelist.Enabled {
+		output.Error("§cWhitelist is currently disabled. Use /whitelist toggle to enable it.")
+		return
+	}
+	if utils.Whitelist.Contains(t.Target) {
+		output.Error("§cThat player is already in the whitelist.")
+		return
+	}
+	utils.Whitelist.Add(t.Target)
+	output.Printf("§e%v §dhas been added to the whitelist.", t.Target)
+}
+
+func (t WhitelistRemove) Run(_ cmd.Source, output *cmd.Output) {
+	if !utils.Whitelist.Enabled {
+		output.Error("§cWhitelist is currently disabled. Use /whitelist toggle to enable it.")
+		return
+	}
+	if !utils.Whitelist.Contains(t.Target) {
+		output.Error("§cThat player is not in the whitelist.")
+		return
+	}
+	utils.Whitelist.Remove(t.Target)
+	output.Printf("§e%v §dhas been removed from the whitelist", t.Target)
+}
+
+type (
+	toggle string
+	add    string
+	remove string
+)
+
+func (toggle) SubName() string { return "toggle" }
+func (add) SubName() string    { return "add" }
+func (remove) SubName() string { return "remove" }
+
+func (WhitelistToggle) Allow(s cmd.Source) bool { return checkAdmin(s) || checkConsole(s) }
+func (WhitelistAdd) Allow(s cmd.Source) bool    { return checkAdmin(s) || checkConsole(s) }
+func (WhitelistRemove) Allow(s cmd.Source) bool { return checkAdmin(s) || checkConsole(s) }

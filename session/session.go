@@ -150,6 +150,9 @@ func (s *Session) DefaultFlags() {
 			s.SetFlag(FlagHasChatCD)
 		}
 	}
+	if s.Rank() != nil && s.Rank().Name == perm.Builder {
+		s.SetFlag(FlagBuilder)
+	}
 }
 
 // Click adds a click to the user's click history.

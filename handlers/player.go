@@ -12,6 +12,8 @@ import (
 	"github.com/df-mc/dragonfly/server/player"
 	"github.com/df-mc/dragonfly/server/player/chat"
 	"github.com/df-mc/dragonfly/server/world"
+	"github.com/df-mc/we/brush"
+	"github.com/df-mc/we/palette"
 	"github.com/go-gl/mathgl/mgl64"
 	"strings"
 	"velvet/form"
@@ -24,6 +26,16 @@ import (
 type PlayerHandler struct {
 	player.NopHandler
 	Session *session.Session
+	ph      *palette.Handler
+	bh      *brush.Handler
+}
+
+func NewPlayerHandler(p *player.Player, s *session.Session) *PlayerHandler {
+	return &PlayerHandler{
+		Session: s,
+		ph:      palette.NewHandler(p),
+		bh:      brush.NewHandler(p),
+	}
 }
 
 func (p *PlayerHandler) HandleAttackEntity(_ *event.Context, _ world.Entity, h *float64, v *float64, critical *bool) {
@@ -44,6 +56,7 @@ func (p *PlayerHandler) HandlePunchAir(_ *event.Context) {
 }
 
 func (p *PlayerHandler) HandleBlockBreak(ctx *event.Context, pos cube.Pos, _ *[]item.Stack) {
+	p.ph.HandleBlockBreak(ctx, pos)
 	if p.Session.Player.World().Name() == utils.Config.World.Build {
 		utils.BuildBlocks.Mutex.Lock()
 		defer utils.BuildBlocks.Mutex.Unlock()
@@ -193,6 +206,11 @@ func (p *PlayerHandler) HandleItemUse(ctx *event.Context) {
 			}
 		}
 	}
+	p.bh.HandleItemUse(ctx)
+}
+
+func (p *PlayerHandler) HandleItemUseOnBlock(ctx *event.Context, pos cube.Pos, face cube.Face, vec mgl64.Vec3) {
+	p.ph.HandleItemUseOnBlock(ctx, pos, face, vec)
 }
 
 func (p *PlayerHandler) HandleQuit() {
@@ -204,4 +222,6 @@ func (p *PlayerHandler) HandleQuit() {
 	for _, s := range session.All() {
 		s.UpdateScoreboard(true, false)
 	}
+	p.bh.HandleQuit()
+	p.ph.HandleQuit()
 }

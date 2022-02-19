@@ -4,6 +4,7 @@ const (
 	Owner     = "Owner"
 	Admin     = "Admin"
 	Mod       = "Mod"
+	Builder   = "Builder"
 	Famous    = "Famous"
 	YouTube   = "YouTube"
 	Hyperedge = "Hyperedge"
@@ -15,8 +16,9 @@ var ranks = map[string]*Rank{
 	Owner:     {Color: "§4"},
 	Admin:     {Color: "§d"},
 	Mod:       {Color: "§2"},
-	Famous:    {Color: "§c"},
-	YouTube:   {Color: "§b"},
+	Builder:   {Color: "§3"},
+	Famous:    {Color: "§b"},
+	YouTube:   {Color: "§c"},
 	Hyperedge: {Color: "§6"},
 	Ravager:   {Color: "§4"},
 	VIP:       {Color: "§9"},

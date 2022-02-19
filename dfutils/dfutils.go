@@ -91,6 +91,6 @@ func StartServer() {
 		s := session.Get(p)
 		s.Player = p
 		s.OnJoin()
-		p.Handle(&handlers.PlayerHandler{Session: s})
+		p.Handle(handlers.NewPlayerHandler(p, s))
 	}
 }

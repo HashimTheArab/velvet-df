@@ -26,6 +26,7 @@ func main() {
 			panic(x)
 		}
 	}()
+
 	console.StartNew()
 	dfutils.StartServer()
 }

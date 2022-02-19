@@ -93,7 +93,7 @@ func teleportTargets(targets []cmd.Target, destination mgl64.Vec3, w *world.Worl
 	return targets[0].Name()
 }
 
-func (TeleportToPos) Allow(s cmd.Source) bool          { return !checkConsole(s) && checkStaff(s) }
-func (TeleportToTarget) Allow(s cmd.Source) bool       { return !checkConsole(s) && checkStaff(s) }
-func (TeleportTargetToTarget) Allow(s cmd.Source) bool { return checkStaff(s) }
-func (TeleportTargetToPos) Allow(s cmd.Source) bool    { return checkStaff(s) }
+func (TeleportToPos) Allow(s cmd.Source) bool          { return checkStaff(s) }
+func (TeleportToTarget) Allow(s cmd.Source) bool       { return checkStaff(s) }
+func (TeleportTargetToTarget) Allow(s cmd.Source) bool { return checkStaff(s) || checkConsole(s) }
+func (TeleportTargetToPos) Allow(s cmd.Source) bool    { return checkStaff(s) || checkConsole(s) }
