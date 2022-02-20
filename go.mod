@@ -3,14 +3,14 @@ module velvet
 go 1.17
 
 require (
-	github.com/df-mc/dragonfly v0.5.2-0.20220218171546-b78e46863efc
+	github.com/df-mc/dragonfly v0.5.2-0.20220219205354-a94f34a6073d
 	github.com/emperials/df-worldmanager v0.0.0-20210810032941-29fc34569fb4
 	github.com/go-gl/mathgl v1.0.0
 	github.com/jmoiron/sqlx v1.3.4
-	github.com/justtaldevelops/oomph v0.0.0-20220219060058-bd2584900045
+	github.com/justtaldevelops/oomph v0.0.0-20220220232907-bd80096ef205
 	github.com/mattn/go-sqlite3 v1.14.11
 	github.com/pelletier/go-toml v1.9.3
-	github.com/sandertv/gophertunnel v1.19.0
+	github.com/sandertv/gophertunnel v1.19.1-0.20220219014023-6970df76a596
 	github.com/sirupsen/logrus v1.8.1
 	go.uber.org/atomic v1.9.0
 )
