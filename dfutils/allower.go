@@ -2,7 +2,6 @@ package dfutils
 
 import (
 	"fmt"
-	"github.com/sandertv/gophertunnel/minecraft"
 	"github.com/sandertv/gophertunnel/minecraft/protocol"
 	"github.com/sandertv/gophertunnel/minecraft/protocol/login"
 	"net"
@@ -74,8 +73,8 @@ func (allower) Allow(_ net.Addr, d login.IdentityData, c login.ClientData) (stri
 	return "", true
 }
 
-func (oomphConnectionHandler) Close(conn *minecraft.Conn) {
-	if s := session.FromName(conn.IdentityData().DisplayName); s != nil {
-		s.CloseWithoutSaving(conn.IdentityData().DisplayName)
+func (oomphConnectionHandler) Close(d login.IdentityData) {
+	if s := session.FromName(d.DisplayName); s != nil {
+		s.CloseWithoutSaving(d.DisplayName)
 	}
 }
