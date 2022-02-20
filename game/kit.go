@@ -17,8 +17,8 @@ func nodebuff_kit(p *player.Player) {
 	p.Armour().Clear()
 	name := "§l§9Nodebuff"
 
-	unbreaking := enchantment.Unbreaking{}.WithLevel(3)
-	_ = p.Inventory().SetItem(0, item.NewStack(item.Sword{Tier: item.ToolTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking, enchantment.Sharpness{}.WithLevel(1)))
+	unbreaking := item.NewEnchantment(enchantment.Unbreaking{}, 3)
+	_ = p.Inventory().SetItem(0, item.NewStack(item.Sword{Tier: item.ToolTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking, item.NewEnchantment(enchantment.Sharpness{}, 1)))
 	_ = p.Inventory().SetItem(1, item.NewStack(item.EnderPearl{}, 16))
 	_, _ = p.Inventory().AddItem(item.NewStack(item.SplashPotion{Type: potion.StrongHealing()}, 34))
 	p.Armour().SetBoots(item.NewStack(item.Boots{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking))
@@ -46,14 +46,14 @@ func build_kit(p *player.Player) {
 	p.Inventory().Clear()
 	p.Armour().Clear()
 	name := "§l§6Build"
-	unbreaking := enchantment.Unbreaking{}.WithLevel(3)
+	unbreaking := item.NewEnchantment(enchantment.Unbreaking{}, 3)
 
-	_ = p.Inventory().SetItem(0, item.NewStack(item.Sword{Tier: item.ToolTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking, enchantment.Sharpness{}.WithLevel(1)))
+	_ = p.Inventory().SetItem(0, item.NewStack(item.Sword{Tier: item.ToolTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking, item.NewEnchantment(enchantment.Sharpness{}, 1)))
 	_ = p.Inventory().SetItem(1, item.NewStack(item.Bow{}, 1).WithCustomName(name).WithEnchantments(unbreaking))
 	_ = p.Inventory().SetItem(2, item.NewStack(item.GoldenApple{}, 10))
 	_ = p.Inventory().SetItem(3, item.NewStack(item.EnderPearl{}, 10))
-	_ = p.Inventory().SetItem(4, item.NewStack(item.Axe{Tier: item.ToolTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking, enchantment.Efficiency{}.WithLevel(3)))
-	_ = p.Inventory().SetItem(5, item.NewStack(item.Pickaxe{Tier: item.ToolTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking, enchantment.Efficiency{}.WithLevel(3)))
+	_ = p.Inventory().SetItem(4, item.NewStack(item.Axe{Tier: item.ToolTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking, item.NewEnchantment(enchantment.Efficiency{}, 3)))
+	_ = p.Inventory().SetItem(5, item.NewStack(item.Pickaxe{Tier: item.ToolTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking, item.NewEnchantment(enchantment.Efficiency{}, 3)))
 	_ = p.Inventory().SetItem(6, item.NewStack(block.Cobblestone{}, 64))
 	_ = p.Inventory().SetItem(7, item.NewStack(block.Planks{}, 64))
 	_ = p.Inventory().SetItem(8, item.NewStack(item.Spyglass{}, 1))
