@@ -21,7 +21,11 @@ type WhitelistRemove struct {
 
 func (t WhitelistToggle) Run(_ cmd.Source, output *cmd.Output) {
 	utils.Whitelist.Enabled = !utils.Whitelist.Enabled
-	output.Printf("§aWhitelist has been enabled!")
+	if utils.Whitelist.Enabled {
+		output.Printf("§aWhitelist has been enabled!")
+	} else {
+		output.Printf("§cWhitelist has been disabled.")
+	}
 }
 
 func (t WhitelistAdd) Run(_ cmd.Source, output *cmd.Output) {
