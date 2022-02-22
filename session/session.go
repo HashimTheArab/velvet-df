@@ -215,10 +215,10 @@ func (s *Session) SaveScoreboard() {
 
 func (s *Session) UpdateScoreboard(online, kd bool) {
 	if online {
-		_ = s.scoreboard.Set(1, "§6Online: §b"+utils.OnlineCount.String())
+		s.scoreboard.Set(1, "§6Online: §b"+utils.OnlineCount.String())
 	}
 	if kd {
-		_ = s.scoreboard.Set(2, "§6K: §b"+strconv.Itoa(int(s.Stats.Kills))+" §6D: §b"+strconv.Itoa(int(s.Stats.Deaths)))
+		s.scoreboard.Set(2, "§6K: §b"+strconv.Itoa(int(s.Stats.Kills))+" §6D: §b"+strconv.Itoa(int(s.Stats.Deaths)))
 	}
 	s.Player.SendScoreboard(s.scoreboard)
 }

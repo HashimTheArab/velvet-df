@@ -2,7 +2,6 @@ package utils
 
 import (
 	"encoding/json"
-	"github.com/pelletier/go-toml"
 	"io/ioutil"
 	"os"
 )
@@ -24,7 +23,7 @@ func initWhitelist() {
 	} else {
 		if data, err := ioutil.ReadFile("whitelist.json"); err != nil {
 			panic(err)
-		} else if err := toml.Unmarshal(data, &Whitelist); err != nil {
+		} else if err := json.Unmarshal(data, &Whitelist); err != nil {
 			panic(err)
 		}
 	}

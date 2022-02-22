@@ -3,7 +3,7 @@ module velvet
 go 1.17
 
 require (
-	github.com/df-mc/dragonfly v0.5.2-0.20220219205354-a94f34a6073d
+	github.com/df-mc/dragonfly v0.5.2-0.20220221115623-76994fe19a88
 	github.com/emperials/df-worldmanager v0.0.0-20210810032941-29fc34569fb4
 	github.com/go-gl/mathgl v1.0.0
 	github.com/jmoiron/sqlx v1.3.4
