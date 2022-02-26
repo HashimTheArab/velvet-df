@@ -66,6 +66,23 @@ func SetRank(id, rank string) {
 // GetRank will return the rank of a player or nil.
 func GetRank(id string) *perm.Rank {
 	var rank string
-	_ = db.QueryRowx("SELECT PlayerRank FROM Players WHERE IGN=? OR XUID=?", rank, id, id).Scan(&rank)
+	_ = db.QueryRow("SELECT PlayerRank FROM Players WHERE IGN=? OR XUID=?", id, id).Scan(&rank)
 	return perm.GetRank(rank)
+}
+
+// HasRank will return true if the given player has the given rank.
+func HasRank(id string, rank string) bool {
+	var found string
+	_ = db.QueryRow("SELECT PlayerRank FROM Players WHERE IGN=? OR XUID=?", id, id).Scan(&found)
+	return found == rank
+}
+
+// IsStaff will return whether a player has a staff rank.
+func IsStaff(id string) bool {
+	var found string
+	_ = db.QueryRow("SELECT PlayerRank FROM Players WHERE IGN=? OR XUID=?", id, id).Scan(&found)
+	if found == "" {
+		return false
+	}
+	return perm.StaffRanks.Contains(found)
 }

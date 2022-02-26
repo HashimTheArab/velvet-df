@@ -6,6 +6,7 @@ import (
 	"github.com/sandertv/gophertunnel/minecraft/protocol/login"
 	"net"
 	"strconv"
+	"time"
 	"velvet/db"
 	"velvet/discord/webhook"
 	"velvet/session"
@@ -69,12 +70,14 @@ func (allower) Allow(_ net.Addr, d login.IdentityData, c login.ClientData) (stri
 			}},
 		})
 	}
+	name := d.DisplayName
+	time.AfterFunc(time.Second*35, func() {
+		if _, ok := utils.Srv.PlayerByName(name); !ok {
+			if s := session.FromName(name); s != nil {
+				s.CloseWithoutSaving(name)
+			}
+		}
+	})
 	session.New(d.DisplayName)
 	return "", true
-}
-
-func (oomphConnectionHandler) Close(d login.IdentityData) {
-	if s := session.FromName(d.DisplayName); s != nil {
-		s.CloseWithoutSaving(d.DisplayName)
-	}
 }

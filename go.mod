@@ -3,14 +3,14 @@ module velvet
 go 1.17
 
 require (
-	github.com/df-mc/dragonfly v0.5.2-0.20220221115623-76994fe19a88
-	github.com/emperials/df-worldmanager v0.0.0-20210810032941-29fc34569fb4
+	github.com/df-mc/dragonfly v0.5.2-0.20220225135709-47710f120b4f
+	github.com/df-mc/we v0.0.0-20211118114534-14a8246db1fb
 	github.com/go-gl/mathgl v1.0.0
 	github.com/jmoiron/sqlx v1.3.4
-	github.com/justtaldevelops/oomph v0.0.0-20220220232907-bd80096ef205
+	github.com/justtaldevelops/oomph v0.0.0-20220225234357-8daf9adc2500
 	github.com/mattn/go-sqlite3 v1.14.11
 	github.com/pelletier/go-toml v1.9.3
-	github.com/sandertv/gophertunnel v1.19.1-0.20220219014023-6970df76a596
+	github.com/sandertv/gophertunnel v1.19.1
 	github.com/sirupsen/logrus v1.8.1
 	go.uber.org/atomic v1.9.0
 )
@@ -18,8 +18,8 @@ require (
 require (
 	github.com/brentp/intintmap v0.0.0-20190211203843-30dc0ade9af9 // indirect
 	github.com/cespare/xxhash v1.1.0 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/df-mc/goleveldb v1.1.9 // indirect
-	github.com/df-mc/we v0.0.0-20211118114534-14a8246db1fb // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.3 // indirect
@@ -38,4 +38,4 @@ require (
 	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
 )
 
-replace github.com/emperials/df-worldmanager => ../df-worldmanager
+replace github.com/justtaldevelops/oomph => ../../gophertunnel/oomph

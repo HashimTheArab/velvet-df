@@ -129,9 +129,11 @@ func (p *PlayerHandler) HandleChangeWorld(_, new *world.World) {
 	}
 }
 
-func (p *PlayerHandler) HandleRespawn(*mgl64.Vec3) {
+func (p *PlayerHandler) HandleRespawn(pos *mgl64.Vec3, w **world.World) {
+	wd := utils.Srv.World()
+	ps := wd.Spawn().Vec3()
+	w, pos = &wd, &ps
 	game.DefaultKit(p.Session.Player)
-	p.Session.TeleportToSpawn()
 }
 
 func (p *PlayerHandler) HandleDeath(source damage.Source) {

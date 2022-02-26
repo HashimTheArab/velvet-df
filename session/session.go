@@ -92,21 +92,7 @@ func (s *Session) HasFlag(flag uint32) bool {
 
 // Staff returns true if a player is a staff member.
 func (s *Session) Staff() bool {
-	if s.Rank() != nil && s.Rank().Name == perm.Admin || s.Rank().Name == perm.Mod {
-		return true
-	}
-	xuid := s.Player.XUID()
-	for _, v := range utils.Config.Staff.Admins {
-		if v == xuid {
-			return true
-		}
-	}
-	for _, v := range utils.Config.Staff.Mods {
-		if v == xuid {
-			return true
-		}
-	}
-	return false
+	return s.HasFlag(FlagStaff)
 }
 
 // Mod returns true if a player is a moderator.
@@ -114,44 +100,25 @@ func (s *Session) Mod() bool {
 	if s.Rank() != nil && s.Rank().Name == perm.Mod {
 		return true
 	}
-	xuid := s.Player.XUID()
-	for _, v := range utils.Config.Staff.Mods {
-		if v == xuid {
-			return true
-		}
-	}
-	return false
-}
-
-// Admin returns true if the player is an Admin.
-func (s *Session) Admin() bool {
-	if s.Rank() != nil && s.Rank().Name == perm.Admin {
-		return true
-	}
-	xuid := s.Player.XUID()
-	for _, v := range utils.Config.Staff.Admins {
-		if v == xuid {
-			return true
-		}
-	}
 	return false
 }
 
 // DefaultFlags will set the default bitflags for the session.
 func (s *Session) DefaultFlags() {
-	if s.Staff() {
-		s.SetFlag(FlagStaff)
-		staff[s.Player.Name()] = s
-		if s.Admin() {
-			s.SetFlag(FlagAdmin)
+	if s.Rank() != nil {
+		rankName := s.Rank().Name
+		if perm.StaffRanks.Contains(rankName) {
+			s.SetFlag(FlagStaff)
+			staff[s.Player.Name()] = s
+			if rankName == perm.Admin || rankName == perm.Owner {
+				s.SetFlag(FlagAdmin)
+			}
+		}
+		if rankName == perm.Builder {
+			s.SetFlag(FlagBuilder)
 		}
 	} else {
-		if s.Rank() == nil {
-			s.SetFlag(FlagHasChatCD)
-		}
-	}
-	if s.Rank() != nil && s.Rank().Name == perm.Builder {
-		s.SetFlag(FlagBuilder)
+		s.SetFlag(FlagHasChatCD)
 	}
 }
 

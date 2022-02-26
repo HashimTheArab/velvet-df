@@ -5,15 +5,14 @@ import (
 	"github.com/df-mc/dragonfly/server"
 	"github.com/df-mc/dragonfly/server/player/chat"
 	"github.com/df-mc/dragonfly/server/world"
-	worldmanager "github.com/emperials/df-worldmanager"
 	"github.com/justtaldevelops/oomph"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
-	"strings"
 	"time"
 	"velvet/handlers"
 	"velvet/session"
 	"velvet/utils"
+	"velvet/utils/worldmanager"
 )
 
 var log = logrus.New()
@@ -62,14 +61,14 @@ func StartServer() {
 	w := srv.World()
 	w.SetDefaultGameMode(world.GameModeSurvival)
 	w.SetRandomTickSpeed(0)
+	w.SetTickRange(0)
 	w.SetTime(0)
 	w.StopTime()
 
 	// AntiCheat start
 	go func() {
-		ac := oomph.New()
-		ac.SetCloser(oomphConnectionHandler{})
-		if err := ac.Listen(srv, ":"+strings.Split(config.Network.Address, ":")[1], ":19132"); err != nil {
+		ac := oomph.New(log, ":19132")
+		if err := ac.Listen(srv, ":19133"); err != nil {
 			panic(err)
 		}
 		for {

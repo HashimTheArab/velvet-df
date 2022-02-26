@@ -10,9 +10,7 @@ import (
 
 type config struct {
 	Staff struct {
-		Admins map[string]string
-		Mods   map[string]string
-		Owner  struct {
+		Owner struct {
 			Name string
 			XUID string
 		}

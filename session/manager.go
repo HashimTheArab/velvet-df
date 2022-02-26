@@ -13,6 +13,9 @@ func New(name string) *Session {
 }
 
 func Get(p *player.Player) *Session {
+	if p == nil {
+		return nil
+	}
 	return sessions[p.Name()]
 }
 

@@ -64,7 +64,7 @@ func checkConsole(s cmd.Source) bool {
 
 func checkPerms(s cmd.Source, flag uint32) bool {
 	p, ok := s.(*player.Player)
-	if !ok || !session.Get(p).HasFlag(flag) {
+	if ses := session.Get(p); ses == nil || !ok || !ses.HasFlag(flag) {
 		return false
 	}
 	return true

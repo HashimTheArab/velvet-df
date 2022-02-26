@@ -1,9 +1,5 @@
 # Entries should be the XUID of the player
 [Staff]
-  # These players will have permission to every command
-  Admins = {"xPrim69x" = "2535468189561157", "Wqrro" = "2535416555113439", "xRyze1" = "2535420468412444", "CreeperGamin113" = "2535447554541624", "Facqde" = "2535421302499765"}
-  # These players will have access to basic staff commands
-  Mods = {}
   [Staff.Owner]
     Name = "xPrim69x"
     XUID = "2535468189561157"

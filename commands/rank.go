@@ -3,6 +3,7 @@ package commands
 import (
 	"github.com/df-mc/dragonfly/server/cmd"
 	"github.com/df-mc/dragonfly/server/player"
+	"velvet/console"
 	"velvet/db"
 	"velvet/perm"
 	"velvet/session"
@@ -31,7 +32,7 @@ type RemoveRankOffline struct {
 	Target string `name:"target"`
 }
 
-func (t SetRank) Run(_ cmd.Source, output *cmd.Output) {
+func (t SetRank) Run(source cmd.Source, output *cmd.Output) {
 	if len(t.Targets) > 1 {
 		output.Error("§cYou can only set the rank of one player at a time.")
 		return
@@ -43,13 +44,16 @@ func (t SetRank) Run(_ cmd.Source, output *cmd.Output) {
 			output.Error("§cRank not found. Contact the owner immediately.")
 			return
 		}
-		s.SetRank(rank)
-		db.SetRank(p.XUID(), rank.Name)
-		output.Printf(utils.Config.Rank.Set, p.Name(), rank.Name)
+		if canSetRank(p.Name(), source, output) {
+			s.SetRank(rank)
+			db.SetRank(p.XUID(), rank.Name)
+			setRankFlags(s, rank.Name)
+			output.Printf(utils.Config.Rank.Set, p.Name(), rank.Name)
+		}
 	}
 }
 
-func (t RemoveRank) Run(_ cmd.Source, output *cmd.Output) {
+func (t RemoveRank) Run(source cmd.Source, output *cmd.Output) {
 	if len(t.Targets) > 1 {
 		output.Error("§cYou can only remove the rank of one player at a time.")
 		return
@@ -60,13 +64,16 @@ func (t RemoveRank) Run(_ cmd.Source, output *cmd.Output) {
 			output.Error("§cThat player does not have a rank.")
 			return
 		}
-		s.SetRank(nil)
-		db.SetRank(p.XUID(), "")
-		output.Printf(utils.Config.Rank.Removed, p.Name())
+		if canSetRank(p.Name(), source, output) {
+			s.SetRank(nil)
+			db.SetRank(p.XUID(), "")
+			setRankFlags(s, "")
+			output.Printf(utils.Config.Rank.Removed, p.Name())
+		}
 	}
 }
 
-func (t SetRankOffline) Run(_ cmd.Source, output *cmd.Output) {
+func (t SetRankOffline) Run(source cmd.Source, output *cmd.Output) {
 	rank := perm.GetRank(string(t.Rank))
 	if rank == nil {
 		output.Error("§cRank not found. Contact the owner immediately.")
@@ -76,17 +83,21 @@ func (t SetRankOffline) Run(_ cmd.Source, output *cmd.Output) {
 		output.Error("§cThat player has never joined the server.")
 		return
 	}
-	db.SetRank(t.Target, rank.Name)
-	output.Printf(utils.Config.Rank.Set, t.Target, rank.Name)
+	if canSetRank(t.Target, source, output) {
+		db.SetRank(t.Target, rank.Name)
+		output.Printf(utils.Config.Rank.Set, t.Target, rank.Name)
+	}
 }
 
-func (t RemoveRankOffline) Run(_ cmd.Source, output *cmd.Output) {
+func (t RemoveRankOffline) Run(source cmd.Source, output *cmd.Output) {
 	if !db.Registered(t.Target) {
 		output.Error("§cThat player has never joined the server.")
 		return
 	}
-	db.SetRank(t.Target, "")
-	output.Printf(utils.Config.Rank.Removed, t.Target)
+	if canSetRank(t.Target, source, output) {
+		db.SetRank(t.Target, "")
+		output.Printf(utils.Config.Rank.Removed, t.Target)
+	}
 }
 
 type setRank string
@@ -111,3 +122,42 @@ func (SetRank) Allow(s cmd.Source) bool           { return checkAdmin(s) || chec
 func (RemoveRank) Allow(s cmd.Source) bool        { return checkAdmin(s) || checkConsole(s) }
 func (SetRankOffline) Allow(s cmd.Source) bool    { return checkAdmin(s) || checkConsole(s) }
 func (RemoveRankOffline) Allow(s cmd.Source) bool { return checkAdmin(s) || checkConsole(s) }
+
+func canSetRank(target string, s cmd.Source, output *cmd.Output) bool {
+	if _, ok := s.(*console.CommandSender); !ok {
+		p := s.(*player.Player)
+		if db.IsStaff(target) && p.XUID() != utils.Config.Staff.Owner.XUID {
+			output.Print(NoPermission)
+			return false
+		}
+	}
+	return true
+}
+
+func setRankFlags(s *session.Session, newRank string) {
+	if s.HasFlag(session.FlagStaff) {
+		if !perm.StaffRanks.Contains(newRank) {
+			s.SetFlag(session.FlagStaff)
+		}
+		if s.HasFlag(session.FlagAdmin) && newRank != perm.Admin {
+			s.SetFlag(session.FlagAdmin)
+		}
+		if s.HasFlag(session.FlagBuilder) && newRank != perm.Builder {
+			s.SetFlag(session.FlagBuilder)
+		}
+	} else {
+		if perm.StaffRanks.Contains(newRank) {
+			s.SetFlag(session.FlagStaff)
+		}
+		switch newRank {
+		case perm.Admin:
+			if !s.HasFlag(session.FlagAdmin) {
+				s.SetFlag(session.FlagAdmin)
+			}
+		case perm.Builder:
+			if !s.HasFlag(session.FlagBuilder) {
+				s.SetFlag(session.FlagBuilder)
+			}
+		}
+	}
+}
