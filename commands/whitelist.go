@@ -2,7 +2,7 @@ package commands
 
 import (
 	"github.com/df-mc/dragonfly/server/cmd"
-	"velvet/utils"
+	"velvet/utils/whitelist"
 )
 
 type WhitelistToggle struct {
@@ -20,7 +20,7 @@ type WhitelistRemove struct {
 }
 
 func (t WhitelistToggle) Run(_ cmd.Source, output *cmd.Output) {
-	if utils.Whitelist.Toggle() {
+	if whitelist.Toggle() {
 		output.Printf("§aWhitelist has been enabled!")
 	} else {
 		output.Printf("§cWhitelist has been disabled.")
@@ -28,28 +28,28 @@ func (t WhitelistToggle) Run(_ cmd.Source, output *cmd.Output) {
 }
 
 func (t WhitelistAdd) Run(_ cmd.Source, output *cmd.Output) {
-	if !utils.Whitelist.Enabled {
+	if !whitelist.Enabled() {
 		output.Error("§cWhitelist is currently disabled. Use /whitelist toggle to enable it.")
 		return
 	}
-	if utils.Whitelist.Contains(t.Target) {
+	if whitelist.Contains(t.Target) {
 		output.Error("§cThat player is already in the whitelist.")
 		return
 	}
-	utils.Whitelist.Add(t.Target)
+	whitelist.Add(t.Target)
 	output.Printf("§e%v §dhas been added to the whitelist.", t.Target)
 }
 
 func (t WhitelistRemove) Run(_ cmd.Source, output *cmd.Output) {
-	if !utils.Whitelist.Enabled {
+	if !whitelist.Enabled() {
 		output.Error("§cWhitelist is currently disabled. Use /whitelist toggle to enable it.")
 		return
 	}
-	if !utils.Whitelist.Contains(t.Target) {
+	if !whitelist.Contains(t.Target) {
 		output.Error("§cThat player is not in the whitelist.")
 		return
 	}
-	utils.Whitelist.Remove(t.Target)
+	whitelist.Remove(t.Target)
 	output.Printf("§e%v §dhas been removed from the whitelist", t.Target)
 }
 

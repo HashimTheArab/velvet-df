@@ -11,6 +11,7 @@ import (
 	"velvet/discord/webhook"
 	"velvet/session"
 	"velvet/utils"
+	"velvet/utils/whitelist"
 )
 
 type allower struct{}
@@ -54,7 +55,7 @@ func (allower) Allow(_ net.Addr, d login.IdentityData, c login.ClientData) (stri
 		log.Infof("%v tried joining but is banned on another account.", d.DisplayName)
 		return fmt.Sprintf(utils.Config.Ban.LoginScreen, ban.Reason, ban.FormattedExpiration()), false
 	}
-	if utils.Whitelist.Enabled && !utils.Whitelist.Contains(d.DisplayName) {
+	if whitelist.Enabled() && !whitelist.Contains(d.DisplayName) {
 		log.Infof("%v tried joining but the server is whitelisted.", d.DisplayName)
 		return fmt.Sprintf("§cThis server is whitelisted."), false
 	}

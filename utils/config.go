@@ -60,6 +60,10 @@ type config struct {
 
 var Config *config
 
+func init() {
+	ReadVelvetConfig()
+}
+
 // ReadDragonflyConfig reads the configuration from the config/dragonfly.toml file, or creates the file if it does not yet exist.
 func ReadDragonflyConfig() (server.Config, error) {
 	c := server.DefaultConfig()
