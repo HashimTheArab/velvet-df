@@ -3,13 +3,15 @@ package commands
 import (
 	"github.com/df-mc/dragonfly/server/block"
 	"github.com/df-mc/dragonfly/server/cmd"
+	"github.com/df-mc/dragonfly/server/player"
 	"time"
 	"velvet/utils"
 )
 
 type ClearBuild struct{}
 
-func (t ClearBuild) Run(_ cmd.Source, output *cmd.Output) {
+func (t ClearBuild) Run(s cmd.Source, output *cmd.Output) {
+	p, pOk := s.(*player.Player)
 	go func() {
 		start := time.Now()
 		if w, ok := utils.WorldMG.World(utils.Config.World.Build); ok {
@@ -19,9 +21,13 @@ func (t ClearBuild) Run(_ cmd.Source, output *cmd.Output) {
 				delete(utils.BuildBlocks.Blocks, pos)
 			}
 			utils.BuildBlocks.Mutex.Unlock()
-			output.Printf("§dBuild was cleared in §e%v.", time.Now().Sub(start).Round(time.Millisecond*10).String())
+			if pOk && p != nil {
+				output.Printf("§dBuild was cleared in §e%v.", time.Now().Sub(start).Round(time.Millisecond*10).String())
+			}
 		} else {
-			output.Printf("§cBuild is currently offline.")
+			if pOk && p != nil {
+				output.Printf("§cBuild is currently offline.")
+			}
 		}
 	}()
 }
