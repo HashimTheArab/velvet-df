@@ -77,7 +77,7 @@ func StartServer() {
 		for {
 			p, err := ac.Accept()
 			if err != nil {
-				panic(err)
+				return
 			}
 			p.Handle(handlers.NewACHandler(p))
 		}
