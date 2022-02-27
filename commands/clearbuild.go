@@ -10,7 +10,7 @@ import (
 
 type ClearBuild struct{}
 
-func (t ClearBuild) Run(s cmd.Source, output *cmd.Output) {
+func (t ClearBuild) Run(s cmd.Source, _ *cmd.Output) {
 	p, pOk := s.(*player.Player)
 	go func() {
 		start := time.Now()
