@@ -22,11 +22,11 @@ func (t ClearBuild) Run(s cmd.Source, output *cmd.Output) {
 			}
 			utils.BuildBlocks.Mutex.Unlock()
 			if pOk && p != nil {
-				output.Printf("§dBuild was cleared in §e%v.", time.Now().Sub(start).Round(time.Millisecond*10).String())
+				p.Messagef("§dBuild was cleared in §e%v.", time.Now().Sub(start).Round(time.Millisecond*10).String())
 			}
 		} else {
 			if pOk && p != nil {
-				output.Printf("§cBuild is currently offline.")
+				p.Messagef("§cBuild is currently offline.")
 			}
 		}
 	}()
