@@ -221,9 +221,7 @@ func (p *PlayerHandler) HandleQuit() {
 	}
 	p.Session.Close()
 	utils.OnlineCount.Store(utils.OnlineCount.Load() - 1)
-	for _, s := range session.All() {
-		s.UpdateScoreboard(true, false)
-	}
+	session.All().UpdateScoreboards(true, false)
 	p.bh.HandleQuit()
 	p.ph.HandleQuit()
 }

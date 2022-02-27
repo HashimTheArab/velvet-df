@@ -52,9 +52,7 @@ func (s *Session) OnJoin() {
 	s.SaveScoreboard()
 	s.Player.EnableInstantRespawn()
 	utils.OnlineCount.Add(1)
-	for _, ses := range All() {
-		ses.UpdateScoreboard(true, false)
-	}
+	All().UpdateScoreboards(true, false)
 	game.DefaultKit(s.Player)
 	go func() {
 		for {

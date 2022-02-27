@@ -1,14 +1,27 @@
 package session
 
 import (
+	"fmt"
 	"github.com/df-mc/dragonfly/server/player"
+	"sync"
 )
 
-var sessions = map[string]*Session{}
+type Sessions struct {
+	list  map[string]*Session
+	mutex sync.Mutex
+}
+
+var sessions = Sessions{
+	list: make(map[string]*Session),
+}
 
 func New(name string) *Session {
 	session := &Session{}
-	sessions[name] = session
+
+	sessions.mutex.Lock()
+	sessions.list[name] = session
+	sessions.mutex.Unlock()
+
 	return session
 }
 
@@ -16,11 +29,15 @@ func Get(p *player.Player) *Session {
 	if p == nil {
 		return nil
 	}
-	return sessions[p.Name()]
+	sessions.mutex.Lock()
+	defer sessions.mutex.Unlock()
+	return sessions.list[p.Name()]
 }
 
 func FromName(name string) *Session {
-	return sessions[name]
+	sessions.mutex.Lock()
+	defer sessions.mutex.Unlock()
+	return sessions.list[name]
 }
 
 func (s *Session) Close() {
@@ -28,16 +45,31 @@ func (s *Session) Close() {
 	if s.HasFlag(FlagStaff) {
 		RemoveStaff(s)
 	}
-	delete(sessions, s.Player.Name())
+
+	fmt.Println("Closed session for: " + s.Player.Name())
+
+	sessions.mutex.Lock()
+	defer sessions.mutex.Unlock()
+	delete(sessions.list, s.Player.Name())
 }
 
 func (s *Session) CloseWithoutSaving(name string) {
+	sessions.mutex.Lock()
+	defer sessions.mutex.Unlock()
 	if s.HasFlag(FlagStaff) {
-		delete(sessions, name)
+		delete(sessions.list, name)
 	}
-	delete(sessions, name)
+	delete(sessions.list, name)
 }
 
-func All() map[string]*Session {
-	return sessions
+func All() *Sessions {
+	return &sessions
+}
+
+func (s *Sessions) UpdateScoreboards(online, kd bool) {
+	s.mutex.Lock()
+	defer s.mutex.Unlock()
+	for _, v := range s.list {
+		v.UpdateScoreboard(online, kd)
+	}
 }

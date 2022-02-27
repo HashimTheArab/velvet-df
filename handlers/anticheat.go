@@ -5,12 +5,11 @@ import (
 	"github.com/df-mc/dragonfly/server/event"
 	"github.com/justtaldevelops/oomph/check"
 	"github.com/justtaldevelops/oomph/player"
-	"github.com/justtaldevelops/oomph/utils"
 	"time"
 	"velvet/db"
 	"velvet/discord/webhook"
 	"velvet/session"
-	vu "velvet/utils"
+	"velvet/utils"
 )
 
 type AntiCheatHandler struct {
@@ -61,7 +60,7 @@ func (a AntiCheatHandler) HandlePunishment(ctx *event.Context, c check.Check, m 
 func (a AntiCheatHandler) HandleFlag(ctx *event.Context, c check.Check, params map[string]interface{}) {
 	ctx.Cancel()
 	name, sub := c.Name()
-	session.AllStaff().Messagef("§7[§cOomph§7] §b%v §6flagged §b%v (%v) §6(§cx%v§6) %v", a.p.Name(), name, sub, c.Violations(), utils.PrettyParameters(params))
+	session.AllStaff().Messagef("§7[§cOomph§7] §b%v §6flagged §b%v (%v) §6(§cx%v§6) %v", a.p.Name(), name, sub, c.Violations(), utils.PrettyParams(params))
 }
 
 func (a AntiCheatHandler) HandleDebug(ctx *event.Context, _ check.Check, _ map[string]interface{}) {
