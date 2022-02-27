@@ -138,6 +138,7 @@ func setRankFlags(s *session.Session, newRank string) {
 	if s.HasFlag(session.FlagStaff) {
 		if !perm.StaffRanks.Contains(newRank) {
 			s.SetFlag(session.FlagStaff)
+			session.RemoveStaff(s)
 		}
 		if s.HasFlag(session.FlagAdmin) && newRank != perm.Admin {
 			s.SetFlag(session.FlagAdmin)
@@ -154,10 +155,13 @@ func setRankFlags(s *session.Session, newRank string) {
 			if !s.HasFlag(session.FlagAdmin) {
 				s.SetFlag(session.FlagAdmin)
 			}
+			session.AddStaff(s)
 		case perm.Builder:
 			if !s.HasFlag(session.FlagBuilder) {
 				s.SetFlag(session.FlagBuilder)
 			}
+		case perm.Mod, perm.Owner:
+			session.AddStaff(s)
 		}
 	}
 }

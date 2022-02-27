@@ -26,7 +26,7 @@ func FromName(name string) *Session {
 func (s *Session) Close() {
 	s.Save()
 	if s.HasFlag(FlagStaff) {
-		delete(sessions, s.Player.Name())
+		RemoveStaff(s)
 	}
 	delete(sessions, s.Player.Name())
 }

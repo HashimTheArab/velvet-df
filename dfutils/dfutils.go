@@ -48,9 +48,12 @@ func StartServer() {
 					fmt.Println("Error loading world " + f.Name() + ": " + err.Error())
 				} else {
 					fmt.Println("Loaded world: " + f.Name())
-					if f.Name() == utils.Config.World.Build {
-						if w, ok := utils.WorldMG.World(f.Name()); ok {
+					if w, ok := utils.WorldMG.World(f.Name()); ok {
+						switch f.Name() {
+						case utils.Config.World.Build:
 							w.ReadOnly()
+						case utils.Config.World.NoDebuff:
+							w.StopWeatherCycle()
 						}
 					}
 				}
@@ -68,7 +71,7 @@ func StartServer() {
 	// AntiCheat start
 	go func() {
 		ac := oomph.New(log, ":19132")
-		if err := ac.Listen(srv, ":19133"); err != nil {
+		if err := ac.Listen(srv, config.Server.Name); err != nil {
 			panic(err)
 		}
 		for {
@@ -88,6 +91,9 @@ func StartServer() {
 		}
 
 		s := session.Get(p)
+		if s == nil {
+			s = session.New(p.Name())
+		}
 		s.Player = p
 		s.OnJoin()
 		p.Handle(handlers.NewPlayerHandler(p, s))

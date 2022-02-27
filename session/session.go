@@ -109,7 +109,7 @@ func (s *Session) DefaultFlags() {
 		rankName := s.Rank().Name
 		if perm.StaffRanks.Contains(rankName) {
 			s.SetFlag(FlagStaff)
-			staff[s.Player.Name()] = s
+			AddStaff(s)
 			if rankName == perm.Admin || rankName == perm.Owner {
 				s.SetFlag(FlagAdmin)
 			}
