@@ -130,9 +130,7 @@ func (p *PlayerHandler) HandleChangeWorld(_, new *world.World) {
 }
 
 func (p *PlayerHandler) HandleRespawn(pos *mgl64.Vec3, w **world.World) {
-	wd := utils.Srv.World()
-	ps := wd.Spawn().Vec3()
-	w, pos = &wd, &ps
+	*w, *pos = utils.Srv.World(), utils.Srv.World().Spawn().Vec3()
 	game.DefaultKit(p.Session.Player)
 }
 
@@ -142,10 +140,10 @@ func (p *PlayerHandler) HandleDeath(source damage.Source) {
 		if g == nil {
 			_, _ = fmt.Fprintf(chat.Global, "§c%v was killed by %v", p.Session.Player.Name(), source.Attacker.Name())
 		} else {
+			g.BroadcastDeathMessage(p.Session.Player, source.Attacker.(*player.Player))
 			if pl, ok := source.Attacker.(*player.Player); ok {
 				g.Kit(pl)
 			}
-			g.BroadcastDeathMessage(p.Session.Player, source.Attacker.(*player.Player))
 		}
 		if pl, ok := source.Attacker.(*player.Player); ok {
 			session.Get(pl).AddKills(1)
