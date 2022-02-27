@@ -43,17 +43,20 @@ func (s *Session) OnJoin() {
 		CooldownTypePearl: {length: time.Second * 15},
 		CooldownTypeChat:  {length: time.Second * 3},
 	}
-	s.Stats = &db.PlayerStats{}
 	s.NetworkSession = player_session(s.Player)
+	s.Stats = &db.PlayerStats{}
+
 	s.Load()
 	s.DefaultFlags()
-	s.Player.SendTitle(title.New("§l§dVelvet").WithSubtitle("§bSeason 3 - Reformed"))
+
 	s.UpdateScoreTag(true, true)
-	s.SaveScoreboard()
-	s.Player.EnableInstantRespawn()
 	utils.OnlineCount.Add(1)
 	All().UpdateScoreboards(true, false)
+
+	s.Player.SendTitle(title.New("§l§dVelvet").WithSubtitle("§bSeason 3 - Reformed"))
+	s.Player.EnableInstantRespawn()
 	game.DefaultKit(s.Player)
+	
 	go func() {
 		for {
 			s.UpdateScoreTag(true, true)
@@ -179,6 +182,9 @@ func (s *Session) SaveScoreboard() {
 }
 
 func (s *Session) UpdateScoreboard(online, kd bool) {
+	if s.scoreboard == nil {
+		s.SaveScoreboard()
+	}
 	if online {
 		s.scoreboard.Set(1, "§6Online: §b"+utils.OnlineCount.String())
 	}
