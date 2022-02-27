@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+	"velvet/session"
 )
 
 type whitelist struct {
@@ -61,9 +62,9 @@ func (w whitelist) Remove(target string) {
 }
 
 func (w whitelist) Save() {
-	if d, err := json.MarshalIndent(Whitelist, "", "    "); err == nil {
-		// error
+	if d, err := json.MarshalIndent(Whitelist, "", "    "); err != nil {
+		session.AllStaff().Message("§cWhitelist failed to marshal json: " + err.Error())
 	} else if err := os.WriteFile("whitelist.json", d, 0644); err != nil {
-		// error
+		session.AllStaff().Message("§cWhitelist failed to save: " + err.Error())
 	}
 }
