@@ -22,7 +22,7 @@ func NewACHandler(p *player.Player) *AntiCheatHandler {
 }
 
 func (a AntiCheatHandler) HandlePunishment(ctx *event.Context, c check.Check, m *string) {
-	if pl, ok := vu.Srv.PlayerByName(a.p.Name()); ok {
+	if pl, ok := utils.Srv.PlayerByName(a.p.Name()); ok {
 		if session.Get(pl).Staff() {
 			return
 		}
@@ -45,7 +45,7 @@ func (a AntiCheatHandler) HandlePunishment(ctx *event.Context, c check.Check, m 
 				return
 			}
 			db.BanPlayer(playerName, "Oomph", reason, time.Hour*24*14)
-			webhook.Send(vu.Config.Discord.Webhook.AntiCheatLogger, webhook.Message{
+			webhook.Send(utils.Config.Discord.Webhook.AntiCheatLogger, webhook.Message{
 				Embeds: []webhook.Embed{{
 					Title:       "**Oomph Punishment**",
 					Description: fmt.Sprintf("Player: %v\nPunishment: %v\nCheck:%v\nViolations: %v", playerName, punishmentString, reason, c.Violations()),
