@@ -29,6 +29,12 @@ func initWhitelist() {
 	}
 }
 
+func (w whitelist) Toggle() bool {
+	Whitelist.Enabled = !Whitelist.Enabled
+	Whitelist.Save()
+	return Whitelist.Enabled
+}
+
 func (w whitelist) Contains(target string) bool {
 	for _, v := range w.Players {
 		if v == target {
