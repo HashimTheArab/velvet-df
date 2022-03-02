@@ -3,8 +3,8 @@ package handlers
 import (
 	"fmt"
 	"github.com/df-mc/dragonfly/server/event"
-	"github.com/justtaldevelops/oomph/check"
-	"github.com/justtaldevelops/oomph/player"
+	"github.com/oomph-ac/oomph/check"
+	"github.com/oomph-ac/oomph/player"
 	"time"
 	"velvet/db"
 	"velvet/discord/webhook"

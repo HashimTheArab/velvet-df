@@ -5,7 +5,7 @@ import (
 	"github.com/df-mc/dragonfly/server"
 	"github.com/df-mc/dragonfly/server/player/chat"
 	"github.com/df-mc/dragonfly/server/world"
-	"github.com/justtaldevelops/oomph"
+	"github.com/oomph-ac/oomph"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"time"
