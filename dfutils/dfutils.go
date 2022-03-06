@@ -53,6 +53,7 @@ func StartServer() {
 						case utils.Config.World.Build:
 							w.ReadOnly()
 						case utils.Config.World.NoDebuff:
+							w.StopRaining()
 							w.StopWeatherCycle()
 						}
 					}
