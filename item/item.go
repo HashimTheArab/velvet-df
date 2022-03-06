@@ -22,6 +22,10 @@ func Override(s *session.Session, ctx *event.Context) {
 
 		held, left := p.HeldItems()
 
+		if held.Empty() {
+			return
+		}
+
 		// Clear meta that may prevent the item from being overridden.
 		name, _ := held.Item().EncodeItem()
 		itemToCheck, _ := world.ItemByName(name, 0)

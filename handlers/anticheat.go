@@ -52,7 +52,7 @@ func (a AntiCheatHandler) HandlePunishment(ctx *event.Context, c check.Check, m 
 			webhook.Send(utils.Config.Discord.Webhook.AntiCheatLogger, webhook.Message{
 				Embeds: []webhook.Embed{{
 					Title:       "**Oomph Punishment**",
-					Description: fmt.Sprintf("Player: %v\nPunishment: %v\nCheck:%v\nViolations: %v", playerName, punishmentString, reason, c.Violations()),
+					Description: fmt.Sprintf("Player: %v\nPunishment: %v\nCheck:%v\nViolations: %v", playerName, punishmentString, reason, utils.Round(c.Violations(), 2)),
 					Color:       0xFF009F,
 					Footer:      webhook.Footer{Text: time.Now().Format("01/02/06 @ 03:04:05 PM")},
 				}},
@@ -64,7 +64,7 @@ func (a AntiCheatHandler) HandlePunishment(ctx *event.Context, c check.Check, m 
 func (a AntiCheatHandler) HandleFlag(ctx *event.Context, c check.Check, params map[string]interface{}) {
 	ctx.Cancel()
 	name, sub := c.Name()
-	_, _ = fmt.Fprintf(chat.Global, "§7[§cOomph§7] §b%v §6flagged §b%v (%v) §6(§cx%v§6) %v", a.p.Name(), name, sub, c.Violations(), utils.PrettyParams(params))
+	_, _ = fmt.Fprintf(chat.Global, "§7[§cOomph§7] §b%v §6flagged §b%v (%v) §6(§cx%v§6) %v", a.p.Name(), name, sub, utils.Round(c.Violations(), 2), utils.PrettyParams(params))
 	//session.AllStaff().Messagef("§7[§cOomph§7] §b%v §6flagged §b%v (%v) §6(§cx%v§6) %v", a.p.Name(), name, sub, c.Violations(), utils.PrettyParams(params))
 }
 
