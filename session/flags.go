@@ -6,5 +6,4 @@ const (
 	FlagStaff
 	FlagVanished
 	FlagBuilding
-	FlagHasChatCD
 )

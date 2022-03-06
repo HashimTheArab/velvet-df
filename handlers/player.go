@@ -143,6 +143,7 @@ func (p *PlayerHandler) HandleDeath(source damage.Source) {
 			g.BroadcastDeathMessage(p.Session.Player, source.Attacker.(*player.Player))
 			if pl, ok := source.Attacker.(*player.Player); ok {
 				g.Kit(pl)
+				pl.Heal(pl.MaxHealth(), healing.SourceCustom{})
 			}
 		}
 		if pl, ok := source.Attacker.(*player.Player); ok {
@@ -172,7 +173,7 @@ func (p *PlayerHandler) HandleCommandExecution(ctx *event.Context, command cmd.C
 }
 
 func (p *PlayerHandler) HandleChat(ctx *event.Context, message *string) {
-	if p.Session.HasFlag(session.FlagHasChatCD) {
+	if p.Session.Rank() == nil {
 		p.Session.Cooldowns().Handle(ctx, p.Session.Player, session.CooldownTypeChat)
 	}
 	if strings.Contains(strings.ToLower(*message), "kkkkkkkk") {

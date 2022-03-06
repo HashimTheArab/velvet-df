@@ -56,7 +56,7 @@ func (s *Session) OnJoin() {
 	s.Player.SendTitle(title.New("§l§dVelvet").WithSubtitle("§bSeason 3 - Reformed"))
 	s.Player.EnableInstantRespawn()
 	game.DefaultKit(s.Player)
-	
+
 	go func() {
 		for {
 			s.UpdateScoreTag(true, true)
@@ -118,8 +118,6 @@ func (s *Session) DefaultFlags() {
 		if rankName == perm.Builder {
 			s.SetFlag(FlagBuilder)
 		}
-	} else {
-		s.SetFlag(FlagHasChatCD)
 	}
 }
 

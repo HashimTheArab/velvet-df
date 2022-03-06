@@ -15,7 +15,6 @@ import (
 )
 
 type allower struct{}
-type oomphConnectionHandler struct{}
 
 var titleIds = map[string]protocol.DeviceOS{
 	"1739947436": protocol.DeviceAndroid,
