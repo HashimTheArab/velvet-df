@@ -160,7 +160,12 @@ func setRankFlags(s *session.Session, newRank string) {
 			if !s.HasFlag(session.FlagBuilder) {
 				s.SetFlag(session.FlagBuilder)
 			}
-		case perm.Mod, perm.Owner:
+		case perm.Mod:
+			session.AddStaff(s)
+		case perm.Owner:
+			if !s.HasFlag(session.FlagAdmin) {
+				s.SetFlag(session.FlagAdmin)
+			}
 			session.AddStaff(s)
 		}
 	}
