@@ -37,6 +37,6 @@ require (
 	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
 )
 
-replace github.com/df-mc/dragonfly => ../dragonfly
+//replace github.com/df-mc/dragonfly => ../dragonfly
 
 //replace github.com/oomph-ac/oomph => ../../gophertunnel/oomph

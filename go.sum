@@ -68,6 +68,8 @@ github.com/df-mc/dragonfly v0.5.2-0.20220226092446-36c89ec108f1 h1:jZdNfMQPVPUIU
 github.com/df-mc/dragonfly v0.5.2-0.20220226092446-36c89ec108f1/go.mod h1:xWCJ8LqWe2Fd05uwR5w+HrYWn2cQtkDFzO6IaIbObdg=
 github.com/df-mc/dragonfly v0.5.2-0.20220301165743-b6bef7622793 h1:qTVhIuvRjF1uugVmuYRDetGmlAeH+A7RbDaq+gSbpTk=
 github.com/df-mc/dragonfly v0.5.2-0.20220301165743-b6bef7622793/go.mod h1:xWCJ8LqWe2Fd05uwR5w+HrYWn2cQtkDFzO6IaIbObdg=
+github.com/df-mc/dragonfly v0.5.2-0.20220306050417-f36dd66a75a1 h1:9WCF7Fpbbv80RRBOlpkHbKXFBZD5BjVVLt1skULzwfw=
+github.com/df-mc/dragonfly v0.5.2-0.20220306050417-f36dd66a75a1/go.mod h1:xWCJ8LqWe2Fd05uwR5w+HrYWn2cQtkDFzO6IaIbObdg=
 github.com/df-mc/goleveldb v1.1.9 h1:ihdosZyy5jkQKrxucTQmN90jq/2lUwQnJZjIYIC/9YU=
 github.com/df-mc/goleveldb v1.1.9/go.mod h1:+NHCup03Sci5q84APIA21z3iPZCuk6m6ABtg4nANCSk=
 github.com/df-mc/we v0.0.0-20211118114534-14a8246db1fb h1:W9OE64JmyMc2eXG3jqrWPvwcTlCOSSJSzQcI8l4zqPY=
