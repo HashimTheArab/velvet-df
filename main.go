@@ -16,7 +16,7 @@ import (
 
 func main() {
 	go func() {
-		log.Println(http.ListenAndServe("0.0.0.0:19133", nil))
+		log.Println(http.ListenAndServe(":19133", nil))
 	}()
 	defer func() {
 		if x := recover(); x != nil {
