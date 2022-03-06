@@ -12,14 +12,14 @@ func Register(xuid, ign, deviceId string) {
 // Registered returns whether a player is registered
 func Registered(id string) bool {
 	var r bool
-	_ = db.QueryRowx("SELECT EXISTS(SELECT IGN FROM Players WHERE IGN=? OR XUID=?)", id, id).Scan(&r)
+	_ = db.QueryRow("SELECT EXISTS(SELECT IGN FROM Players WHERE IGN=? OR XUID=?)", id, id).Scan(&r)
 	return r
 }
 
 // GetDeviceID will return the device id for the given ign or an empty string if that player has never joined before.
 func GetDeviceID(ign string) string {
 	var deviceID string
-	_ = db.QueryRowx("SELECT DeviceID FROM Players WHERE IGN=?", ign).Scan(&deviceID)
+	_ = db.QueryRow("SELECT DeviceID FROM Players WHERE IGN=?", ign).Scan(&deviceID)
 	return deviceID
 }
 
