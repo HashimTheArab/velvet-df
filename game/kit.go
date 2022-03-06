@@ -2,10 +2,12 @@ package game
 
 import (
 	"github.com/df-mc/dragonfly/server/block"
+	"github.com/df-mc/dragonfly/server/entity/effect"
 	"github.com/df-mc/dragonfly/server/item"
 	"github.com/df-mc/dragonfly/server/item/enchantment"
 	"github.com/df-mc/dragonfly/server/item/potion"
 	"github.com/df-mc/dragonfly/server/player"
+	"time"
 )
 
 const (
@@ -25,7 +27,7 @@ func nodebuff_kit(p *player.Player) {
 	p.Armour().SetLeggings(item.NewStack(item.Leggings{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking))
 	p.Armour().SetChestplate(item.NewStack(item.Chestplate{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking))
 	p.Armour().SetHelmet(item.NewStack(item.Helmet{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking))
-	//p.AddEffect(effect.New(effect.Speed{}, 1, time.Hour*3))
+	p.AddEffect(effect.New(effect.Speed{}, 1, time.Hour*10))
 }
 
 func diamond_kit(p *player.Player) {

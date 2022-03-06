@@ -1,7 +1,6 @@
 package session
 
 import (
-	"fmt"
 	"github.com/df-mc/dragonfly/server/player"
 	"sync"
 )
@@ -45,8 +44,6 @@ func (s *Session) Close() {
 	if s.HasFlag(FlagStaff) {
 		RemoveStaff(s)
 	}
-
-	fmt.Println("Closed session for: " + s.Player.Name())
 
 	sessions.mutex.Lock()
 	defer sessions.mutex.Unlock()
