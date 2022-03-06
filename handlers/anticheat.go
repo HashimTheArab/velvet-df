@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"github.com/df-mc/dragonfly/server/event"
+	"github.com/df-mc/dragonfly/server/player/chat"
 	"github.com/oomph-ac/oomph/check"
 	"github.com/oomph-ac/oomph/player"
 	"time"
@@ -22,20 +23,23 @@ func NewACHandler(p *player.Player) *AntiCheatHandler {
 }
 
 func (a AntiCheatHandler) HandlePunishment(ctx *event.Context, c check.Check, m *string) {
+	name, sub := c.Name()
+	if name == "Reach" {
+		return
+	}
 	if pl, ok := utils.Srv.PlayerByName(a.p.Name()); ok {
 		if session.Get(pl).Staff() {
 			return
 		}
 		punishmentString := "Kick"
-		name, sub := c.Name()
 		reason := name + "(" + sub + ")"
 		playerName := pl.Name()
 		//if c.BaseSettings().Punishment == punishment.Ban() {
 		//	pl.Disconnect(fmt.Sprintf("§6[§bOomph§6] Caught yo ass lackin!\n§6Reason: §b%v", reason))
 		//	db.BanPlayer(pl.Name(), "Oomph", reason, time.Hour*24*14)
 		//} else if c.BaseSettings().Punishment == punishment.Kick() {
-		//	_, _ = fmt.Fprintf(chat.Global, vu.Config.Kick.Broadcast, pl.Name(), "Oomph", reason)
-		//	pl.Disconnect(fmt.Sprintf("§6[§bOomph§6] Caught yo ass lackin!\n§6Reason: §b%v", reason))
+		_, _ = fmt.Fprintf(chat.Global, utils.Config.Kick.Broadcast, pl.Name(), "Oomph", reason)
+		pl.Disconnect(fmt.Sprintf("§6[§bOomph§6] Caught yo ass lackin!\n§6Reason: §b%v", reason))
 		//} else {
 		//	return
 		//}

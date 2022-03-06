@@ -1,6 +1,6 @@
 
 [Network]
-  Address = ":19133"
+  Address = ":6969"
 
 [Players]
   Folder = "players"
