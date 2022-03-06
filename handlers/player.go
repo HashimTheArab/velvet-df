@@ -119,6 +119,11 @@ func (*PlayerHandler) HandleFoodLoss(ctx *event.Context, _ int, _ int) {
 
 func (p *PlayerHandler) HandleChangeWorld(_, new *world.World) {
 	p.Session.Player.Teleport(new.Spawn().Vec3())
+
+	for _, e := range p.Session.Player.Effects() {
+		p.Session.Player.RemoveEffect(e.Type())
+	}
+	
 	g := game.FromWorld(new.Name())
 	if g != nil {
 		g.Kit(p.Session.Player)
