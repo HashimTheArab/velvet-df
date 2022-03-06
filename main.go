@@ -15,7 +15,9 @@ import (
 )
 
 func main() {
-	go log.Println(http.ListenAndServe("localhost:19133", nil))
+	go func() {
+		log.Println(http.ListenAndServe("localhost:19133", nil))
+	}()
 	defer func() {
 		if x := recover(); x != nil {
 			if err := os.Mkdir("errors", os.ModePerm); err == nil || os.IsExist(err) {
