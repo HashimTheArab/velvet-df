@@ -23,5 +23,5 @@ func Stats(target string, d db.PlayerData) form.Menu {
 		s += "§6" + k + ": §b" + v + "\n"
 	}
 
-	return form.NewMenu(stats{}, "§6"+target+"'s Stats").WithButtons(form.NewButton("Exit", "")).WithBody(form.NewLabel(s))
+	return form.NewMenu(stats{}, "§6"+target+"'s Stats").WithButtons(form.NewButton("Exit", "")).WithBody(s)
 }
