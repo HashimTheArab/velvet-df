@@ -39,4 +39,4 @@ require (
 
 //replace github.com/df-mc/dragonfly => ../dragonfly
 
-//replace github.com/oomph-ac/oomph => ../../gophertunnel/oomph
+replace github.com/oomph-ac/oomph => ../../gophertunnel/oomph

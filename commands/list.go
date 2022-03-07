@@ -19,7 +19,7 @@ func (List) Run(_ cmd.Source, output *cmd.Output) {
 			players = append(players, "§7"+v.Name())
 		}
 	}
-	output.Printf("§6Players (§b%v§6): §b%v", len(utils.Srv.Players()), strings.Join(players, ", "))
+	output.Printf("§dPlayers (§e%v§d): %v", len(utils.Srv.Players()), strings.Join(players, ", "))
 }
 
 func (List) Allow(s cmd.Source) bool { return checkStaff(s) || checkConsole(s) }
