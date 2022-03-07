@@ -22,4 +22,4 @@ func (List) Run(_ cmd.Source, output *cmd.Output) {
 	output.Printf("§6Players (§b%v§6): §b%v", len(utils.Srv.Players()), strings.Join(players, ", "))
 }
 
-func (List) Allow(s cmd.Source) bool { return checkStaff(s) }
+func (List) Allow(s cmd.Source) bool { return checkStaff(s) || checkConsole(s) }

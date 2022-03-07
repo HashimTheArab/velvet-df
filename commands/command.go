@@ -41,6 +41,7 @@ func init() {
 		cmd.New("whitelist", "§cManage the server whitelist", nil, WhitelistToggle{}, WhitelistAdd{}, WhitelistRemove{}),
 		cmd.New("say", "§0Broadcast a message to everyone", nil, Say{}),
 		cmd.New("list", "§aView all online players", nil, List{}),
+		cmd.New("stats", "§bView a player's stats", nil, StatsOnline{}, StatsOffline{}),
 		//cmd.StartNew("kill", "§bKill another player", nil, Kill{}),
 	} {
 		cmd.Register(command)
