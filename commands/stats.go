@@ -33,7 +33,7 @@ func (t StatsOnline) Run(source cmd.Source, output *cmd.Output) {
 			s := session.Get(pl)
 			data = db.PlayerData{
 				PlayerStats: s.Stats,
-				Rank:        s.Rank().Name,
+				Rank:        s.RankName(),
 			}
 			name = pl.Name()
 		} else {
@@ -43,7 +43,7 @@ func (t StatsOnline) Run(source cmd.Source, output *cmd.Output) {
 		s := session.Get(p)
 		data = db.PlayerData{
 			PlayerStats: s.Stats,
-			Rank:        s.Rank().Name,
+			Rank:        s.RankName(),
 		}
 		name = p.NameTag()
 	}

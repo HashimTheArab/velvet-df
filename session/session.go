@@ -98,7 +98,7 @@ func (s *Session) Staff() bool {
 
 // Mod returns true if a player is a moderator.
 func (s *Session) Mod() bool {
-	if s.Rank() != nil && s.Rank().Name == perm.Mod {
+	if s.RankName() == perm.Mod {
 		return true
 	}
 	return false
@@ -253,6 +253,14 @@ func (s *Session) Cooldowns() *cooldownMap {
 // Rank will return the rank of the session.
 func (s *Session) Rank() *perm.Rank {
 	return s.rank
+}
+
+// RankName returns the players rank name or "None" if the player has no rank.
+func (s *Session) RankName() string {
+	if s.Rank() == nil {
+		return "None"
+	}
+	return s.Rank().Name
 }
 
 // SetRank will set the rank for a session and return the new rank.
