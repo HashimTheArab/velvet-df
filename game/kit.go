@@ -27,7 +27,7 @@ func nodebuff_kit(p *player.Player) {
 	p.Armour().SetLeggings(item.NewStack(item.Leggings{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking))
 	p.Armour().SetChestplate(item.NewStack(item.Chestplate{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking))
 	p.Armour().SetHelmet(item.NewStack(item.Helmet{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking))
-	p.AddEffect(effect.New(effect.Speed{}, 1, time.Hour*10))
+	p.AddEffect(effect.New(effect.Speed{}, 1, time.Hour*10).WithoutParticles())
 }
 
 func diamond_kit(p *player.Player) {
