@@ -123,7 +123,7 @@ func (p *PlayerHandler) HandleChangeWorld(_, new *world.World) {
 	for _, e := range p.Session.Player.Effects() {
 		p.Session.Player.RemoveEffect(e.Type())
 	}
-	
+
 	g := game.FromWorld(new.Name())
 	if g != nil {
 		g.Kit(p.Session.Player)
@@ -221,7 +221,10 @@ func (p *PlayerHandler) HandleItemUseOnBlock(ctx *event.Context, pos cube.Pos, f
 
 func (p *PlayerHandler) HandleQuit() {
 	if p.Session.Combat().Tagged() {
+		p.Session.Player.Inventory().Clear()
+		p.Session.Player.Armour().Clear()
 		p.Session.Player.Hurt(p.Session.Player.MaxHealth(), damage.SourceCustom{})
+		_, _ = fmt.Fprintf(chat.Global, "§c%v died.", p.Session.Player.Name())
 	}
 	p.Session.Close()
 	utils.OnlineCount.Store(utils.OnlineCount.Load() - 1)

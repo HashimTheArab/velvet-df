@@ -3,7 +3,7 @@ module velvet
 go 1.17
 
 require (
-	github.com/df-mc/dragonfly v0.5.2-0.20220306050417-f36dd66a75a1
+	github.com/df-mc/dragonfly v0.5.2-0.20220307082342-de596e2d146c
 	github.com/df-mc/we v0.0.0-20211118114534-14a8246db1fb
 	github.com/go-gl/mathgl v1.0.0
 	github.com/jmoiron/sqlx v1.3.4
@@ -39,4 +39,4 @@ require (
 
 //replace github.com/df-mc/dragonfly => ../dragonfly
 
-replace github.com/oomph-ac/oomph => ../../gophertunnel/oomph
+//replace github.com/oomph-ac/oomph => ../../gophertunnel/oomph
