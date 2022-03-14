@@ -6,10 +6,6 @@ import (
 	"velvet/db"
 )
 
-type stats struct{}
-
-func (s stats) Submit(form.Submitter, form.Button) {}
-
 func Stats(target string, d db.PlayerData) form.Menu {
 	var s string
 
@@ -23,5 +19,5 @@ func Stats(target string, d db.PlayerData) form.Menu {
 		s += "§6" + k + ": §b" + v + "\n"
 	}
 
-	return form.NewMenu(stats{}, "§6"+target+"'s Stats").WithButtons(form.NewButton("Exit", "")).WithBody(s)
+	return form.NewMenu(NopSubmit, "§6"+target+"'s Stats").WithButtons(form.NewButton("Exit", "")).WithBody(s)
 }

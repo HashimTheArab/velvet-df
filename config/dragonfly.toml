@@ -9,7 +9,8 @@
   SaveData = false
 
 [Resources]
-  Folder = "resources_"
+  AutoBuildPack = false
+  Folder = "resources"
 
 [Server]
   AuthEnabled = true
