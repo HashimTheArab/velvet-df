@@ -288,3 +288,12 @@ func (s *Session) HasPerm(perm perm.Permission) bool {
 func (s *Session) Perms() uint32 {
 	return s.perms.Load()
 }
+
+// Offline checks if the session is fully online.
+func (s *Session) Offline() bool {
+	if s.Player == nil {
+		return true
+	}
+	ses := player_session(s.Player)
+	return ses == nil || ses == session.Nop
+}

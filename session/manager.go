@@ -67,6 +67,8 @@ func (s *Sessions) UpdateScoreboards(online, kd bool) {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	for _, v := range s.list {
-		v.UpdateScoreboard(online, kd)
+		if !v.Offline() {
+			v.UpdateScoreboard(online, kd)
+		}
 	}
 }

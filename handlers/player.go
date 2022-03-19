@@ -16,6 +16,7 @@ import (
 	"github.com/df-mc/we/palette"
 	"github.com/go-gl/mathgl/mgl64"
 	"strings"
+	"time"
 	"velvet/form"
 	"velvet/game"
 	vitem "velvet/item"
@@ -38,7 +39,7 @@ func NewPlayerHandler(p *player.Player, s *session.Session) *PlayerHandler {
 	}
 }
 
-func (p *PlayerHandler) HandleAttackEntity(_ *event.Context, _ world.Entity, h *float64, v *float64, critical *bool) {
+func (p *PlayerHandler) HandleAttackEntity(ctx *event.Context, _ world.Entity, h *float64, v *float64, _ *bool) {
 	p.Session.Click()
 	g := game.FromWorld(p.Session.Player.World().Name())
 	if g != nil {
@@ -46,9 +47,11 @@ func (p *PlayerHandler) HandleAttackEntity(_ *event.Context, _ world.Entity, h *
 	} else {
 		*h, *v = 0.398, 0.405
 	}
-	if p.Session.Player.Sprinting() {
-		*critical = false
-	}
+	ctx.After(func(cancelled bool) {
+		if !cancelled {
+			p.Session.Player.SetAttackImmunity(time.Second * 475)
+		}
+	})
 }
 
 func (p *PlayerHandler) HandlePunchAir(_ *event.Context) {
