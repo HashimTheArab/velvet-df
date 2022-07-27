@@ -2,16 +2,6 @@
 [Network]
   Address = ":6969"
 
-[Players]
-  Folder = "players"
-  MaxCount = 0
-  MaximumChunkRadius = 6
-  SaveData = false
-
-[Resources]
-  AutoBuildPack = false
-  Folder = "resources"
-
 [Server]
   AuthEnabled = true
   JoinMessage = "§l§a✔ %v"
@@ -22,3 +12,14 @@
 [World]
   Folder = "worlds/world"
   Name = "World"
+
+[Players]
+  MaxCount = 0
+  MaximumChunkRadius = 6
+  SaveData = false
+  Folder = "players"
+
+[Resources]
+  AutoBuildPack = false
+  Folder = "resources"
+  Required = true

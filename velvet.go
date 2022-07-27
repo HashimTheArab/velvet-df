@@ -7,6 +7,7 @@ import (
 	"github.com/df-mc/dragonfly/server/player/chat"
 	"github.com/df-mc/dragonfly/server/world"
 	"github.com/oomph-ac/oomph"
+	"github.com/sandertv/gophertunnel/minecraft/resource"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"log"
@@ -43,6 +44,10 @@ func startServer() {
 	srv.CloseOnProgramEnd()
 	if err := srv.Start(); err != nil {
 		logger.Fatalln(err)
+	}
+
+	if p, err := resource.Compile("resources/pack.zip"); err == nil {
+		srv.AddResourcePack(p) // todo: p.WithContentKey
 	}
 
 	utils.Srv = srv
