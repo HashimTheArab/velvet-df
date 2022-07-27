@@ -56,7 +56,7 @@ func startServer() {
 
 	if files, err := ioutil.ReadDir("worlds"); err == nil {
 		for _, f := range files {
-			if f.Name() != "world" {
+			if f.Name() != "world" && f.Name() != "world.zip" {
 				err = utils.WorldMG.LoadWorld(f.Name(), f.Name(), world.Overworld)
 				if err != nil {
 					fmt.Println("Error loading world " + f.Name() + ": " + err.Error())

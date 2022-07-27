@@ -3,11 +3,11 @@ module velvet
 go 1.18
 
 require (
+	github.com/df-mc/atomic v1.10.0
 	github.com/df-mc/dragonfly v0.7.6-0.20220726155739-f78bfa9acd61
 	github.com/df-mc/goleveldb v1.1.9
 	github.com/df-mc/we v0.0.0-20220708094252-7917469f65d1
 	github.com/go-gl/mathgl v1.0.0
-	github.com/mattn/go-sqlite3 v1.14.11
 	github.com/oomph-ac/oomph v0.0.0-20220726173716-aac5ae498a36
 	github.com/pelletier/go-toml v1.9.5
 	github.com/sandertv/gophertunnel v1.22.3
@@ -20,7 +20,6 @@ require (
 require (
 	github.com/brentp/intintmap v0.0.0-20190211203843-30dc0ade9af9 // indirect
 	github.com/cespare/xxhash v1.1.0 // indirect
-	github.com/df-mc/atomic v1.10.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/uuid v1.3.0 // indirect
@@ -38,8 +37,5 @@ require (
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22 // indirect
 	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-//replace github.com/df-mc/dragonfly => ../dragonfly
-
-//replace github.com/oomph-ac/oomph => ../../gophertunnel/oomph
