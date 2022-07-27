@@ -11,21 +11,21 @@ import (
 )
 
 type TeleportToPos struct {
-	Destination mgl64.Vec3 `name:"destination"`
+	Destination mgl64.Vec3 `cmd:"destination"`
 }
 
 type TeleportToTarget struct {
-	Player []cmd.Target `name:"destination"`
+	Player []cmd.Target `cmd:"destination"`
 }
 
 type TeleportTargetToTarget struct {
-	Players []cmd.Target `name:"victim"`
-	Targets []cmd.Target `name:"destination"`
+	Players []cmd.Target `cmd:"victim"`
+	Targets []cmd.Target `cmd:"destination"`
 }
 
 type TeleportTargetToPos struct {
-	Players     []cmd.Target `name:"victim"`
-	Destination mgl64.Vec3   `name:"destination"`
+	Players     []cmd.Target `cmd:"victim"`
+	Destination mgl64.Vec3   `cmd:"destination"`
 }
 
 func (t TeleportToPos) Run(source cmd.Source, output *cmd.Output) {

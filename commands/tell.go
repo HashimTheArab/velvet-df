@@ -6,8 +6,8 @@ import (
 )
 
 type Tell struct {
-	Target  []cmd.Target `name:"player"`
-	Message cmd.Varargs  `name:"message"`
+	Target  []cmd.Target `cmd:"player"`
+	Message cmd.Varargs  `cmd:"message"`
 }
 
 func (t Tell) Run(source cmd.Source, output *cmd.Output) {

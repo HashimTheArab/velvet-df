@@ -13,23 +13,23 @@ import (
 )
 
 type Ban struct {
-	Player []cmd.Target `name:"victim"`
-	Length string       `name:"length"`
-	Reason cmd.Varargs  `name:"reason"`
+	Player []cmd.Target `cmd:"victim"`
+	Length string       `cmd:"length"`
+	Reason cmd.Varargs  `cmd:"reason"`
 }
 
 type BanOffline struct {
-	Player string      `name:"victim"`
-	Length string      `name:"length"`
-	Reason cmd.Varargs `name:"reason"`
+	Player string      `cmd:"victim"`
+	Length string      `cmd:"length"`
+	Reason cmd.Varargs `cmd:"reason"`
 }
 
 type BanLift struct {
-	Player string `name:"target"`
+	Player string `cmd:"target"`
 }
 
 type BanInfo struct {
-	Player string `name:"target"`
+	Player string `cmd:"target"`
 }
 
 func (t Ban) Run(source cmd.Source, output *cmd.Output) {

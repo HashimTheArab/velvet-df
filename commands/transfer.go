@@ -8,15 +8,16 @@ import (
 )
 
 type Transfer struct {
-	Address string       `name:"address"`
-	Port    uint16       `name:"port"`
-	Targets []cmd.Target `optional:"" name:"victim"`
+	Address string                     `cmd:"address"`
+	Port    uint16                     `cmd:"port"`
+	Targets cmd.Optional[[]cmd.Target] `cmd:"victim"`
 }
 
 func (t Transfer) Run(source cmd.Source, output *cmd.Output) {
 	p, ok := source.(*player.Player)
-	if len(t.Targets) > 0 {
-		for _, v := range t.Targets {
+	targets := t.Targets.LoadOr(nil)
+	if len(targets) > 0 {
+		for _, v := range targets {
 			vp, ok := v.(*player.Player)
 			if ok {
 				if err := vp.Transfer(t.Address + strconv.Itoa(int(t.Port))); err != nil {

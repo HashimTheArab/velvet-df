@@ -9,11 +9,11 @@ import (
 )
 
 type Alias struct {
-	Target []cmd.Target `name:"target"`
+	Target []cmd.Target `cmd:"target"`
 }
 
 type AliasOffline struct {
-	Target string `name:"target"`
+	Target string `cmd:"target"`
 }
 
 func (t Alias) Run(_ cmd.Source, output *cmd.Output) {

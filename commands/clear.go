@@ -6,21 +6,22 @@ import (
 )
 
 type Clear struct {
-	Targets []cmd.Target `optional:"" name:"victim"`
-	Armour  bool         `optional:"" name:"armor"`
+	Targets cmd.Optional[[]cmd.Target] `cmd:"victim"`
+	Armour  cmd.Optional[bool]         `cmd:"armor"`
 }
 
 func (t Clear) Run(source cmd.Source, output *cmd.Output) {
 	p, ok := source.(*player.Player)
-	if len(t.Targets) > 0 {
-		if len(t.Targets) > 1 {
+	armour := t.Armour.LoadOr(true)
+	if targets := t.Targets.LoadOr(nil); len(targets) > 0 {
+		if len(targets) > 1 {
 			output.Print("§cYou can only clear the inventory of one player at a time.")
 			return
 		}
-		tg, ok := t.Targets[0].(*player.Player)
+		tg, ok := targets[0].(*player.Player)
 		if ok {
 			tg.Inventory().Clear()
-			if t.Armour {
+			if armour {
 				tg.Armour().Clear()
 			}
 		} else {
@@ -30,7 +31,7 @@ func (t Clear) Run(source cmd.Source, output *cmd.Output) {
 	}
 	if ok {
 		p.Inventory().Clear()
-		if t.Armour {
+		if armour {
 			p.Armour().Clear()
 		}
 	}

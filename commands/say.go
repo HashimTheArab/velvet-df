@@ -7,7 +7,7 @@ import (
 )
 
 type Say struct {
-	Message cmd.Varargs `name:"message"`
+	Message cmd.Varargs `cmd:"message"`
 }
 
 func (t Say) Run(cmd.Source, *cmd.Output) {

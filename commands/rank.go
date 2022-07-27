@@ -11,25 +11,25 @@ import (
 )
 
 type SetRank struct {
-	Sub     setRank
-	Targets []cmd.Target `name:"target"`
-	Rank    ranks        `name:"rank"`
+	Sub     cmd.SubCommand `cmd:"set"`
+	Targets []cmd.Target   `cmd:"target"`
+	Rank    ranks          `cmd:"rank"`
 }
 
 type RemoveRank struct {
-	Sub     removeRank
-	Targets []cmd.Target `name:"target"`
+	Sub     cmd.SubCommand `cmd:"remove"`
+	Targets []cmd.Target   `cmd:"target"`
 }
 
 type SetRankOffline struct {
-	Sub    setRank
-	Target string `name:"target"`
-	Rank   ranks  `name:"rank"`
+	Sub    cmd.SubCommand `cmd:"set"`
+	Target string         `cmd:"target"`
+	Rank   ranks          `cmd:"rank"`
 }
 
 type RemoveRankOffline struct {
-	Sub    removeRank
-	Target string `name:"target"`
+	Sub    cmd.SubCommand `cmd:"remove"`
+	Target string         `cmd:"target"`
 }
 
 func (t SetRank) Run(source cmd.Source, output *cmd.Output) {
@@ -107,12 +107,6 @@ func (t RemoveRankOffline) Run(source cmd.Source, output *cmd.Output) {
 		output.Printf(utils.Config.Rank.Removed, t.Target)
 	}
 }
-
-type setRank string
-type removeRank string
-
-func (setRank) SubName() string    { return "set" }
-func (removeRank) SubName() string { return "remove" }
 
 type ranks string
 

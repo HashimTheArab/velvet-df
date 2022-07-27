@@ -6,7 +6,7 @@ import (
 )
 
 type NewPlayer struct {
-	Name string `name:"name"`
+	Name string `cmd:"name"`
 }
 
 func (t NewPlayer) Run(source cmd.Source, _ *cmd.Output) {

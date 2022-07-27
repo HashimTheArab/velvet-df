@@ -11,8 +11,8 @@ import (
 type GameModeType string
 
 type GameMode struct {
-	GameMode GameModeType `name:"mode"`
-	Player   []cmd.Target `optional:"" name:"target"`
+	GameMode GameModeType               `cmd:"mode"`
+	Targets  cmd.Optional[[]cmd.Target] `cmd:"target"`
 }
 
 func (t GameMode) Run(source cmd.Source, output *cmd.Output) {
@@ -32,8 +32,8 @@ func (t GameMode) Run(source cmd.Source, output *cmd.Output) {
 		return
 	}
 
-	if len(t.Player) > 0 {
-		if target, ok := t.Player[0].(*player.Player); ok {
+	if targets := t.Targets.LoadOr(nil); len(targets) > 0 {
+		if target, ok := targets[0].(*player.Player); ok {
 			target.SetGameMode(gm)
 			target.Messagef(utils.Config.Message.GameModeSetByPlayer, p.Name(), t.GameMode)
 			output.Printf(utils.Config.Message.GameModeSetOther, target.Name(), t.GameMode)

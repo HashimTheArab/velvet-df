@@ -7,29 +7,32 @@ import (
 	"velvet/utils"
 )
 
+// WorldTeleport lets you teleport to another loaded world.
 type WorldTeleport struct {
-	Sub     teleport
-	Name    string       `name:"name"`
-	Targets []cmd.Target `optional:"" name:"target"`
+	Sub     cmd.SubCommand             `cmd:"teleport"`
+	Name    string                     `cmd:"name"`
+	Targets cmd.Optional[[]cmd.Target] `cmd:"target"`
 }
 
+// WorldList outputs all loaded worlds.
 type WorldList struct {
-	Sub list
+	Sub cmd.SubCommand `cmd:"list"`
 }
 
 func (t WorldTeleport) Run(source cmd.Source, output *cmd.Output) {
 	p := source.(*player.Player)
+	targets := t.Targets.LoadOr(nil)
 	if w, ok := utils.WorldMG.World(t.Name); ok {
-		if len(t.Targets) > 0 {
+		if len(targets) > 0 {
 			if checkAdmin(source) {
-				for _, v := range t.Targets {
+				for _, v := range targets {
 					if pl, ok := v.(*player.Player); ok {
 						w.AddEntity(pl)
 					}
 				}
 			} else {
-				if len(t.Targets) == 0 {
-					if pl, ok := t.Targets[0].(*player.Player); ok {
+				if len(targets) == 0 {
+					if pl, ok := targets[0].(*player.Player); ok {
 						w.AddEntity(pl)
 					}
 				}
@@ -64,14 +67,6 @@ func (t WorldList) Run(_ cmd.Source, output *cmd.Output) {
 
 func (WorldTeleport) Allow(s cmd.Source) bool { return checkStaff(s) }
 
-type teleport string
-
-func (teleport) SubName() string { return "teleport" }
-
 func (WorldList) Allow(s cmd.Source) bool {
 	return checkStaff(s) || checkConsole(s)
 }
-
-type list string
-
-func (list) SubName() string { return "list" }

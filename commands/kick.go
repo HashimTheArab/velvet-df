@@ -10,8 +10,8 @@ import (
 )
 
 type Kick struct {
-	Player []cmd.Target `name:"victim"`
-	Reason cmd.Varargs  `name:"reason"`
+	Player []cmd.Target `cmd:"victim"`
+	Reason cmd.Varargs  `cmd:"reason"`
 }
 
 func (t Kick) Run(source cmd.Source, output *cmd.Output) {

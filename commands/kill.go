@@ -8,21 +8,22 @@ import (
 )
 
 type Kill struct {
-	Target []cmd.Target `optional:"" name:"victim"`
+	Targets cmd.Optional[[]cmd.Target] `cmd:"victim"`
 }
 
 func (t Kill) Run(source cmd.Source, _ *cmd.Output) {
 	p := source.(*player.Player)
-	if len(t.Target) > 0 {
-		if len(t.Target) > 1 {
+	targets := t.Targets.LoadOr(nil)
+	if len(targets) > 0 {
+		if len(targets) > 1 {
 			if p.XUID() != utils.Config.Staff.Owner.XUID {
 				p.Message(NoPermission)
 				return
 			}
-			p.Messagef("§cYou have killed §d%v §cpeople.", len(t.Target))
+			p.Messagef("§cYou have killed §d%v §cpeople.", len(targets))
 			return
 		}
-		if tg, ok := t.Target[0].(*player.Player); ok {
+		if tg, ok := targets[0].(*player.Player); ok {
 			tg.Hurt(tg.MaxHealth(), damage.SourceVoid{})
 			p.Messagef("§cYou have killed %v.", tg.Name())
 		}

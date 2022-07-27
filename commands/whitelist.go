@@ -6,17 +6,17 @@ import (
 )
 
 type WhitelistToggle struct {
-	Sub toggle
+	Sub cmd.SubCommand `cmd:"toggle"`
 }
 
 type WhitelistAdd struct {
-	Sub    add
-	Target string `name:"target"`
+	Sub    cmd.SubCommand `cmd:"add"`
+	Target string         `cmd:"target"`
 }
 
 type WhitelistRemove struct {
-	Sub    remove
-	Target string `name:"target"`
+	Sub    cmd.SubCommand `cmd:"remove"`
+	Target string         `cmd:"target"`
 }
 
 func (t WhitelistToggle) Run(_ cmd.Source, output *cmd.Output) {
@@ -52,16 +52,6 @@ func (t WhitelistRemove) Run(_ cmd.Source, output *cmd.Output) {
 	whitelist.Remove(t.Target)
 	output.Printf("§e%v §dhas been removed from the whitelist", t.Target)
 }
-
-type (
-	toggle string
-	add    string
-	remove string
-)
-
-func (toggle) SubName() string { return "toggle" }
-func (add) SubName() string    { return "add" }
-func (remove) SubName() string { return "remove" }
 
 func (WhitelistToggle) Allow(s cmd.Source) bool { return checkAdmin(s) || checkConsole(s) }
 func (WhitelistAdd) Allow(s cmd.Source) bool    { return checkAdmin(s) || checkConsole(s) }

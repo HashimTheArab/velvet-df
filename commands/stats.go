@@ -9,21 +9,22 @@ import (
 )
 
 type StatsOnline struct {
-	Target []cmd.Target `name:"target" optional:""`
+	Targets cmd.Optional[[]cmd.Target] `cmd:"target"`
 }
 
 type StatsOffline struct {
-	Target string `name:"target"`
+	Target string `cmd:"target"`
 }
 
 func (t StatsOnline) Run(source cmd.Source, output *cmd.Output) {
 	p := source.(*player.Player)
-	if len(t.Target) > 0 {
-		if len(t.Target) > 1 {
+	targets := t.Targets.LoadOr(nil)
+	if len(targets) > 0 {
+		if len(targets) > 1 {
 			output.Error("You can only check the stats of one player at a time.")
 			return
 		}
-		if pl, ok := t.Target[0].(*player.Player); ok {
+		if pl, ok := targets[0].(*player.Player); ok {
 			p.SendForm(form.StatsOnline(session.Get(pl)))
 		} else {
 			output.Error("Player not found.")

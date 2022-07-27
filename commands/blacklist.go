@@ -10,13 +10,13 @@ import (
 )
 
 type Blacklist struct {
-	Player []cmd.Target `name:"victim"`
-	Reason cmd.Varargs  `name:"reason"`
+	Player []cmd.Target `cmd:"victim"`
+	Reason cmd.Varargs  `cmd:"reason"`
 }
 
 type BlacklistOffline struct {
-	Player string      `name:"victim"`
-	Reason cmd.Varargs `name:"reason"`
+	Player string      `cmd:"victim"`
+	Reason cmd.Varargs `cmd:"reason"`
 }
 
 func (t Blacklist) Run(source cmd.Source, output *cmd.Output) {

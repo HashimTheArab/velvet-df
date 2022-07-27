@@ -11,10 +11,10 @@ import (
 type EffectType string
 
 type Effect struct {
-	Target          []cmd.Target `name:"target"`
-	EffectName      EffectType   `name:"effect"`
-	EffectLength    uint32       `name:"length"`
-	EffectAmplifier int          `name:"amplifier"`
+	Target          []cmd.Target `cmd:"target"`
+	EffectName      EffectType   `cmd:"effect"`
+	EffectLength    uint32       `cmd:"length"`
+	EffectAmplifier int          `cmd:"amplifier"`
 }
 
 var effectIdMap = map[string]effect.Type{

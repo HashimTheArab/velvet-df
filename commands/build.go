@@ -8,17 +8,18 @@ import (
 )
 
 type Build struct {
-	Player []cmd.Target `optional:"" name:"victim"`
+	Targets cmd.Optional[[]cmd.Target] `cmd:"victim"`
 }
 
 func (t Build) Run(source cmd.Source, output *cmd.Output) {
 	p, ok := source.(*player.Player)
-	if len(t.Player) > 0 {
-		if len(t.Player) > 1 {
+	targets := t.Targets.LoadOr(nil)
+	if len(targets) > 0 {
+		if len(targets) > 1 {
 			output.Error(utils.Config.Message.BuildTooManyPlayers)
 			return
 		}
-		if target, ok := t.Player[0].(*player.Player); ok {
+		if target, ok := targets[0].(*player.Player); ok {
 			s := session.Get(target)
 			if s.HasFlag(session.FlagBuilding) {
 				target.Messagef(utils.Config.Message.UnsetBuilderModeByPlayer, p.Name())

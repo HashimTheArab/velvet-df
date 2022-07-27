@@ -7,16 +7,17 @@ import (
 )
 
 type Ping struct {
-	Targets []cmd.Target `optional:"" json:"target"`
+	Targets cmd.Optional[[]cmd.Target] `cmd:"target"`
 }
 
 func (t Ping) Run(source cmd.Source, output *cmd.Output) {
-	if len(t.Targets) > 1 {
+	targets := t.Targets.LoadOr(nil)
+	if len(targets) > 1 {
 		output.Printf("§cYou can only specify one player at once.")
 		return
 	}
-	if len(t.Targets) > 0 {
-		if p, ok := t.Targets[0].(*player.Player); ok {
+	if len(targets) > 0 {
+		if p, ok := targets[0].(*player.Player); ok {
 			output.Printf("§e%v's §dping is §e%v.", p.Name(), p.Latency().Round(time.Millisecond*10).String())
 		} else {
 			output.Printf(PlayerNotFound)
