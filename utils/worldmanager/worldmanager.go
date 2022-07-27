@@ -63,26 +63,22 @@ func (m *WorldManager) World(name string) (*world.World, bool) {
 }
 
 // LoadWorld ...
-func (m *WorldManager) LoadWorld(folderName, worldName string, dimension world.Dimension, settings *world.Settings) error {
+func (m *WorldManager) LoadWorld(folderName, worldName string, dimension world.Dimension) error {
 	if _, ok := m.World(worldName); ok {
 		return fmt.Errorf("world is already loaded")
 	}
 
-	if settings == nil {
-		settings = &world.Settings{}
-	}
-	w := world.New(m.log, dimension, settings)
-	p, err := mcdb.New(m.folderPath+"/"+folderName, dimension, opt.DefaultCompressionType)
+	p, err := mcdb.New(m.folderPath+"/"+folderName, opt.DefaultCompressionType)
 	if err != nil {
 		return fmt.Errorf("error loading world: %v", err)
 	}
 
-	w.Provider(p)
-	//w.Generator(generator.Flat{
-	//	Biome:  biome.Plains{},
-	//	Layers: []world.Block{block.Grass{}, block.Dirt{}, block.Dirt{}, block.Bedrock{}},
-	//})
-	w.SetRandomTickSpeed(0)
+	w := world.Config{
+		Log:      m.log,
+		Dim:      dimension,
+		Provider: p,
+		ReadOnly: true,
+	}.New()
 
 	m.worldsMu.Lock()
 	m.worlds[folderName] = w

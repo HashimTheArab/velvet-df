@@ -23,12 +23,12 @@ func (t Kill) Run(source cmd.Source, _ *cmd.Output) {
 			return
 		}
 		if tg, ok := t.Target[0].(*player.Player); ok {
-			tg.Hurt(tg.MaxHealth(), damage.SourceCustom{})
+			tg.Hurt(tg.MaxHealth(), damage.SourceVoid{})
 			p.Messagef("§cYou have killed %v.", tg.Name())
 		}
 		return
 	}
-	p.Hurt(p.MaxHealth(), damage.SourceCustom{})
+	p.Hurt(p.MaxHealth(), damage.SourceVoid{})
 	p.Message("§cYou have killed yourself.")
 }
 

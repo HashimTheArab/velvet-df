@@ -15,10 +15,12 @@ const (
 func init() {
 	for _, command := range []cmd.Command{
 		cmd.New("gamemode", "§bChange your gamemode", []string{"gm"}, GameMode{}),
+		cmd.New("/wand", "§bGet a World Edit wand", nil, Wand{}),
+		cmd.New("/palette", "§bSet a block palette for world edit", nil, PaletteSet{}, PaletteSave{}, PaletteDelete{}),
+		cmd.New("/fill", "§bFill an area", nil, Fill{}),
 		cmd.New("teleport", "§bTeleport to another player", []string{"tp"}, TeleportToPos{}, TeleportToTarget{}, TeleportTargetToTarget{}, TeleportTargetToPos{}),
 		cmd.New("build", "§bUse builder mode", nil, Build{}),
 		cmd.New("world", "§bManage worlds", nil, WorldTeleport{}, WorldList{}),
-		//cmd.New("worldedit", "§bManage world edit", []string{"we"}, Wand{}, brush.BindCommand{}, brush.UnbindCommand{}, brush.UndoCommand{}),
 		cmd.New("newplayer", "§bSpawn a fake player", []string{"np"}, NewPlayer{}),
 		cmd.New("effect", "§bApply an effect to yourself or another player", nil, Effect{}),
 		cmd.New("kick", "§aKick a player from the server", nil, Kick{}),

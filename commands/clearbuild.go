@@ -17,7 +17,7 @@ func (t ClearBuild) Run(s cmd.Source, _ *cmd.Output) {
 		if w, ok := utils.WorldMG.World(utils.Config.World.Build); ok {
 			utils.BuildBlocks.Mutex.Lock()
 			for pos := range utils.BuildBlocks.Blocks {
-				w.SetBlock(pos, block.Air{})
+				w.SetBlock(pos, block.Air{}, nil)
 				delete(utils.BuildBlocks.Blocks, pos)
 			}
 			utils.BuildBlocks.Mutex.Unlock()

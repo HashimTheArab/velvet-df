@@ -1,4 +1,4 @@
-package dfutils
+package main
 
 import (
 	"fmt"
@@ -6,10 +6,8 @@ import (
 	"github.com/sandertv/gophertunnel/minecraft/protocol/login"
 	"net"
 	"strconv"
-	"time"
 	"velvet/db"
 	"velvet/discord/webhook"
-	"velvet/session"
 	"velvet/utils"
 	"velvet/utils/whitelist"
 )
@@ -24,7 +22,7 @@ var titleIds = map[string]protocol.DeviceOS{
 	"2044456598": protocol.DeviceOrbis,
 	"2047319603": protocol.DeviceNX,
 	"1828326430": protocol.DeviceXBOX,
-	"1916611344": protocol.DeviceOS(14), // windows phone
+	"1916611344": protocol.DeviceWP,
 }
 
 /*
@@ -35,27 +33,19 @@ var titleIds = map[string]protocol.DeviceOS{
 
 func (allower) Allow(_ net.Addr, d login.IdentityData, c login.ClientData) (string, bool) {
 	db.Register(d.XUID, d.DisplayName, c.DeviceID)
-	if ban := db.GetBan(d.DisplayName); ban != nil {
-		if ban.XUID == "" {
-			ban.Update(d.XUID)
+	if user, ban, ok := db.GetBan(d.DisplayName); ok {
+		if user.XUID == "" {
+			ban.Update(user.Name, d.XUID)
 		}
-		if ban.Blacklist() {
-			log.Infof("%v tried joining but is BLACKLISTED.", d.DisplayName)
+		if ban.Permanent {
+			logger.Infof("%v tried joining but is BLACKLISTED.", d.DisplayName)
 			return fmt.Sprintf(utils.Config.Ban.BlacklistScreen, ""), false
 		}
-		log.Infof("%v tried joining but is banned.", d.DisplayName)
-		return fmt.Sprintf(utils.Config.Ban.LoginScreen, ban.Reason, ban.FormattedExpiration()), false
-	}
-	if ban := db.DeviceBan(c.DeviceID); ban != nil {
-		if ban.Blacklist() {
-			log.Infof("%v tried joining but is BLACKLISTED on another account.", d.DisplayName)
-			return fmt.Sprintf(utils.Config.Ban.BlacklistScreen, ""), false
-		}
-		log.Infof("%v tried joining but is banned on another account.", d.DisplayName)
+		logger.Infof("%v tried joining but is banned.", d.DisplayName)
 		return fmt.Sprintf(utils.Config.Ban.LoginScreen, ban.Reason, ban.FormattedExpiration()), false
 	}
 	if whitelist.Enabled() && !whitelist.Contains(d.DisplayName) {
-		log.Infof("%v tried joining but the server is whitelisted.", d.DisplayName)
+		logger.Infof("%v tried joining but the server is whitelisted.", d.DisplayName)
 		return fmt.Sprintf("§cThis server is whitelisted."), false
 	}
 	if _, ok := titleIds[d.TitleID]; !ok {
@@ -70,14 +60,5 @@ func (allower) Allow(_ net.Addr, d login.IdentityData, c login.ClientData) (stri
 			}},
 		})
 	}
-	name := d.DisplayName
-	time.AfterFunc(time.Second*35, func() {
-		if _, ok := utils.Srv.PlayerByName(name); !ok {
-			if s := session.FromName(name); s != nil {
-				s.CloseWithoutSaving(name)
-			}
-		}
-	})
-	session.New(d.DisplayName)
 	return "", true
 }

@@ -2,8 +2,10 @@ package whitelist
 
 import (
 	"encoding/json"
+	"golang.org/x/exp/slices"
 	"io/ioutil"
 	"os"
+	"strings"
 	"velvet/session"
 )
 
@@ -39,16 +41,11 @@ func Toggle() bool {
 }
 
 func Contains(target string) bool {
-	for _, v := range whitelist.Players {
-		if v == target {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(whitelist.Players, strings.ToLower(target))
 }
 
 func Add(target string) {
-	whitelist.Players = append(whitelist.Players, target)
+	whitelist.Players = append(whitelist.Players, strings.ToLower(target))
 	Save()
 }
 

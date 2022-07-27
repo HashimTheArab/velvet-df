@@ -1,38 +1,18 @@
 package db
 
 import (
-	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/upper/db/v4"
+	"github.com/upper/db/v4/adapter/mongo"
 )
 
-var db *sqlx.DB
+var sess db.Session
 
 // init initializes the database and creates the tables required.
 func init() {
 	var err error
-	if db, err = sqlx.Connect("sqlite3", "velvet.db"); err != nil {
-		panic(err)
-	}
-	if _, err := db.Exec(`
-	CREATE TABLE IF NOT EXISTS Players (
-		XUID TEXT PRIMARY KEY,
-		IGN TEXT UNIQUE NOT NULL COLLATE NOCASE,
-		DeviceID TEXT NOT NULL,
-		PlayerRank TEXT DEFAULT '' COLLATE NOCASE,
-		Perms INTEGER DEFAULT 0,
-		Kills INTEGER DEFAULT 0,
-		Deaths INTEGER DEFAULT 0
-	)`); err != nil {
-		panic(err)
-	}
-	if _, err := db.Exec(`
-	CREATE TABLE IF NOT EXISTS Bans (
-		XUID TEXT PRIMARY KEY,
-		IGN TEXT UNIQUE NOT NULL COLLATE NOCASE,
-		Mod TEXT NOT NULL,
-		Reason TEXT NOT NULL,
-		Expires INT NOT NULL
-	)`); err != nil {
+	conn, _ := mongo.ParseURL("mongodb+srv://Hashim:9AHn2GahV2IXJWHTr80f6dozWEzKMiks3@practice.oeekd.mongodb.net/test")
+	if sess, err = mongo.Open(conn); err != nil {
 		panic(err)
 	}
 }

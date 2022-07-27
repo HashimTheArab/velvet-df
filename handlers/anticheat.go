@@ -13,61 +13,85 @@ import (
 	"velvet/utils"
 )
 
+// AntiCheatHandler is the handler for Oomph.
 type AntiCheatHandler struct {
 	player.NopHandler
 	p *player.Player
 }
 
+// NewACHandler creates a new Oomph handler.
 func NewACHandler(p *player.Player) *AntiCheatHandler {
 	return &AntiCheatHandler{p: p}
 }
 
-func (a AntiCheatHandler) HandlePunishment(ctx *event.Context, c check.Check, m *string) {
-	name, sub := c.Name()
-	if name == "Reach" {
+// HandlePunishment ...
+func (a AntiCheatHandler) HandlePunishment(ctx *event.Context, ch check.Check, _ *string) {
+	ctx.Cancel()
+
+	_, autoClickerC := ch.(*check.AutoClickerC)
+	_, autoClickerD := ch.(*check.AutoClickerD)
+	//_, reachA := ch.(*check.ReachA)
+	if autoClickerC || autoClickerD /*|| reachA*/ {
+		// These checks are not always accurate, and shouldn't be punished for.
 		return
 	}
-	if pl, ok := utils.Srv.PlayerByName(a.p.Name()); ok {
-		if session.Get(pl).Staff() {
-			return
-		}
-		punishmentString := "Kick"
-		reason := name + "(" + sub + ")"
-		playerName := pl.Name()
-		//if c.BaseSettings().Punishment == punishment.Ban() {
-		//	pl.Disconnect(fmt.Sprintf("§6[§bOomph§6] Caught yo ass lackin!\n§6Reason: §b%v", reason))
-		//	db.BanPlayer(pl.Name(), "Oomph", reason, time.Hour*24*14)
-		//} else if c.BaseSettings().Punishment == punishment.Kick() {
+
+	pl, ok := utils.Srv.PlayerByName(a.p.Name())
+	if !ok {
+		return
+	}
+	name, sub := ch.Name()
+	if session.Get(pl).Staff() {
+		return
+	}
+
+	reason := fmt.Sprintf("%s (%s)", name, sub)
+	punishmentString := "Kick"
+	ban := checkBan(ch)
+	if ban {
+		punishmentString = "Ban"
+		db.BanPlayer(pl.Name(), "Oomph", reason, time.Hour*24*14)
+	} else {
 		_, _ = fmt.Fprintf(chat.Global, utils.Config.Kick.Broadcast, pl.Name(), "Oomph", reason)
 		pl.Disconnect(fmt.Sprintf("§6[§bOomph§6] Caught yo ass lackin!\n§6Reason: §b%v", reason))
-		//} else {
-		//	return
-		//}
-		*m = fmt.Sprintf("§6[§bOomph§6] Caught yo ass lackin!\n§6Reason: §b%v", reason)
-		ctx.After(func(cancelled bool) {
-			if cancelled {
-				return
-			}
-			db.BanPlayer(playerName, "Oomph", reason, time.Hour*24*14)
-			webhook.Send(utils.Config.Discord.Webhook.AntiCheatLogger, webhook.Message{
-				Embeds: []webhook.Embed{{
-					Title:       "**Oomph Punishment**",
-					Description: fmt.Sprintf("Player: %v\nPunishment: %v\nCheck:%v\nViolations: %v", playerName, punishmentString, reason, utils.Round(c.Violations(), 2)),
-					Color:       0xFF009F,
-					Footer:      webhook.Footer{Text: time.Now().Format("01/02/06 @ 03:04:05 PM")},
-				}},
-			})
-		})
 	}
+
+	webhook.Send(utils.Config.Discord.Webhook.AntiCheatLogger, webhook.Message{
+		Embeds: []webhook.Embed{{
+			Title: "**Oomph Punishment**",
+			Description: fmt.Sprintf(
+				"Player: %v\nPunishment: %v\nCheck:%v\nViolations: %v",
+				pl.Name(), punishmentString, reason, utils.Round(ch.Violations(), 2),
+			),
+			Color:  0xFF009F,
+			Footer: webhook.Footer{Text: time.Now().Format("01/02/06 @ 03:04:05 PM")},
+		}},
+	})
 }
 
-func (a AntiCheatHandler) HandleFlag(ctx *event.Context, c check.Check, params map[string]interface{}) {
+// HandleFlag ...
+func (a AntiCheatHandler) HandleFlag(ctx *event.Context, c check.Check, params map[string]any) {
 	ctx.Cancel()
 	name, sub := c.Name()
 	_, _ = fmt.Fprintf(chat.Global, "§7[§cOomph§7] §b%v §6flagged §b%v (%v) §6(§cx%v§6) %v", a.p.Name(), name, sub, utils.Round(c.Violations(), 2), utils.PrettyParams(params))
 	//session.AllStaff().Messagef("§7[§cOomph§7] §b%v §6flagged §b%v (%v) §6(§cx%v§6) %v", a.p.Name(), name, sub, c.Violations(), utils.PrettyParams(params))
 }
 
-func (a AntiCheatHandler) HandleDebug(ctx *event.Context, _ check.Check, _ map[string]interface{}) {
+// HandleDebug ...
+func (a AntiCheatHandler) HandleDebug(ctx *event.Context, _ check.Check, _ map[string]any) {
 	ctx.Cancel()
+}
+
+// checkban checks if a check should ban.
+func checkBan(ch check.Check) (ban bool) {
+	ban = true
+	switch ch.(type) {
+	case *check.AutoClickerA, *check.AutoClickerB, *check.AutoClickerC, *check.AutoClickerD:
+		ban = false
+	case *check.OSSpoofer:
+		ban = false
+	case *check.TimerA:
+		ban = false
+	}
+	return
 }

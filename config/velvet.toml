@@ -10,6 +10,7 @@
     BanLogger = "https://discord.com/api/webhooks/752996288659849247/-aeMwvNXSIQ8bJxvISqU-TT3sI5HfHnu2LM3dB8Jh-RHHXz0pQxqVZLBK8uQKMHAaKU5"
     UnbanLogger = "https://discord.com/api/webhooks/812151702706585623/62QXehZ58BXZ4_XtuYozXGrxcY1lMRwe5OccoiXtdIeJHG8lm4ctCv47zRM1iqjucIhW"
     AntiCheatLogger = "https://discord.com/api/webhooks/767569955348283402/RAVAUKOYGEokCM4Tw_OynnyXPIIhVeDaChbLo5X8_3dYHX9mwrljo9oZdQIEfff6V8ts"
+  Invite = "discord.gg/yYpPX3d"
 
 # World names
 [World]

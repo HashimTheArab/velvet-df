@@ -23,10 +23,10 @@ func nodebuff_kit(p *player.Player) {
 	_ = p.Inventory().SetItem(0, item.NewStack(item.Sword{Tier: item.ToolTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking, item.NewEnchantment(enchantment.Sharpness{}, 1)))
 	_ = p.Inventory().SetItem(1, item.NewStack(item.EnderPearl{}, 16))
 	_, _ = p.Inventory().AddItem(item.NewStack(item.SplashPotion{Type: potion.StrongHealing()}, 34))
-	p.Armour().SetBoots(item.NewStack(item.Boots{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking))
-	p.Armour().SetLeggings(item.NewStack(item.Leggings{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking))
-	p.Armour().SetChestplate(item.NewStack(item.Chestplate{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking))
-	p.Armour().SetHelmet(item.NewStack(item.Helmet{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking))
+	p.Armour().SetBoots(item.NewStack(item.Boots{Tier: item.ArmourTierDiamond{}}, 1).WithCustomName(name).WithEnchantments(unbreaking))
+	p.Armour().SetLeggings(item.NewStack(item.Leggings{Tier: item.ArmourTierDiamond{}}, 1).WithCustomName(name).WithEnchantments(unbreaking))
+	p.Armour().SetChestplate(item.NewStack(item.Chestplate{Tier: item.ArmourTierDiamond{}}, 1).WithCustomName(name).WithEnchantments(unbreaking))
+	p.Armour().SetHelmet(item.NewStack(item.Helmet{Tier: item.ArmourTierDiamond{}}, 1).WithCustomName(name).WithEnchantments(unbreaking))
 	p.AddEffect(effect.New(effect.Speed{}, 1, time.Hour*10).WithoutParticles())
 }
 
@@ -38,10 +38,10 @@ func diamond_kit(p *player.Player) {
 	_ = p.Inventory().SetItem(1, item.NewStack(item.Bow{}, 1))
 	_ = p.Inventory().SetItem(9, item.NewStack(item.Arrow{}, 1))
 	_ = p.Inventory().SetItem(8, item.NewStack(item.Spyglass{}, 1))
-	p.Armour().SetBoots(item.NewStack(item.Boots{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name))
-	p.Armour().SetLeggings(item.NewStack(item.Leggings{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name))
-	p.Armour().SetChestplate(item.NewStack(item.Chestplate{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name))
-	p.Armour().SetHelmet(item.NewStack(item.Helmet{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name))
+	p.Armour().SetBoots(item.NewStack(item.Boots{Tier: item.ArmourTierDiamond{}}, 1).WithCustomName(name))
+	p.Armour().SetLeggings(item.NewStack(item.Leggings{Tier: item.ArmourTierDiamond{}}, 1).WithCustomName(name))
+	p.Armour().SetChestplate(item.NewStack(item.Chestplate{Tier: item.ArmourTierDiamond{}}, 1).WithCustomName(name))
+	p.Armour().SetHelmet(item.NewStack(item.Helmet{Tier: item.ArmourTierDiamond{}}, 1).WithCustomName(name))
 }
 
 func build_kit(p *player.Player) {
@@ -61,10 +61,10 @@ func build_kit(p *player.Player) {
 	_ = p.Inventory().SetItem(8, item.NewStack(item.Spyglass{}, 1))
 	_ = p.Inventory().SetItem(9, item.NewStack(item.Arrow{}, 16))
 
-	p.Armour().SetBoots(item.NewStack(item.Boots{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking))
-	p.Armour().SetLeggings(item.NewStack(item.Leggings{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking))
-	p.Armour().SetChestplate(item.NewStack(item.Chestplate{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking))
-	p.Armour().SetHelmet(item.NewStack(item.Helmet{Tier: item.ArmourTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking))
+	p.Armour().SetBoots(item.NewStack(item.Boots{Tier: item.ArmourTierDiamond{}}, 1).WithCustomName(name).WithEnchantments(unbreaking))
+	p.Armour().SetLeggings(item.NewStack(item.Leggings{Tier: item.ArmourTierDiamond{}}, 1).WithCustomName(name).WithEnchantments(unbreaking))
+	p.Armour().SetChestplate(item.NewStack(item.Chestplate{Tier: item.ArmourTierDiamond{}}, 1).WithCustomName(name).WithEnchantments(unbreaking))
+	p.Armour().SetHelmet(item.NewStack(item.Helmet{Tier: item.ArmourTierDiamond{}}, 1).WithCustomName(name).WithEnchantments(unbreaking))
 }
 
 func DefaultKit(p *player.Player) {

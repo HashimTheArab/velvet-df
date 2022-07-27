@@ -1,99 +1,36 @@
 package db
 
 import (
-	"fmt"
-	"github.com/df-mc/dragonfly/server/player/chat"
 	"time"
-	"velvet/discord/webhook"
-	"velvet/utils"
 )
 
-// GetBan returns the ban of a player, or nil if the player is not banned.
-func GetBan(id string) *BanEntry {
-	var entry BanEntry
-	if err := db.QueryRowx("SELECT * FROM Bans WHERE XUID=? OR IGN=?", id, id).StructScan(&entry); err != nil {
-		return nil
-	}
-	if !entry.Blacklist() && time.Now().Unix() >= entry.Expires {
-		UnbanPlayer(id)
-		return nil
-	}
-	return &entry
+// Punishment is a struct used for storing punishments such as mutes and bans.
+type Punishment struct {
+	Mod        string    `bson:"mod"`
+	Reason     string    `bson:"reason"`
+	Permanent  bool      `bson:"permanent"`
+	Expiration time.Time `bson:"expiration"`
 }
 
-// BanPlayer bans a player and handles everything such as the disconnection, broadcasting, and webhook.
-func BanPlayer(target, mod, reason string, length time.Duration) {
-	p, ok := utils.Srv.PlayerByName(target)
-	blacklist := length == -1
-	lengthString := utils.DurationToString(length)
-	var xuid string
-	if ok {
-		target = p.Name()
-		xuid = p.XUID()
-		if blacklist {
-			p.Disconnect(utils.Config.Ban.BlacklistScreen)
-		} else {
-			p.Disconnect(fmt.Sprintf(utils.Config.Ban.Screen, mod, reason, lengthString))
-		}
-	}
-	if blacklist {
-		_, _ = fmt.Fprintf(chat.Global, utils.Config.Ban.BlacklistBroadcast, target, mod, reason)
-	} else {
-		_, _ = fmt.Fprintf(chat.Global, utils.Config.Ban.Broadcast, target, mod, lengthString, reason)
-	}
-	go func() {
-		var expires int64 = -1
-		if length != 0 {
-			expires = time.Now().Add(length).Unix()
-		}
-		_, _ = db.Exec("INSERT INTO Bans(XUID, IGN, Mod, Reason, Expires) VALUES(?, ?, ?, ?, ?)", xuid, target, mod, reason, expires)
-		var msg webhook.Message
-		if blacklist {
-			msg = webhook.Message{
-				Embeds: []webhook.Embed{{
-					Title:       "Player Blacklisted",
-					Description: fmt.Sprintf("**Player:** %v\n**Staff:** %v\n**Reason:** %v", target, mod, reason),
-					Color:       0xc000ff,
-				}},
-			}
-		} else {
-			msg = webhook.Message{
-				Embeds: []webhook.Embed{{
-					Title:       "Player Banned",
-					Description: fmt.Sprintf("**Player:** %v\n**Staff:** %v\n**Reason:** %v\n**Length:** %v", target, mod, reason, lengthString),
-					Color:       0xc000ff,
-				}},
-			}
-		}
-		webhook.Send(utils.Config.Discord.Webhook.BanLogger, msg)
-	}()
+// Remaining returns the remaining duration of the punishment.
+func (p Punishment) Remaining() time.Duration {
+	return time.Until(p.Expiration).Round(time.Second)
 }
 
-// UnbanPlayer unbans a player.
-func UnbanPlayer(id string) {
-	_, _ = db.Exec("DELETE FROM Bans WHERE XUID=? OR IGN=?", id, id)
+// Expired checks if the punishment has expired.
+func (p Punishment) Expired() bool {
+	return !p.Permanent && time.Now().After(p.Expiration)
 }
 
-// DeviceBan will return an existing ban with the given device id or nil.
-func DeviceBan(deviceID string) *BanEntry {
-	if rows, err := db.Query("SELECT XUID, IGN FROM Players WHERE DeviceID=?", deviceID); err == nil { // get all players with that device id
-		var xuids, names []string
-		for rows.Next() {
-			var xuid, name string
-			if err := rows.Scan(&xuid, &name); err == nil {
-				xuids, names = append(xuids, xuid), append(names, name)
-			}
-		}
-		var entry *BanEntry
-		if err := db.QueryRowx("SELECT * FROM Bans WHERE XUID IN (?) OR IGN IN (?)", xuids, names).StructScan(entry); err != nil { // get the first ban with any of the names or xuids
-			return nil
-		}
-		if !entry.Blacklist() && time.Now().Unix() >= entry.Expires { // unban if the ban has expired
-			UnbanPlayer(entry.IGN)
-			UnbanPlayer(entry.XUID)
-			return nil
-		}
-		return entry
+// Update saves the passed xuid for the ban.
+func (p Punishment) Update(ign, xuid string) {
+	_ = findBan(ign).Update(map[string]string{"xuid": xuid})
+}
+
+// FormattedExpiration returns how long is left on the ban, formatted nicely.
+func (p Punishment) FormattedExpiration() string {
+	if p.Permanent {
+		return "Never"
 	}
-	return nil
+	return (time.Second * p.Remaining()).String()
 }

@@ -3,11 +3,10 @@ package entity
 import (
 	"github.com/df-mc/dragonfly/server/block"
 	"github.com/df-mc/dragonfly/server/block/cube"
+	"github.com/df-mc/dragonfly/server/block/cube/trace"
 	"github.com/df-mc/dragonfly/server/entity"
 	"github.com/df-mc/dragonfly/server/entity/effect"
 	"github.com/df-mc/dragonfly/server/entity/healing"
-	"github.com/df-mc/dragonfly/server/entity/physics"
-	"github.com/df-mc/dragonfly/server/entity/physics/trace"
 	"github.com/df-mc/dragonfly/server/item/potion"
 	"github.com/df-mc/dragonfly/server/world"
 	"github.com/df-mc/dragonfly/server/world/particle"
@@ -63,9 +62,9 @@ func (s *SplashPotion) EncodeEntity() string {
 	return "minecraft:splash_potion"
 }
 
-// AABB ...
-func (s *SplashPotion) AABB() physics.AABB {
-	return physics.NewAABB(mgl64.Vec3{-0.125, 0, -0.125}, mgl64.Vec3{0.125, 0.25, 0.125})
+// BBox ...
+func (s *SplashPotion) BBox() cube.BBox {
+	return cube.Box(-0.125, 0, -0.125, 0.125, 0.25, 0.125)
 }
 
 // Rotation ...
@@ -103,7 +102,7 @@ func (s *SplashPotion) Tick(w *world.World, current int64) {
 	}
 
 	if result != nil {
-		aabb := s.AABB().Translate(m.Position())
+		aabb := s.BBox().Translate(m.Position())
 		colour := color.RGBA{R: 0x38, G: 0x5d, B: 0xc6, A: 0xff}
 		if effects := s.t.Effects(); len(effects) > 0 {
 			colour, _ = effect.ResultingColour(effects)
@@ -115,11 +114,11 @@ func (s *SplashPotion) Tick(w *world.World, current int64) {
 
 			for _, e := range w.EntitiesWithin(aabb.GrowVec3(mgl64.Vec3{6, 4.5, 6}), ignore) {
 				pos := e.Position()
-				if !e.AABB().Translate(pos).IntersectsWith(aabb.GrowVec3(mgl64.Vec3{3, 2.125, 3})) {
+				if !e.BBox().Translate(pos).IntersectsWith(aabb.GrowVec3(mgl64.Vec3{3, 2.125, 3})) {
 					continue
 				}
 
-				dist := world.Distance(pos, m.Position())
+				dist := pos.Sub(m.Position()).Len()
 				if dist > 4 {
 					continue
 				}
@@ -136,7 +135,7 @@ func (s *SplashPotion) Tick(w *world.World, current int64) {
 				splashed := e.(entity.Living)
 				for _, eff := range effects {
 					if eff.Type() == (effect.InstantHealth{}) && eff.Level() == 2 {
-						splashed.Heal(float64(int(4)<<(eff.Level()-1))*distMultiplier*1.75, healing.SourceCustom{})
+						splashed.Heal(float64(int(4)<<(eff.Level()-1))*distMultiplier*1.75, healing.SourceInstantHealthEffect{})
 						continue
 					}
 					if p, ok := eff.Type().(effect.PotentType); ok {
@@ -151,17 +150,17 @@ func (s *SplashPotion) Tick(w *world.World, current int64) {
 					splashed.AddEffect(effect.New(eff.Type().(effect.LastingType), eff.Level(), dur))
 				}
 			}
-		} else if s.t.Equals(potion.Water()) {
+		} else if s.t == potion.Water() {
 			if blockResult, ok := result.(*trace.BlockResult); ok {
 				pos := blockResult.BlockPosition().Side(blockResult.Face())
 				if _, ok := w.Block(pos).(block.Fire); ok {
-					w.SetBlock(pos, block.Air{})
+					w.SetBlock(pos, block.Air{}, nil)
 				}
 
 				for _, f := range cube.HorizontalFaces() {
 					h := pos.Side(f)
 					if _, ok := w.Block(h).(block.Fire); ok {
-						w.SetBlock(h, block.Air{})
+						w.SetBlock(h, block.Air{}, nil)
 					}
 				}
 			}

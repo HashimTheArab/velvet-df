@@ -36,7 +36,7 @@ func DurationToString(t time.Duration) string {
 }
 
 // PrettyParams converts the given parameters to a readable string.
-func PrettyParams(params map[string]interface{}) string {
+func PrettyParams(params map[string]any) string {
 	if len(params) == 0 {
 		// Don't waste our time if there are no parameters.
 		return "[]"

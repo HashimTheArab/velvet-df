@@ -1,6 +1,9 @@
 package session
 
-import "sync"
+import (
+	"fmt"
+	"sync"
+)
 
 // Staff contains the staff list and all its methods.
 type Staff struct {
@@ -19,7 +22,7 @@ func AllStaff() *Staff {
 }
 
 // Message will send a message to all online staff.
-func (s *Staff) Message(a ...interface{}) {
+func (s *Staff) Message(a ...any) {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	for _, v := range s.list {
@@ -28,7 +31,7 @@ func (s *Staff) Message(a ...interface{}) {
 }
 
 // Messagef will send a formatted message to all online staff.
-func (s *Staff) Messagef(f string, a ...interface{}) {
+func (s *Staff) Messagef(f string, a ...any) {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	for _, v := range s.list {
@@ -37,11 +40,11 @@ func (s *Staff) Messagef(f string, a ...interface{}) {
 }
 
 // Whisper will send a gray italic message to all online staff.
-func (s *Staff) Whisper(f string, a ...interface{}) {
+func (s *Staff) Whisper(f string, a ...any) {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	for _, v := range s.list {
-		v.Player.Messagef("§7§o["+f+"]", a...)
+		v.Player.Messagef(fmt.Sprintf("§7§o[%s]", f), a...)
 	}
 }
 

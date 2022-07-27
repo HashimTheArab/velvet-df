@@ -9,34 +9,12 @@ import (
 	"velvet/utils"
 )
 
+// ffa is the ffa form.
 type ffa struct {
 	p *player.Player
 }
 
-func (f ffa) Submit(_ form.Submitter, pressed form.Button) {
-	var g *game.Game
-	name := strings.Split(pressed.Text, "\n")[0]
-	for _, v := range game.Games {
-		if v.DisplayName == name {
-			g = v
-			break
-		}
-	}
-
-	if g == nil {
-		f.p.Message(utils.Config.Message.ModeUnavailable)
-		return
-	}
-	w, ok := utils.WorldMG.World(strings.ToLower(g.Name))
-	if !ok {
-		f.p.Message(utils.Config.Message.ModeUnavailable)
-		return
-	}
-
-	w.AddEntity(f.p)
-	f.p.Message("§7Welcome to " + g.Name + ".")
-}
-
+// FFA creates a new FFA form.
 func FFA(p *player.Player) form.Menu {
 	var buttons []form.Button
 	var games = []string{game.NoDebuff, game.Diamond, game.Build}
@@ -60,4 +38,29 @@ func FFA(p *player.Player) form.Menu {
 		buttons = append(buttons, form.NewButton(name, g.FormData.ResourcePath))
 	}
 	return form.NewMenu(ffa{p}, "§l§aFree For All!").WithButtons(buttons...)
+}
+
+// Submit ...
+func (f ffa) Submit(_ form.Submitter, pressed form.Button) {
+	var g *game.Game
+	name := strings.Split(pressed.Text, "\n")[0]
+	for _, v := range game.Games {
+		if v.DisplayName == name {
+			g = v
+			break
+		}
+	}
+
+	if g == nil {
+		f.p.Message(utils.Config.Message.ModeUnavailable)
+		return
+	}
+	w, ok := utils.WorldMG.World(strings.ToLower(g.Name))
+	if !ok {
+		f.p.Message(utils.Config.Message.ModeUnavailable)
+		return
+	}
+
+	w.AddEntity(f.p)
+	f.p.Message("§7Welcome to " + g.Name + ".")
 }

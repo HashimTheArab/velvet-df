@@ -14,16 +14,12 @@ var sessions = Sessions{
 	list: make(map[string]*Session),
 }
 
-func New(name string) *Session {
-	session := &Session{}
-
-	sessions.mutex.Lock()
-	sessions.list[name] = session
-	sessions.mutex.Unlock()
-
-	return session
+// All returns every loaded sessions.
+func All() *Sessions {
+	return &sessions
 }
 
+// Get gets a session based on the player.
 func Get(p *player.Player) *Session {
 	if p == nil {
 		return nil
@@ -33,14 +29,15 @@ func Get(p *player.Player) *Session {
 	return sessions.list[p.Name()]
 }
 
+// FromName gets a session based on a name.
 func FromName(name string) *Session {
 	sessions.mutex.Lock()
 	defer sessions.mutex.Unlock()
 	return sessions.list[name]
 }
 
+// Close closes and saves the session.
 func (s *Session) Close() {
-	s.Save()
 	if s.HasFlag(FlagStaff) {
 		RemoveStaff(s)
 	}
@@ -50,6 +47,7 @@ func (s *Session) Close() {
 	delete(sessions.list, s.Player.Name())
 }
 
+// CloseWithoutSaving closes the session without saving data.
 func (s *Session) CloseWithoutSaving(name string) {
 	sessions.mutex.Lock()
 	defer sessions.mutex.Unlock()
@@ -59,10 +57,7 @@ func (s *Session) CloseWithoutSaving(name string) {
 	delete(sessions.list, name)
 }
 
-func All() *Sessions {
-	return &sessions
-}
-
+// UpdateScoreboards updates the scoreboard of every session.
 func (s *Sessions) UpdateScoreboards(online, kd bool) {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()

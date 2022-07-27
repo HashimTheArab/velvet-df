@@ -6,11 +6,9 @@ import (
 	"velvet/session"
 )
 
-type Vanish struct {
-	// Targets []cmd.Target `name:"target" optional:""` todo
-}
+type Vanish struct{}
 
-func (t Vanish) Run(source cmd.Source, output *cmd.Output) {
+func (t Vanish) Run(source cmd.Source, _ *cmd.Output) {
 	p, ok := source.(*player.Player)
 	if !ok {
 		return

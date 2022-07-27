@@ -10,7 +10,6 @@ import (
 	_ "velvet/commands"
 	"velvet/console"
 	_ "velvet/db"
-	"velvet/dfutils"
 	_ "velvet/utils"
 )
 
@@ -34,5 +33,5 @@ func main() {
 	}()
 
 	console.StartNew()
-	dfutils.StartServer()
+	startServer()
 }

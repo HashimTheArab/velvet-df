@@ -1,10 +1,10 @@
 package entity
 
 import (
+	"github.com/df-mc/dragonfly/server/block/cube"
+	"github.com/df-mc/dragonfly/server/block/cube/trace"
 	"github.com/df-mc/dragonfly/server/entity"
 	"github.com/df-mc/dragonfly/server/entity/damage"
-	"github.com/df-mc/dragonfly/server/entity/physics"
-	"github.com/df-mc/dragonfly/server/entity/physics/trace"
 	"github.com/df-mc/dragonfly/server/player"
 	"github.com/df-mc/dragonfly/server/session"
 	"github.com/df-mc/dragonfly/server/world"
@@ -12,8 +12,8 @@ import (
 	"github.com/df-mc/dragonfly/server/world/sound"
 	"github.com/go-gl/mathgl/mgl32"
 	"github.com/go-gl/mathgl/mgl64"
-	"github.com/sandertv/gophertunnel/minecraft/protocol/packet"
 	"image/color"
+	_ "unsafe"
 	vs "velvet/session"
 )
 
@@ -64,9 +64,9 @@ func (e *Pearl) Scale() float64 {
 	return 0.6
 }
 
-// AABB ...
-func (e *Pearl) AABB() physics.AABB {
-	return physics.NewAABB(mgl64.Vec3{-0.125, 0, -0.125}, mgl64.Vec3{0.125, 0.25, 0.125})
+// BBox ...
+func (e *Pearl) BBox() cube.BBox {
+	return cube.Box(-0.125, 0, -0.125, 0.125, 0.25, 0.125)
 }
 
 // Rotation ...
@@ -82,11 +82,14 @@ func (e *Pearl) Tick(w *world.World, current int64) {
 		_ = e.Close()
 		return
 	}
+
 	e.mu.Lock()
 	m, result := e.c.TickMovement(e, e.pos, e.vel, e.yaw, e.pitch, e.ignores)
 	e.yaw, e.pitch = m.Rotation()
 	e.pos, e.vel = m.Position(), m.Velocity()
+	owner := e.owner
 	e.mu.Unlock()
+
 	w.AddParticle(m.Position(), particle.Flame{Colour: color.RGBA{G: 255, B: 255}})
 
 	e.age++
@@ -106,37 +109,16 @@ func (e *Pearl) Tick(w *world.World, current int64) {
 			}
 		}
 
-		if owner := e.Owner(); owner != nil {
+		if owner != nil {
 			if user, ok := owner.(*player.Player); ok {
 				s := vs.Get(user)
-				w.PlaySound(user.Position(), sound.EndermanTeleport{})
+				w.PlaySound(user.Position(), sound.Teleport{})
 
-				yaw, pitch := user.Rotation()
-				onGround := user.OnGround()
-				translatedPos := vec64To32(m.Position()).Add(mgl32.Vec3{0, 1.621, 0})
-				s.WritePacket(&packet.MovePlayer{
-					EntityRuntimeID: 1,
-					Position:        translatedPos,
-					OnGround:        onGround,
-					Yaw:             float32(yaw),
-					HeadYaw:         float32(yaw),
-					Pitch:           float32(pitch),
-					Mode:            packet.MoveModeTeleport,
-				})
-				for _, v := range w.Viewers(m.Position()) {
-					session_writePacket(s.NetworkSession, &packet.MovePlayer{
-						EntityRuntimeID: session_entityRuntimeID(v.(*session.Session), user),
-						Position:        translatedPos,
-						OnGround:        onGround,
-						Yaw:             float32(yaw),
-						HeadYaw:         float32(yaw),
-						Pitch:           float32(pitch),
-						Mode:            packet.MoveModeNormal,
-					})
-				}
+				session_ViewEntityTeleport(s.NetworkSession, owner, m.Position())
+				user.Move(m.Position().Sub(user.Position()), 0, 0)
 
 				w.AddParticle(m.Position(), particle.EndermanTeleportParticle{})
-				w.PlaySound(m.Position(), sound.EndermanTeleport{})
+				w.PlaySound(m.Position(), sound.Teleport{})
 			}
 		}
 
@@ -168,3 +150,7 @@ func (e *Pearl) Own(owner world.Entity) {
 func vec64To32(vec3 mgl64.Vec3) mgl32.Vec3 {
 	return mgl32.Vec3{float32(vec3[0]), float32(vec3[1]), float32(vec3[2])}
 }
+
+//go:linkname session_ViewEntityTeleport github.com/df-mc/dragonfly/server/session.(*Session).ViewEntityTeleport
+//noinspection ALL
+func session_ViewEntityTeleport(*session.Session, world.Entity, mgl64.Vec3)

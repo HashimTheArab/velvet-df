@@ -16,7 +16,7 @@ type Kick struct {
 
 func (t Kick) Run(source cmd.Source, output *cmd.Output) {
 	if target, ok := t.Player[0].(*player.Player); ok {
-		if target.Name() == source.Name() || (source.Name() != utils.Config.Staff.Owner.Name && session.Get(target).HasFlag(session.FlagStaff)) {
+		if target == source || (source.Name() != utils.Config.Staff.Owner.Name && session.Get(target).HasFlag(session.FlagStaff)) {
 			output.Print(utils.Config.Message.CannotPunishPlayer)
 			return
 		}

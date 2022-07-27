@@ -46,7 +46,6 @@ func (t SetRank) Run(source cmd.Source, output *cmd.Output) {
 		}
 		if canSetRank(p.Name(), source, output) {
 			s.SetRank(rank)
-			db.SetRank(p.XUID(), rank.Name)
 			setRankFlags(s, rank.Name)
 			output.Printf(utils.Config.Rank.Set, p.Name(), rank.Name)
 		}
@@ -66,7 +65,6 @@ func (t RemoveRank) Run(source cmd.Source, output *cmd.Output) {
 		}
 		if canSetRank(p.Name(), source, output) {
 			s.SetRank(nil)
-			db.SetRank(p.XUID(), "")
 			setRankFlags(s, "")
 			output.Printf(utils.Config.Rank.Removed, p.Name())
 		}
@@ -84,7 +82,12 @@ func (t SetRankOffline) Run(source cmd.Source, output *cmd.Output) {
 		return
 	}
 	if canSetRank(t.Target, source, output) {
-		db.SetRank(t.Target, rank.Name)
+		p, err := db.LoadOfflinePlayer(t.Target)
+		if err != nil {
+			panic(err)
+		}
+		p.Rank = rank.Name
+		_ = db.SaveOfflinePlayer(p)
 		output.Printf(utils.Config.Rank.Set, t.Target, rank.Name)
 	}
 }
@@ -95,7 +98,12 @@ func (t RemoveRankOffline) Run(source cmd.Source, output *cmd.Output) {
 		return
 	}
 	if canSetRank(t.Target, source, output) {
-		db.SetRank(t.Target, "")
+		p, err := db.LoadOfflinePlayer(t.Target)
+		if err != nil {
+			panic(err)
+		}
+		p.Rank = ""
+		_ = db.SaveOfflinePlayer(p)
 		output.Printf(utils.Config.Rank.Removed, t.Target)
 	}
 }
@@ -112,7 +120,7 @@ func (ranks) Type() string { return "Rank" }
 func (ranks) Options(cmd.Source) []string {
 	r := perm.Ranks()
 	var rankList []string
-	for name, _ := range r {
+	for name := range r {
 		rankList = append(rankList, name)
 	}
 	return rankList

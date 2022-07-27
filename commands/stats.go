@@ -17,47 +17,30 @@ type StatsOffline struct {
 }
 
 func (t StatsOnline) Run(source cmd.Source, output *cmd.Output) {
-	p, ok := source.(*player.Player)
-	if !ok {
-		return
-	}
-
-	var data db.PlayerData
-	var name string
+	p := source.(*player.Player)
 	if len(t.Target) > 0 {
 		if len(t.Target) > 1 {
 			output.Error("You can only check the stats of one player at a time.")
 			return
 		}
 		if pl, ok := t.Target[0].(*player.Player); ok {
-			s := session.Get(pl)
-			data = db.PlayerData{
-				PlayerStats: s.Stats,
-				Rank:        s.RankName(),
-			}
-			name = pl.Name()
+			p.SendForm(form.StatsOnline(session.Get(pl)))
 		} else {
 			output.Error("Player not found.")
 		}
 	} else {
-		s := session.Get(p)
-		data = db.PlayerData{
-			PlayerStats: s.Stats,
-			Rank:        s.RankName(),
-		}
-		name = p.NameTag()
-	}
-	sendDataForm(p, name, data)
-}
-
-func (t StatsOffline) Run(source cmd.Source, _ *cmd.Output) {
-	if p, ok := source.(*player.Player); ok {
-		sendDataForm(p, t.Target, db.GetData(t.Target))
+		p.SendForm(form.StatsOnline(session.Get(p)))
 	}
 }
 
-func sendDataForm(p *player.Player, target string, data db.PlayerData) {
-	p.SendForm(form.Stats(target, data))
+func (t StatsOffline) Run(source cmd.Source, o *cmd.Output) {
+	u, err := db.LoadOfflinePlayer(t.Target)
+	if err != nil {
+		o.Error("That player has not joined before.")
+		return
+	}
+
+	source.(*player.Player).SendForm(form.StatsOffline(u))
 }
 
 func (StatsOnline) Allow(s cmd.Source) bool  { return !checkConsole(s) }

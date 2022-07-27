@@ -39,7 +39,7 @@ func (t Ban) Run(source cmd.Source, output *cmd.Output) {
 	}
 	if target, ok := t.Player[0].(*player.Player); ok {
 		if _, ok := source.(*console.CommandSender); !ok {
-			if target.Name() == source.Name() || (source.Name() != utils.Config.Staff.Owner.Name && session.Get(target).HasFlag(session.FlagStaff)) {
+			if target == source || (source.Name() != utils.Config.Staff.Owner.Name && session.Get(target).HasFlag(session.FlagStaff)) {
 				output.Print(utils.Config.Message.CannotPunishPlayer)
 				return
 			}
@@ -58,7 +58,7 @@ func (t Ban) Run(source cmd.Source, output *cmd.Output) {
 }
 
 func (t BanOffline) Run(source cmd.Source, output *cmd.Output) {
-	p, _ := source.(*player.Player)
+	p := source.(*player.Player)
 	if _, ok := source.(*console.CommandSender); !ok {
 		if t.Player == source.Name() || (db.IsStaff(t.Player) && p.XUID() != utils.Config.Staff.Owner.XUID) {
 			output.Print(utils.Config.Message.CannotPunishPlayer)
@@ -78,33 +78,33 @@ func (t BanOffline) Run(source cmd.Source, output *cmd.Output) {
 }
 
 func (t BanLift) Run(_ cmd.Source, output *cmd.Output) {
-	b := db.GetBan(t.Player)
-	if b != nil {
-		db.UnbanPlayer(t.Player)
-		output.Printf(utils.Config.Ban.PlayerUnbanned, b.IGN)
-		webhook.Send(utils.Config.Discord.Webhook.UnbanLogger, webhook.Message{
-			Embeds: []webhook.Embed{{
-				Title:       "Player Pardoned",
-				Description: fmt.Sprintf("**Player:** %v\n**Staff:** %v\n", b.IGN, b.Mod),
-				Color:       0xFF8900,
-			}},
-		})
-	} else {
-		output.Print(utils.Config.Ban.PlayerNotBanned)
+	p, ban, ok := db.GetBan(t.Player)
+	if !ok {
+		output.Error(utils.Config.Ban.PlayerNotBanned)
+		return
 	}
+	db.UnbanPlayer(t.Player)
+	output.Printf(utils.Config.Ban.PlayerUnbanned, p.DisplayName)
+	webhook.Send(utils.Config.Discord.Webhook.UnbanLogger, webhook.Message{
+		Embeds: []webhook.Embed{{
+			Title:       "Player Pardoned",
+			Description: fmt.Sprintf("**Player:** %v\n**Staff:** %v\n", p.DisplayName, ban.Mod),
+			Color:       0xFF8900,
+		}},
+	})
 }
 
 func (t BanInfo) Run(_ cmd.Source, output *cmd.Output) {
-	b := db.GetBan(t.Player)
-	if b != nil {
-		output.Printf(utils.Config.Ban.Info, b.IGN, b.Mod, b.Reason, b.FormattedExpiration())
-	} else {
-		output.Print(utils.Config.Ban.PlayerNotBanned)
+	p, ban, ok := db.GetBan(t.Player)
+	if !ok {
+		output.Error(utils.Config.Ban.PlayerNotBanned)
+		return
 	}
+	output.Printf(utils.Config.Ban.Info, p.DisplayName, ban.Mod, ban.Reason, ban.FormattedExpiration())
 }
 
 func ban(p cmd.Source, output *cmd.Output, target, reason string, length time.Duration) {
-	if db.GetBan(target) != nil {
+	if _, _, ok := db.GetBan(target); ok {
 		output.Print(utils.Config.Ban.PlayerAlreadyBanned)
 		return
 	}

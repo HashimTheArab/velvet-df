@@ -22,6 +22,7 @@ type config struct {
 			UnbanLogger     string
 			AntiCheatLogger string
 		}
+		Invite string
 	}
 	World struct {
 		NoDebuff string

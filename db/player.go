@@ -1,88 +1,92 @@
 package db
 
 import (
-	"velvet/perm"
+	"fmt"
+	"github.com/df-mc/dragonfly/server/player/chat"
+	"github.com/upper/db/v4"
+	"time"
+	"velvet/discord/webhook"
+	"velvet/utils"
 )
 
-// Register registers a player into the database.
-func Register(xuid, ign, deviceId string) {
-	_, _ = db.Exec("INSERT INTO Players(XUID, IGN, DeviceID) VALUES (?, ?, ?) ON CONFLICT DO UPDATE SET IGN=?, DeviceID=?", xuid, ign, deviceId, ign, deviceId)
+var (
+	PunishmentTypeBan  = "ban"
+	PunishmentTypeMute = "mute"
+)
+
+// GetBan gets the ban for a player, if the ban does not exist the boolean will be false.
+func GetBan(id string) (*Entry, Punishment, bool) {
+	p, err := LoadOfflinePlayer(id)
+	if err != nil {
+		return nil, Punishment{}, false
+	}
+	if p.Punishments.Ban.Expired() {
+		UnbanPlayer(id)
+		return nil, Punishment{}, false
+	}
+	return p, p.Punishments.Ban, true
 }
 
-// Registered returns whether a player is registered
-func Registered(id string) bool {
-	var r bool
-	_ = db.QueryRow("SELECT EXISTS(SELECT IGN FROM Players WHERE IGN=? OR XUID=?)", id, id).Scan(&r)
-	return r
-}
-
-// GetDeviceID will return the device id for the given ign or an empty string if that player has never joined before.
-func GetDeviceID(ign string) string {
-	var deviceID string
-	_ = db.QueryRow("SELECT DeviceID FROM Players WHERE IGN=?", ign).Scan(&deviceID)
-	return deviceID
-}
-
-// GetAlias will return all the names that have the same deviceID as the given ign.
-// Zero values will be returned if the player has never joined before.
-func GetAlias(ign string) (deviceID string, names []string) {
-	if deviceID = GetDeviceID(ign); deviceID != "" {
-		if rows, err := db.Query("SELECT IGN FROM Players WHERE DeviceID=?", deviceID); err == nil { // get all players with the deviceID
-			for rows.Next() {
-				var name string
-				if err := rows.Scan(&name); err == nil {
-					names = append(names, name)
-				}
-			}
-			if len(names) > 0 {
-				var bans []string
-				if rows, err := db.Query("SELECT IGN FROM Bans WHERE IGN IN (?)", names); err == nil { // get all bans from the names
-					for rows.Next() {
-						var ban string
-						if err := rows.Scan(&ban); err == nil {
-							bans = append(bans, ban)
-						}
-					}
-				}
-				for k, v := range names {
-					for _, bannedPlayer := range bans {
-						if bannedPlayer == v {
-							names[k] = v + " §l§cBANNED§r"
-						}
-					}
-					names[k] = "§e" + v
-				}
-			}
+// BanPlayer bans a player and handles everything such as the disconnection, broadcasting, and webhook.
+func BanPlayer(target, mod, reason string, length time.Duration) {
+	p, ok := utils.Srv.PlayerByName(target)
+	blacklist := length == -1
+	lengthString := utils.DurationToString(length)
+	if ok {
+		target = p.Name()
+		if blacklist {
+			p.Disconnect(utils.Config.Ban.BlacklistScreen)
+		} else {
+			p.Disconnect(fmt.Sprintf(utils.Config.Ban.Screen, mod, reason, lengthString))
 		}
 	}
-	return
-}
-
-// SetRank will set the rank for a player.
-func SetRank(id, rank string) {
-	_, _ = db.Exec("UPDATE Players set PlayerRank=? WHERE IGN=? OR XUID=?", rank, id, id)
-}
-
-// GetRank will return the rank of a player or nil.
-func GetRank(id string) *perm.Rank {
-	var rank string
-	_ = db.QueryRow("SELECT PlayerRank FROM Players WHERE IGN=? OR XUID=?", id, id).Scan(&rank)
-	return perm.GetRank(rank)
-}
-
-// HasRank will return true if the given player has the given rank.
-func HasRank(id string, rank string) bool {
-	var found string
-	_ = db.QueryRow("SELECT PlayerRank FROM Players WHERE IGN=? OR XUID=?", id, id).Scan(&found)
-	return found == rank
-}
-
-// IsStaff will return whether a player has a staff rank.
-func IsStaff(id string) bool {
-	var found string
-	_ = db.QueryRow("SELECT PlayerRank FROM Players WHERE IGN=? OR XUID=?", id, id).Scan(&found)
-	if found == "" {
-		return false
+	if blacklist {
+		_, _ = fmt.Fprintf(chat.Global, utils.Config.Ban.BlacklistBroadcast, target, mod, reason)
+	} else {
+		_, _ = fmt.Fprintf(chat.Global, utils.Config.Ban.Broadcast, target, mod, lengthString, reason)
 	}
-	return perm.StaffRanks.Contains(found)
+	var expires time.Time
+	if length != 0 {
+		expires = time.Now().Add(length)
+	}
+	_, _ = sess.Collection("punishments").Insert(Punishment{
+		Mod:        mod,
+		Reason:     reason,
+		Permanent:  expires == time.Time{},
+		Expiration: expires,
+	})
+	var msg webhook.Message
+	if blacklist {
+		msg = webhook.Message{
+			Embeds: []webhook.Embed{{
+				Title:       "Player Blacklisted",
+				Description: fmt.Sprintf("**Player:** %v\n**Staff:** %v\n**Reason:** %v", target, mod, reason),
+				Color:       0xc000ff,
+			}},
+		}
+	} else {
+		msg = webhook.Message{
+			Embeds: []webhook.Embed{{
+				Title:       "Player Banned",
+				Description: fmt.Sprintf("**Player:** %v\n**Staff:** %v\n**Reason:** %v\n**Length:** %v", target, mod, reason, lengthString),
+				Color:       0xc000ff,
+			}},
+		}
+	}
+	webhook.Send(utils.Config.Discord.Webhook.BanLogger, msg)
+}
+
+// UnbanPlayer unbans a player.
+func UnbanPlayer(id string) {
+	_ = findBan(id).Delete()
+}
+
+// findBan is internally used to find a ban entry.
+func findBan(id string) db.Result {
+	return sess.Collection("punishments").Find(
+		db.And(
+			db.Or(db.Cond{"xuid": id}, db.Cond{"ign": id}),
+			db.Cond{"type": PunishmentTypeBan},
+		),
+	)
 }
