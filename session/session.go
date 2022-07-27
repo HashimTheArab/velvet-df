@@ -43,7 +43,7 @@ type Session struct {
 	cooldownsMu sync.Mutex
 
 	scoreboard *scoreboard.Scoreboard
-	rank       *perm.Rank
+	rank       atomic.Value[*perm.Rank]
 
 	kills  atomic.Uint32
 	deaths atomic.Uint32
@@ -51,6 +51,8 @@ type Session struct {
 	deviceID string // todo
 
 	wandPos1, wandPos2 atomic.Value[mgl64.Vec3]
+
+	closed atomic.Bool
 }
 
 // New creates a new session.
@@ -64,7 +66,7 @@ func New(p *player.Player, rank *perm.Rank, kills, deaths uint32) *Session {
 		},
 		kills:  *atomic.NewUint32(kills),
 		deaths: *atomic.NewUint32(deaths),
-		rank:   rank,
+		rank:   *atomic.NewValue[*perm.Rank](rank),
 	}
 
 	sessions.mutex.Lock()
@@ -129,10 +131,7 @@ func (s *Session) Staff() bool {
 
 // Mod returns true if a player is a moderator.
 func (s *Session) Mod() bool {
-	if s.RankName() == perm.Mod {
-		return true
-	}
-	return false
+	return s.RankName() == perm.Mod
 }
 
 // DefaultFlags will set the default bitflags for the session.
@@ -319,7 +318,7 @@ func (s *Session) Cooldowns() *cooldownMap {
 
 // Rank will return the rank of the session.
 func (s *Session) Rank() *perm.Rank {
-	return s.rank
+	return s.rank.Load()
 }
 
 // RankName returns the players rank name or "None" if the player has no rank.
@@ -331,16 +330,11 @@ func (s *Session) RankName() string {
 }
 
 // SetRank will set the rank for a session and return the new rank.
-func (s *Session) SetRank(rank *perm.Rank) *perm.Rank {
-	s.rank = rank
-	return s.rank
+func (s *Session) SetRank(rank *perm.Rank) {
+	s.rank.Store(rank)
 }
 
 // Offline checks if the session is fully online.
 func (s *Session) Offline() bool {
-	if s.Player == nil {
-		return true
-	}
-	ses := player_session(s.Player)
-	return ses == nil || ses == session.Nop
+	return s.closed.Load()
 }

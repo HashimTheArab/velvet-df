@@ -38,6 +38,7 @@ func FromName(name string) *Session {
 
 // Close closes and saves the session.
 func (s *Session) Close() {
+	s.closed.Store(true)
 	if s.HasFlag(FlagStaff) {
 		RemoveStaff(s)
 	}
