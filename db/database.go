@@ -14,7 +14,7 @@ func init() {
 		User:     "Hashim",
 		Password: "9AHn2GahV2IXJWHTr80f6dozWEzKMiks3",
 		Host:     "127.0.0.1:27017",
-		Database: "velvet",
+		Database: "test",
 		Options: map[string]string{
 			"authSource":    "admin",
 			"authMechanism": "SCRAM-SHA-1",
