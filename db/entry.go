@@ -59,7 +59,7 @@ func LoadSession(p *player.Player) (*session.Session, error) {
 		perm.GetRank(entry.Rank),
 		entry.Kills,
 		entry.Deaths,
-		entry.DeviceID
+		entry.DeviceID,
 	), nil
 }
 
