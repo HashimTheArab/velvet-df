@@ -16,8 +16,8 @@ func init() {
 		Host:     "127.0.0.1:27017",
 		Database: "velvet",
 		Options: map[string]string{
-			"authSource": "admin",
-			//"authMechanism": "SCRAM-SHA-1",
+			"authSource":    "admin",
+			"authMechanism": "SCRAM-SHA-1",
 		},
 	}); err != nil {
 		panic(err)

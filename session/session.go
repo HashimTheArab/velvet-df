@@ -48,7 +48,7 @@ type Session struct {
 	kills  atomic.Uint32
 	deaths atomic.Uint32
 
-	deviceID string // todo
+	deviceID string
 
 	wandPos1, wandPos2 atomic.Value[mgl64.Vec3]
 
@@ -56,7 +56,7 @@ type Session struct {
 }
 
 // New creates a new session.
-func New(p *player.Player, rank *perm.Rank, kills, deaths uint32) *Session {
+func New(p *player.Player, rank *perm.Rank, kills, deaths uint32, deviceID string) *Session {
 	s := &Session{
 		Player:         p,
 		NetworkSession: player_session(p),
@@ -64,9 +64,10 @@ func New(p *player.Player, rank *perm.Rank, kills, deaths uint32) *Session {
 			CooldownTypePearl: {length: time.Second * 15},
 			CooldownTypeChat:  {length: time.Second * 3},
 		},
-		kills:  *atomic.NewUint32(kills),
-		deaths: *atomic.NewUint32(deaths),
-		rank:   *atomic.NewValue[*perm.Rank](rank),
+		kills:    *atomic.NewUint32(kills),
+		deaths:   *atomic.NewUint32(deaths),
+		rank:     *atomic.NewValue[*perm.Rank](rank),
+		deviceID: deviceID,
 	}
 
 	sessions.mutex.Lock()
