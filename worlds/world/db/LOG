@@ -8,3 +8,15 @@
 2022/07/28-02:02:04.838000 16240 compacted to: files[ 0 0 1 0 0 0 0 ]
 2022/07/28-02:02:04.838000 16240 Delete type=2 #15349
 2022/07/28-02:02:04.838000 16240 Delete type=2 #15351
+=============== Jul 28, 2022 (EDT) ===============
+02:10:16.369372 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+02:10:16.370441 version@stat F·[0 0 1] S·198KiB[0B 0B 198KiB] Sc·[0.00 0.00 0.00]
+02:10:16.370441 db@open opening
+02:10:16.370966 journal@recovery F·1
+02:10:16.370966 journal@recovery recovering @15354
+02:10:16.446993 memdb@flush created L0@15356 N·26536 S·250KiB "\x01\x00\x00..\x00\x00,,v142710343":" \x00\x00..\x00\x006,v142710276"
+02:10:16.447653 version@stat F·[1 0 1] S·448KiB[250KiB 0B 198KiB] Sc·[0.25 0.00 0.00]
+02:10:16.510848 db@janitor F·4 G·0
+02:10:16.510848 db@open done T·140.407ms
+02:10:19.150354 db@close closing
+02:10:19.150884 db@close done T·530µs
