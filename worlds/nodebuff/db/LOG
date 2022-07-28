@@ -59,15 +59,3 @@
 02:17:42.016795 version@stat F·[] S·0B[] Sc·[]
 02:17:42.081782 db@janitor F·2 G·0
 02:17:42.081782 db@open done T·66.0339ms
-=============== Jul 28, 2022 (UTC) ===============
-06:53:03.907194 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
-06:53:03.907290 version@stat F·[] S·0B[] Sc·[]
-06:53:03.907317 db@open opening
-06:53:03.907375 journal@recovery F·2
-06:53:03.908674 journal@recovery recovering @12
-06:53:03.908733 journal@recovery recovering @20
-06:53:03.908747 version@stat F·[] S·0B[] Sc·[]
-06:53:03.910239 version@stat F·[] S·0B[] Sc·[]
-06:53:03.910779 db@janitor F·3 G·1
-06:53:03.910786 db@janitor removing manifest-19
-06:53:03.910828 db@open done T·3.507054ms
