@@ -52,7 +52,7 @@ func Register(xuid, displayName, deviceID string) {
 // LoadSession loads a user session from the database.
 func LoadSession(p *player.Player) (*session.Session, error) {
 	var entry *Entry
-	if err := findPlayer(p.Name()).One(entry); err != nil {
+	if err := findPlayer(p.Name()).One(&entry); err != nil {
 		return nil, err
 	}
 	return session.New(p,
@@ -86,7 +86,7 @@ func Registered(id string) bool {
 // LoadOfflinePlayer returns an offline player entry for the given ign, if the player does not exist, an error will be returned.
 func LoadOfflinePlayer(ign string) (*Entry, error) {
 	var entry *Entry
-	err := findPlayer(ign).One(entry)
+	err := findPlayer(ign).One(&entry)
 	return entry, err
 }
 
