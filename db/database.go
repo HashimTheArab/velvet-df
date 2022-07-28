@@ -9,7 +9,7 @@ var sess db.Session
 
 // init creates the database connection.
 func init() {
-	conn, err := mongo.ParseURL("mongodb://Hashim:9AHn2GahV2IXJWHTr80f6dozWEzKMiks3@practice.oeekd.mongodb.net/test")
+	conn, err := mongo.ParseURL("mongodb://Hashim:9AHn2GahV2IXJWHTr80f6dozWEzKMiks3@127.0.0.1/velvet")
 	if err != nil {
 		panic(err)
 	}
