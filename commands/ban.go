@@ -48,8 +48,8 @@ func (t Ban) Run(source cmd.Source, output *cmd.Output) {
 			output.Print("§cProvide a reason.")
 			return
 		}
-		duration := utils.DurationFromString(t.Length)
-		if duration == -1 {
+		duration, err := utils.ParseDuration(t.Length)
+		if err != nil {
 			output.Print(utils.Config.Message.InvalidPunishmentTime)
 			return
 		}
@@ -69,8 +69,8 @@ func (t BanOffline) Run(source cmd.Source, output *cmd.Output) {
 		output.Print("§cProvide a reason.")
 		return
 	}
-	duration := utils.DurationFromString(t.Length)
-	if duration == -1 {
+	duration, err := utils.ParseDuration(t.Length)
+	if err != nil {
 		output.Print(utils.Config.Message.InvalidPunishmentTime)
 		return
 	}

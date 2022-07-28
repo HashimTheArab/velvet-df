@@ -3,6 +3,7 @@ package db
 import (
 	"fmt"
 	"github.com/df-mc/dragonfly/server/player/chat"
+	"github.com/hako/durafmt"
 	"github.com/upper/db/v4"
 	"time"
 	"velvet/discord/webhook"
@@ -31,7 +32,7 @@ func GetBan(id string) (*Entry, Punishment, bool) {
 func BanPlayer(target, mod, reason string, length time.Duration) {
 	p, ok := utils.Srv.PlayerByName(target)
 	blacklist := length == -1
-	lengthString := utils.DurationToString(length)
+	lengthString := durafmt.Parse(length.Round(time.Second))
 	if ok {
 		target = p.Name()
 		if blacklist {
