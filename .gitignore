@@ -1,6 +1,6 @@
 velvet.exe
 .idea
-worlds
+#worlds
 errors
 whitelist.json
 velvet.db
