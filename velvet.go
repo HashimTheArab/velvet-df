@@ -44,6 +44,10 @@ func startServer() {
 	srv.Allow(allower{})
 	srv.CloseOnProgramEnd()
 	srv.World().SetSpawn(cube.Pos{263, 66, 257})
+	for _, e := range srv.World().Entities() {
+		srv.World().RemoveEntity(e)
+		fmt.Println("Removed entity: " + e.Name())
+	}
 	if err := srv.Start(); err != nil {
 		logger.Fatalln(err)
 	}
