@@ -36,3 +36,14 @@
 02:41:59.170052 db@open done T·69.1157ms
 02:43:05.717189 db@close closing
 02:43:05.717714 db@close done T·524.8µs
+=============== Jul 28, 2022 (EDT) ===============
+02:46:53.701136 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+02:46:53.702168 version@stat F·[0 1] S·88KiB[0B 88KiB] Sc·[0.00 0.00]
+02:46:53.702168 db@open opening
+02:46:53.702168 journal@recovery F·1
+02:46:53.702708 journal@recovery recovering @21
+02:46:53.703236 version@stat F·[0 1] S·88KiB[0B 88KiB] Sc·[0.00 0.00]
+02:46:53.770113 db@janitor F·3 G·0
+02:46:53.770365 db@open done T·68.1974ms
+02:47:22.882747 db@close closing
+02:47:22.883263 db@close done T·515.7µs
