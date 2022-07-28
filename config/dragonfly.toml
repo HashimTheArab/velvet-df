@@ -2,6 +2,10 @@
 [Network]
   Address = ":6969"
 
+[Oomph]
+  Address = ":19132"
+  Enabled = true
+
 [Server]
   AuthEnabled = true
   JoinMessage = "§l§a✔ %v"

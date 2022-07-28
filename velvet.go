@@ -26,7 +26,7 @@ func startServer() {
 
 	chat.Global.Subscribe(chat.StdoutSubscriber{})
 
-	config, err := utils.ReadDragonflyConfig()
+	config, err := readConfig()
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -38,7 +38,7 @@ func startServer() {
 		return def
 	}
 
-	srv := server.New(&config, logger)
+	srv := server.New(&config.Config, logger)
 	srv.SetName("Velvet")
 	srv.Allow(allower{})
 	srv.CloseOnProgramEnd()
@@ -81,19 +81,21 @@ func startServer() {
 	w.StopTime()
 
 	// AntiCheat start
-	go func() {
-		ac := oomph.New(logger, ":19132")
-		if err := ac.Listen(srv, config.Server.Name, config.Resources.Required); err != nil {
-			panic(err)
-		}
-		for {
-			p, err := ac.Accept()
-			if err != nil {
-				return
+	if config.Oomph.Enabled {
+		go func() {
+			ac := oomph.New(logger, config.Oomph.Address)
+			if err := ac.Listen(srv, config.Server.Name, config.Resources.Required); err != nil {
+				panic(err)
 			}
-			p.Handle(handlers.NewACHandler(p))
-		}
-	}()
+			for {
+				p, err := ac.Accept()
+				if err != nil {
+					return
+				}
+				p.Handle(handlers.NewACHandler(p))
+			}
+		}()
+	}
 	// AntiCheat end
 
 	for srv.Accept(handleJoin) {
