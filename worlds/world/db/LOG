@@ -1,22 +1,41 @@
-2022/07/28-02:01:50.481000 20176 Recovering log #15352
-2022/07/28-02:01:50.547000 20176 Delete type=0 #15352
-2022/07/28-02:01:50.547000 20176 Delete type=3 #15350
-2022/07/28-02:02:04.470000 16240 Moved #15351 to level-1 18017 bytes OK: files[ 0 1 1 0 0 0 0 ]
-2022/07/28-02:02:04.478000 16240 Compacting 1@1 + 1@2 files
-2022/07/28-02:02:04.805000 16240 Generated table #15355@1: 15367 keys, 203141 bytes
-2022/07/28-02:02:04.805000 16240 Compacted 1@1 + 1@2 files => 203141 bytes
-2022/07/28-02:02:04.838000 16240 compacted to: files[ 0 0 1 0 0 0 0 ]
-2022/07/28-02:02:04.838000 16240 Delete type=2 #15349
-2022/07/28-02:02:04.838000 16240 Delete type=2 #15351
+2022/07/28-02:15:10.987000 21156 Recovering log #15354
+2022/07/28-02:15:11.182000 21156 Level-0 table #15357: started
+2022/07/28-02:15:11.295000 21156 Level-0 table #15357: 234228 bytes OK
+2022/07/28-02:15:11.470000 21156 Delete type=0 #15354
+2022/07/28-02:15:11.471000 21156 Delete type=3 #15353
+2022/07/28-02:15:23.247000 2636 Moved #15357 to level-1 234228 bytes OK: files[ 0 1 1 0 0 0 0 ]
+2022/07/28-02:15:24.463000 2636 Compacting 1@1 + 1@2 files
+2022/07/28-02:15:24.571000 2636 Generated table #15359@1: 16236 keys, 219117 bytes
+2022/07/28-02:15:24.571000 2636 Compacted 1@1 + 1@2 files => 219117 bytes
+2022/07/28-02:15:24.605000 2636 compacted to: files[ 0 0 1 0 0 0 0 ]
+2022/07/28-02:15:24.606000 2636 Delete type=2 #15355
+2022/07/28-02:15:24.606000 2636 Delete type=2 #15357
 =============== Jul 28, 2022 (EDT) ===============
-02:10:16.369372 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
-02:10:16.370441 version@stat F·[0 0 1] S·198KiB[0B 0B 198KiB] Sc·[0.00 0.00 0.00]
-02:10:16.370441 db@open opening
-02:10:16.370966 journal@recovery F·1
-02:10:16.370966 journal@recovery recovering @15354
-02:10:16.446993 memdb@flush created L0@15356 N·26536 S·250KiB "\x01\x00\x00..\x00\x00,,v142710343":" \x00\x00..\x00\x006,v142710276"
-02:10:16.447653 version@stat F·[1 0 1] S·448KiB[250KiB 0B 198KiB] Sc·[0.25 0.00 0.00]
-02:10:16.510848 db@janitor F·4 G·0
-02:10:16.510848 db@open done T·140.407ms
-02:10:19.150354 db@close closing
-02:10:19.150884 db@close done T·530µs
+02:17:19.607396 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+02:17:19.607396 version@stat F·[0 0 1] S·213KiB[0B 0B 213KiB] Sc·[0.00 0.00 0.00]
+02:17:19.607396 db@open opening
+02:17:19.607396 journal@recovery F·1
+02:17:19.607396 journal@recovery recovering @15358
+02:17:19.700576 memdb@flush created L0@15360 N·21596 S·171KiB "\x00\x00\x00..\x00\x00,,v142730885":"\xff\xff\xff..\x00\x006,v142728555"
+02:17:19.701078 version@stat F·[1 0 1] S·385KiB[171KiB 0B 213KiB] Sc·[0.25 0.00 0.00]
+02:17:19.766380 db@janitor F·4 G·0
+02:17:19.766380 db@open done T·158.9831ms
+=============== Jul 28, 2022 (EDT) ===============
+02:17:41.661163 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+02:17:41.661699 version@stat F·[1 0 1] S·385KiB[171KiB 0B 213KiB] Sc·[0.25 0.00 0.00]
+02:17:41.662223 db@open opening
+02:17:41.662223 journal@recovery F·1
+02:17:41.662223 journal@recovery recovering @15361
+02:17:41.665069 version@stat F·[1 0 1] S·385KiB[171KiB 0B 213KiB] Sc·[0.25 0.00 0.00]
+02:17:41.731909 db@janitor F·4 G·0
+02:17:41.731909 db@open done T·69.6856ms
+02:17:49.494995 table@move L0@15360 -> L1
+02:17:49.494995 version@stat F·[0 1 1] S·385KiB[0B 171KiB 213KiB] Sc·[0.00 0.00 0.00]
+02:17:49.641041 table@compaction L1·1 -> L2·1 S·385KiB Q·142733706
+02:17:49.743036 table@build created L2@15365 N·16877 S·263KiB "\x00\x00\x00..\x00\x00-,v44454":"\xff\xff\xff..\xff\xffv,v141692138"
+02:17:49.743036 version@stat F·[0 0 1] S·263KiB[0B 0B 263KiB] Sc·[0.00 0.00 0.00]
+02:17:49.780333 table@compaction committed F-1 S-122KiB Ke·0 D·20955 T·139.2921ms
+02:17:49.780836 table@remove removed @15360
+02:17:49.780836 table@remove removed @15359
+02:18:04.494190 db@close closing
+02:18:04.495193 db@close done T·1.0027ms

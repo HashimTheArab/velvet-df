@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/df-mc/dragonfly/server"
-	"github.com/df-mc/dragonfly/server/block/cube"
 	"github.com/df-mc/dragonfly/server/player"
 	"github.com/df-mc/dragonfly/server/player/chat"
 	"github.com/df-mc/dragonfly/server/world"
@@ -32,7 +31,7 @@ func startServer() {
 		log.Fatalln(err)
 	}
 	config.WorldConfig = func(def world.Config) world.Config {
-		//def.ReadOnly = true
+		def.ReadOnly = true
 		def.RandomTickSpeed = 0
 		def.Generator = nil
 		def.PortalDestination = nil
@@ -43,11 +42,6 @@ func startServer() {
 	srv.SetName("Velvet")
 	srv.Allow(allower{})
 	srv.CloseOnProgramEnd()
-	srv.World().SetSpawn(cube.Pos{263, 66, 257})
-	for _, e := range srv.World().Entities() {
-		srv.World().RemoveEntity(e)
-		fmt.Println("Removed entity: " + e.Name())
-	}
 	if err := srv.Start(); err != nil {
 		logger.Fatalln(err)
 	}
