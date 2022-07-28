@@ -14,7 +14,7 @@ func init() {
 		User:     "Hashim",
 		Password: "9AHn2GahV2IXJWHTr80f6dozWEzKMiks3",
 		Host:     "127.0.0.1:27017",
-		Database: "ve;vet",
+		Database: "velvet",
 	}); err != nil {
 		panic(err)
 	}
