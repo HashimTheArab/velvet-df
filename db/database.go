@@ -11,7 +11,7 @@ var sess db.Session
 func init() {
 	var err error
 	if sess, err = mongo.Open(mongo.ConnectionURL{
-		User:     "Hashim",
+		User:     "admin",
 		Password: "9AHn2GahV2IXJWHTr80f6dozWEzKMiks3",
 		Host:     "127.0.0.1:27017",
 		Database: "velvet",
