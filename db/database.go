@@ -9,11 +9,13 @@ var sess db.Session
 
 // init creates the database connection.
 func init() {
-	conn, err := mongo.ParseURL("mongodb://Hashim:9AHn2GahV2IXJWHTr80f6dozWEzKMiks3@127.0.0.1/velvet")
-	if err != nil {
-		panic(err)
-	}
-	if sess, err = mongo.Open(conn); err != nil {
+	var err error
+	if sess, err = mongo.Open(mongo.ConnectionURL{
+		User:     "Hashim",
+		Password: "9AHn2GahV2IXJWHTr80f6dozWEzKMiks3",
+		Host:     "127.0.0.1:27017",
+		Database: "ve;vet",
+	}); err != nil {
 		panic(err)
 	}
 }
