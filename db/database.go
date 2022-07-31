@@ -9,11 +9,16 @@ var sess db.Session
 
 // init creates the database connection.
 func init() {
+	const (
+		localHost  = "127.0.0.1:27017"
+		normalHost = "velvetpractice.tk:26919"
+	)
+
 	var err error
 	if sess, err = mongo.Open(mongo.ConnectionURL{
 		User:     "Hashim",
 		Password: "9AHn2GahV2IXJWHTr80f6dozWEzKMiks3",
-		Host:     "127.0.0.1:27017",
+		Host:     normalHost,
 		Database: "velvet",
 		Options: map[string]string{
 			"authSource":    "admin",

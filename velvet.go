@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 	"github.com/df-mc/dragonfly/server"
+	"github.com/df-mc/dragonfly/server/block/cube"
 	"github.com/df-mc/dragonfly/server/player"
 	"github.com/df-mc/dragonfly/server/player/chat"
 	"github.com/df-mc/dragonfly/server/world"
-	"github.com/oomph-ac/oomph"
-	"github.com/sandertv/gophertunnel/minecraft/resource"
+	//"github.com/oomph-ac/oomph"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"log"
@@ -31,7 +31,7 @@ func startServer() {
 		log.Fatalln(err)
 	}
 	config.WorldConfig = func(def world.Config) world.Config {
-		def.ReadOnly = true
+		//def.ReadOnly = true
 		def.RandomTickSpeed = 0
 		def.Generator = nil
 		def.PortalDestination = nil
@@ -45,10 +45,10 @@ func startServer() {
 	if err := srv.Start(); err != nil {
 		logger.Fatalln(err)
 	}
-
-	if p, err := resource.Compile("resources/pack.zip"); err == nil {
-		srv.AddResourcePack(p) // todo: p.WithContentKey
-	}
+	//
+	//if p, err := resource.Compile("resources/pack.zip"); err == nil {
+	//	srv.AddResourcePack(p) // todo: p.WithContentKey
+	//}
 
 	utils.Srv = srv
 	utils.WorldMG = worldmanager.New(srv, "worlds/", logger)
@@ -57,7 +57,7 @@ func startServer() {
 	if files, err := ioutil.ReadDir("worlds"); err == nil {
 		for _, f := range files {
 			if f.Name() != "world" && f.Name() != "world.zip" {
-				err = utils.WorldMG.LoadWorld(f.Name(), f.Name(), world.Overworld)
+				err = utils.WorldMG.LoadWorld(f.Name(), f.Name(), world.Overworld, nil)
 				if err != nil {
 					fmt.Println("Error loading world " + f.Name() + ": " + err.Error())
 				} else {
@@ -67,6 +67,10 @@ func startServer() {
 						case utils.Config.World.NoDebuff:
 							w.StopRaining()
 							w.StopWeatherCycle()
+						case utils.Config.World.Diamond:
+							w.SetSpawn(cube.Pos{296, 88, 286})
+						case utils.Config.World.Build:
+							w.SetSpawn(cube.Pos{218, 113, 255})
 						}
 					}
 				}
@@ -82,25 +86,27 @@ func startServer() {
 
 	// AntiCheat start
 	if config.Oomph.Enabled {
-		go func() {
-			ac := oomph.New(logger, config.Oomph.Address)
-			if err := ac.Listen(srv, config.Server.Name, config.Resources.Required); err != nil {
-				panic(err)
-			}
-			for {
-				p, err := ac.Accept()
-				if err != nil {
-					return
-				}
-				p.Handle(handlers.NewACHandler(p))
-			}
-		}()
+		//go func() {
+		//	ac := oomph.New(logger, config.Oomph.Address)
+		//	if err := ac.Listen(srv, config.Server.Name, config.Resources.Required); err != nil {
+		//		panic(err)
+		//	}
+		//	for {
+		//		p, err := ac.Accept()
+		//		if err != nil {
+		//			return
+		//		}
+		//		p.Handle(handlers.NewACHandler(p))
+		//	}
+		//}()
 	}
 	// AntiCheat end
 
 	for srv.Accept(handleJoin) {
 
 	}
+
+	_ = utils.WorldMG.Close()
 }
 
 // handleJoin processes a players join.

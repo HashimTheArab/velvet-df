@@ -62,5 +62,5 @@ func (f ffa) Submit(_ form.Submitter, pressed form.Button) {
 	}
 
 	w.AddEntity(f.p)
-	f.p.Message("§7Welcome to " + g.Name + ".")
+	f.p.SendTip("§7Welcome to " + g.Name + ".")
 }

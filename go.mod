@@ -4,17 +4,16 @@ go 1.18
 
 require (
 	github.com/df-mc/atomic v1.10.0
-	github.com/df-mc/dragonfly v0.7.6-0.20220726155739-f78bfa9acd61
+	github.com/df-mc/dragonfly v0.7.4
 	github.com/df-mc/goleveldb v1.1.9
 	github.com/df-mc/we v0.0.0-20220708094252-7917469f65d1
 	github.com/go-gl/mathgl v1.0.0
-	github.com/oomph-ac/oomph v0.0.0-20220726173716-aac5ae498a36
 	github.com/pelletier/go-toml v1.9.5
 	github.com/sandertv/gophertunnel v1.22.3
 	github.com/sirupsen/logrus v1.9.0
 	github.com/upper/db/v4 v4.5.5-0.20220704022950-82a177100b77
 	go.uber.org/atomic v1.9.0
-	golang.org/x/exp v0.0.0-20220722155223-a9213eeb770e
+	golang.org/x/exp v0.0.0-20220706164943-b4a6d9510983
 )
 
 require (

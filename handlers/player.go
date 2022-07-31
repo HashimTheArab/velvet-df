@@ -47,7 +47,7 @@ func (p *PlayerHandler) HandleBlockBreak(ctx *event.Context, pos cube.Pos, drops
 	held, _ := p.Session.Player.HeldItems()
 	if _, ok := held.Value("wand"); ok {
 		ctx.Cancel()
-		p.Session.SetWandPos2(pos.Vec3())
+		p.Session.SetWandPos1(pos.Vec3())
 		return
 	}
 
@@ -131,17 +131,17 @@ func (*PlayerHandler) HandleFoodLoss(ctx *event.Context, _ int, _ int) {
 	ctx.Cancel()
 }
 
-func (p *PlayerHandler) HandleChangeWorld(_, new *world.World) {
-	p.Session.Player.Teleport(new.Spawn().Vec3())
+func (p *PlayerHandler) HandleChangeWorld(_, after *world.World) {
+	p.Session.Player.Teleport(after.Spawn().Vec3())
 
 	for _, e := range p.Session.Player.Effects() {
 		p.Session.Player.RemoveEffect(e.Type())
 	}
 
-	g := game.FromWorld(new.Name())
+	g := game.FromWorld(after.Name())
 	if g != nil {
 		g.Kit(p.Session.Player)
-	} else if new.Name() == utils.Srv.World().Name() {
+	} else if after == utils.Srv.World() {
 		p.Session.Player.Armour().Clear()
 		p.Session.Player.Inventory().Clear()
 		game.DefaultKit(p.Session.Player)
@@ -231,7 +231,8 @@ func (p *PlayerHandler) HandleItemUse(ctx *event.Context) {
 func (p *PlayerHandler) HandleItemUseOnBlock(ctx *event.Context, pos cube.Pos, face cube.Face, vec mgl64.Vec3) {
 	p.ph.HandleItemUseOnBlock(ctx, pos, face, vec)
 	held, _ := p.Session.Player.HeldItems()
-	if _, ok := held.Value("wand"); ok {
+	_, pos2 := p.Session.WandPos()
+	if _, ok := held.Value("wand"); ok && pos != cube.PosFromVec3(pos2) {
 		ctx.Cancel()
 		p.Session.SetWandPos2(pos.Vec3())
 	}

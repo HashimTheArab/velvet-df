@@ -6,6 +6,7 @@ import (
 	"github.com/df-mc/dragonfly/server/player/chat"
 	"math"
 	"math/rand"
+	"strings"
 	"velvet/utils"
 )
 
@@ -67,7 +68,7 @@ func Get(name string) *Game {
 }
 
 func FromWorld(name string) *Game {
-	switch name {
+	switch strings.ToLower(name) {
 	case utils.Config.World.NoDebuff:
 		return Get(NoDebuff)
 	case utils.Config.World.Diamond:

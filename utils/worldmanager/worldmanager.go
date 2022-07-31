@@ -3,6 +3,8 @@ package worldmanager
 import (
 	"fmt"
 	"github.com/df-mc/dragonfly/server"
+	"github.com/df-mc/dragonfly/server/block"
+	"github.com/df-mc/dragonfly/server/block/cube"
 	"github.com/df-mc/dragonfly/server/world"
 	"github.com/df-mc/dragonfly/server/world/mcdb"
 	"github.com/df-mc/goleveldb/leveldb/opt"
@@ -63,7 +65,7 @@ func (m *WorldManager) World(name string) (*world.World, bool) {
 }
 
 // LoadWorld ...
-func (m *WorldManager) LoadWorld(folderName, worldName string, dimension world.Dimension) error {
+func (m *WorldManager) LoadWorld(folderName, worldName string, dimension world.Dimension, generator world.Generator) error {
 	if _, ok := m.World(worldName); ok {
 		return fmt.Errorf("world is already loaded")
 	}
@@ -74,11 +76,16 @@ func (m *WorldManager) LoadWorld(folderName, worldName string, dimension world.D
 	}
 
 	w := world.Config{
-		Log:      m.log,
-		Dim:      dimension,
-		Provider: p,
-		ReadOnly: true,
+		Log:       m.log,
+		Dim:       dimension,
+		Provider:  p,
+		Generator: generator,
+		//ReadOnly: true,
 	}.New()
+
+	if _, ok := generator.(world.NopGenerator); ok {
+		w.SetBlock(cube.Pos{0, 0, 0}, block.Grass{}, nil)
+	}
 
 	m.worldsMu.Lock()
 	m.worlds[folderName] = w

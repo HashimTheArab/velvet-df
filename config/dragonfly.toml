@@ -25,5 +25,5 @@
 
 [Resources]
   AutoBuildPack = false
-  Folder = "resources"
+  Folder = "resources/pack"
   Required = true
