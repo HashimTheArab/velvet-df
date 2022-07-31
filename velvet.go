@@ -7,7 +7,7 @@ import (
 	"github.com/df-mc/dragonfly/server/player"
 	"github.com/df-mc/dragonfly/server/player/chat"
 	"github.com/df-mc/dragonfly/server/world"
-	//"github.com/oomph-ac/oomph"
+	"github.com/oomph-ac/oomph"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"log"
@@ -86,19 +86,19 @@ func startServer() {
 
 	// AntiCheat start
 	if config.Oomph.Enabled {
-		//go func() {
-		//	ac := oomph.New(logger, config.Oomph.Address)
-		//	if err := ac.Listen(srv, config.Server.Name, config.Resources.Required); err != nil {
-		//		panic(err)
-		//	}
-		//	for {
-		//		p, err := ac.Accept()
-		//		if err != nil {
-		//			return
-		//		}
-		//		p.Handle(handlers.NewACHandler(p))
-		//	}
-		//}()
+		go func() {
+			ac := oomph.New(logger, config.Oomph.Address)
+			if err := ac.Listen(srv, config.Server.Name, config.Resources.Required); err != nil {
+				panic(err)
+			}
+			for {
+				p, err := ac.Accept()
+				if err != nil {
+					return
+				}
+				p.Handle(handlers.NewACHandler(p))
+			}
+		}()
 	}
 	// AntiCheat end
 
