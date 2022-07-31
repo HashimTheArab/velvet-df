@@ -31,7 +31,7 @@ func startServer() {
 		log.Fatalln(err)
 	}
 	config.WorldConfig = func(def world.Config) world.Config {
-		//def.ReadOnly = true
+		def.ReadOnly = true
 		def.RandomTickSpeed = 0
 		def.Generator = nil
 		def.PortalDestination = nil

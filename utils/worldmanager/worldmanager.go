@@ -80,7 +80,7 @@ func (m *WorldManager) LoadWorld(folderName, worldName string, dimension world.D
 		Dim:       dimension,
 		Provider:  p,
 		Generator: generator,
-		//ReadOnly: true,
+		ReadOnly:  true,
 	}.New()
 
 	if _, ok := generator.(world.NopGenerator); ok {
