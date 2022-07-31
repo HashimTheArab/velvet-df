@@ -70,7 +70,7 @@ func startServer() {
 						case utils.Config.World.Diamond:
 							w.SetSpawn(cube.Pos{296, 88, 286})
 						case utils.Config.World.Build:
-							w.SetSpawn(cube.Pos{218, 113, 255})
+							//w.SetSpawn(cube.Pos{218, 113, 255})
 						}
 					}
 				}
