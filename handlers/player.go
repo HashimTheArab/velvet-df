@@ -89,7 +89,8 @@ func (p *PlayerHandler) HandleAttackEntity(_ *event.Context, _ world.Entity, h *
 func (p *PlayerHandler) HandleHurt(ctx *event.Context, _ *float64, attackImmunity *time.Duration, src damage.Source) {
 	if _, ok := src.(damage.SourceVoid); ok {
 		ctx.Cancel()
-		p.Session.TeleportToSpawn()
+		utils.Srv.World().AddEntity(p.Session.Player)
+		p.Session.Player.Teleport(utils.Srv.World().Spawn().Vec3())
 		return
 	}
 

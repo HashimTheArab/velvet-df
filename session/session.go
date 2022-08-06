@@ -197,11 +197,6 @@ func (s *Session) CPS() int {
 	return clicks
 }
 
-// TeleportToSpawn will teleport the player to the server spawn.
-func (s *Session) TeleportToSpawn() {
-	utils.Srv.World().AddEntity(s.Player)
-}
-
 // UpdateScoreTag updates a users score tag showing health and stuff like that.
 func (s *Session) UpdateScoreTag(health, cps bool) {
 	var tag string
