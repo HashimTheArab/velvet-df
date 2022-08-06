@@ -10,6 +10,7 @@ import (
 	"github.com/df-mc/goleveldb/leveldb/opt"
 	"github.com/sirupsen/logrus"
 	"os"
+	"strings"
 	"sync"
 )
 
@@ -59,18 +60,18 @@ func (m *WorldManager) Worlds() []*world.World {
 // World ...
 func (m *WorldManager) World(name string) (*world.World, bool) {
 	m.worldsMu.RLock()
-	w, ok := m.worlds[name]
+	w, ok := m.worlds[strings.ToLower(name)]
 	m.worldsMu.RUnlock()
 	return w, ok
 }
 
 // LoadWorld ...
-func (m *WorldManager) LoadWorld(folderName, worldName string, dimension world.Dimension, generator world.Generator) error {
+func (m *WorldManager) LoadWorld(worldName string, dimension world.Dimension, generator world.Generator) error {
 	if _, ok := m.World(worldName); ok {
 		return fmt.Errorf("world is already loaded")
 	}
 
-	p, err := mcdb.New(m.folderPath+"/"+folderName, opt.DefaultCompressionType)
+	p, err := mcdb.New(m.folderPath+"/"+worldName, opt.DefaultCompressionType)
 	if err != nil {
 		return fmt.Errorf("error loading world: %v", err)
 	}
@@ -95,7 +96,7 @@ func (m *WorldManager) LoadWorld(folderName, worldName string, dimension world.D
 	}
 
 	m.worldsMu.Lock()
-	m.worlds[folderName] = w
+	m.worlds[worldName] = w
 	m.worldsMu.Unlock()
 	return nil
 }

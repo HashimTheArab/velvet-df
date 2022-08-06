@@ -1,7 +1,9 @@
 package form
 
 import (
+	"fmt"
 	"github.com/df-mc/dragonfly/server/player"
+	"github.com/df-mc/dragonfly/server/player/chat"
 	"github.com/df-mc/dragonfly/server/player/form"
 	"strconv"
 	"strings"
@@ -20,7 +22,7 @@ func FFA(p *player.Player) form.Menu {
 	var games = []string{game.NoDebuff, game.Diamond, game.Build}
 	for _, name := range games {
 		g := game.Games[name]
-		w, ok := utils.WorldMG.World(strings.ToLower(g.Name))
+		w, ok := utils.WorldMG.World(g.Name)
 		var name string
 
 		if ok {
@@ -55,7 +57,8 @@ func (f ffa) Submit(_ form.Submitter, pressed form.Button) {
 		f.p.Message(utils.Config.Message.ModeUnavailable)
 		return
 	}
-	w, ok := utils.WorldMG.World(strings.ToLower(g.Name))
+	_, _ = chat.Global.WriteString(fmt.Sprintf("player %v is teleporting to world %v", f.p.Name(), g.Name))
+	w, ok := utils.WorldMG.World(g.Name)
 	if !ok {
 		f.p.Message(utils.Config.Message.ModeUnavailable)
 		return

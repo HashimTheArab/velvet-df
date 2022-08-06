@@ -98,7 +98,7 @@ func (t WorldCreate) Run(_ cmd.Source, output *cmd.Output) {
 	case "void":
 		gen = world.NopGenerator{}
 	}
-	err := utils.WorldMG.LoadWorld(t.Name, t.Name, world.Overworld, gen)
+	err := utils.WorldMG.LoadWorld(t.Name, world.Overworld, gen)
 	if err != nil {
 		output.Errorf(err.Error())
 		return
