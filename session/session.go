@@ -85,7 +85,12 @@ func New(p *player.Player, rank *perm.Rank, kills, deaths uint32, deviceID strin
 	game.DefaultKit(s.Player)
 
 	go func() {
-		for {
+		t := time.NewTicker(time.Second)
+		defer t.Stop()
+		for range t.C {
+			if s.Offline() {
+				return
+			}
 			s.UpdateScoreTag(true, true)
 			if s.Combat().Tagged() {
 				s.Combat().time--
@@ -103,7 +108,6 @@ func New(p *player.Player, rank *perm.Rank, kills, deaths uint32, deviceID strin
 				}
 				s.Player.SendTitle(title.New("").WithActionText("§aYou are vanished."))
 			}
-			time.Sleep(time.Second)
 		}
 	}()
 
