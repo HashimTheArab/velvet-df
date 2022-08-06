@@ -86,7 +86,7 @@ func (p *PlayerHandler) HandleAttackEntity(_ *event.Context, _ world.Entity, h *
 	}
 }
 
-func (p *PlayerHandler) HandleHurt(ctx *event.Context, dmg *float64, attackImmunity *time.Duration, src damage.Source) {
+func (p *PlayerHandler) HandleHurt(ctx *event.Context, _ *float64, attackImmunity *time.Duration, src damage.Source) {
 	if _, ok := src.(damage.SourceVoid); ok {
 		ctx.Cancel()
 		p.Session.TeleportToSpawn()
@@ -98,7 +98,7 @@ func (p *PlayerHandler) HandleHurt(ctx *event.Context, dmg *float64, attackImmun
 		return
 	}
 
-	*attackImmunity = time.Second * 475
+	*attackImmunity = time.Millisecond * 475
 	p.Session.UpdateScoreTag(true, false)
 	if source, ok := src.(damage.SourceEntityAttack); ok {
 		if pl, ok := source.Attacker.(*player.Player); ok {
