@@ -41,6 +41,7 @@ func startServer() {
 	srv.SetName("Velvet")
 	srv.Allow(allower{})
 	srv.CloseOnProgramEnd()
+	srv.World().SetSpawn(cube.Pos{273, 66, 258})
 	if err := srv.Start(); err != nil {
 		logger.Fatalln(err)
 	}
