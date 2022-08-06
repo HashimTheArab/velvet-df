@@ -1,9 +1,7 @@
 package form
 
 import (
-	"fmt"
 	"github.com/df-mc/dragonfly/server/player"
-	"github.com/df-mc/dragonfly/server/player/chat"
 	"github.com/df-mc/dragonfly/server/player/form"
 	"strconv"
 	"strings"
@@ -57,7 +55,6 @@ func (f ffa) Submit(_ form.Submitter, pressed form.Button) {
 		f.p.Message(utils.Config.Message.ModeUnavailable)
 		return
 	}
-	_, _ = chat.Global.WriteString(fmt.Sprintf("player %v is teleporting to world %v", f.p.Name(), g.Name))
 	w, ok := utils.WorldMG.World(g.Name)
 	if !ok {
 		f.p.Message(utils.Config.Message.ModeUnavailable)
