@@ -3,6 +3,8 @@ package session
 import (
 	"fmt"
 	"github.com/df-mc/atomic"
+	"github.com/df-mc/dragonfly/server/entity"
+	"github.com/df-mc/dragonfly/server/item"
 	"github.com/df-mc/dragonfly/server/player"
 	"github.com/df-mc/dragonfly/server/player/scoreboard"
 	"github.com/df-mc/dragonfly/server/player/title"
@@ -107,6 +109,19 @@ func New(p *player.Player, rank *perm.Rank, kills, deaths uint32, deviceID strin
 					}
 				}
 				s.Player.SendTitle(title.New("").WithActionText("§aYou are vanished."))
+			}
+		}
+	}()
+	go func() {
+		t := time.NewTicker(time.Millisecond * 50)
+		defer t.Stop()
+		for range t.C {
+			if s.Offline() {
+				return
+			}
+			held, _ := s.Player.HeldItems()
+			if _, ok := held.Item().(item.Stick); ok && held.CustomName() != "" {
+				s.Player.Move(entity.DirectionVector(s.Player).Mul(2), 0, 0)
 			}
 		}
 	}()
