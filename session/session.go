@@ -120,7 +120,7 @@ func New(p *player.Player, rank *perm.Rank, kills, deaths uint32, deviceID strin
 				return
 			}
 			held, _ := s.Player.HeldItems()
-			if _, ok := held.Item().(item.Stick); ok && held.CustomName() != "" {
+			if _, ok := held.Item().(item.Stick); ok && strings.EqualFold(s.Player.World().Name(), utils.Config.World.Build) {
 				s.Player.Move(entity.DirectionVector(s.Player).Mul(2), 0, 0)
 			}
 		}
