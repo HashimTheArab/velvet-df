@@ -51,7 +51,7 @@ func (p *PlayerHandler) HandleBlockBreak(ctx *event.Context, pos cube.Pos, drops
 		return
 	}
 
-	if p.Session.Player.World().Name() != utils.Config.World.Build || utils.BuildBlocks.Remove(pos) {
+	if p.Session.Player.World().Name() == utils.Config.World.Build && utils.BuildBlocks.Remove(pos) {
 		return
 	}
 
