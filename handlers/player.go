@@ -51,11 +51,6 @@ func (p *PlayerHandler) HandleBlockBreak(ctx *event.Context, pos cube.Pos, drops
 		return
 	}
 
-	if !p.Session.HasFlag(session.FlagBuilding) {
-		ctx.Cancel()
-		return
-	}
-
 	if p.Session.Player.World().Name() == utils.Config.World.Build {
 		utils.BuildBlocks.Mutex.Lock()
 		if _, ok := utils.BuildBlocks.Blocks[pos]; ok {
@@ -64,17 +59,23 @@ func (p *PlayerHandler) HandleBlockBreak(ctx *event.Context, pos cube.Pos, drops
 			return
 		}
 		utils.BuildBlocks.Mutex.Unlock()
+		return
 	}
-}
 
-func (p *PlayerHandler) HandleBlockPlace(ctx *event.Context, pos cube.Pos, _ world.Block) {
 	if !p.Session.HasFlag(session.FlagBuilding) {
 		ctx.Cancel()
 		return
 	}
+}
 
+func (p *PlayerHandler) HandleBlockPlace(ctx *event.Context, pos cube.Pos, _ world.Block) {
 	if p.Session.Player.World().Name() == utils.Config.World.Build {
 		utils.BuildBlocks.Set(pos)
+		return
+	}
+	if !p.Session.HasFlag(session.FlagBuilding) {
+		ctx.Cancel()
+		return
 	}
 }
 

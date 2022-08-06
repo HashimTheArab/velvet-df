@@ -8,8 +8,8 @@ import (
 	"github.com/df-mc/dragonfly/server/player/chat"
 	"github.com/df-mc/dragonfly/server/world"
 	"github.com/sirupsen/logrus"
-	"io/ioutil"
 	"log"
+	"os"
 	"time"
 	"velvet/db"
 	"velvet/handlers"
@@ -53,7 +53,7 @@ func startServer() {
 	utils.WorldMG = worldmanager.New(srv, "worlds/", logger)
 	utils.Started = time.Now().Unix()
 
-	if files, err := ioutil.ReadDir("worlds"); err == nil {
+	if files, err := os.ReadDir("worlds"); err == nil {
 		for _, f := range files {
 			if f.Name() != "world" && f.Name() != "world.zip" {
 				err = utils.WorldMG.LoadWorld(f.Name(), world.Overworld, nil)
@@ -69,7 +69,7 @@ func startServer() {
 						case utils.Config.World.Diamond:
 							w.SetSpawn(cube.Pos{296, 88, 286})
 						case utils.Config.World.Build:
-							//w.SetSpawn(cube.Pos{218, 113, 255})
+							w.SetSpawn(cube.Pos{218, 113, 255})
 						}
 					}
 				}
