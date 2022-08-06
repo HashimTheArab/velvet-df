@@ -110,7 +110,7 @@ func (t WorldCreate) Run(_ cmd.Source, output *cmd.Output) {
 type generate string
 
 // Type ...
-func (generate) Type() string { return "Gennerator" }
+func (generate) Type() string { return "Generator" }
 
 // Options ...
 func (generate) Options(cmd.Source) []string {

@@ -15,9 +15,10 @@ const (
 func init() {
 	for _, command := range []cmd.Command{
 		cmd.New("gamemode", "§bChange your gamemode", []string{"gm"}, GameMode{}),
-		cmd.New("/wand", "§bGet a World Edit wand", nil, Wand{}),
-		cmd.New("/palette", "§bSet a block palette for world edit", nil, PaletteSet{}, PaletteSave{}, PaletteDelete{}),
-		cmd.New("/fill", "§bFill an area", nil, Fill{}),
+		cmd.New("_wand", "§bGet a World Edit wand", nil, Wand{}),
+		cmd.New("_palette", "§bSet a block palette for world edit", nil, PaletteSet{}, PaletteSave{}, PaletteDelete{}),
+		cmd.New("_fill", "§bFill an area", nil, Fill{}),
+		cmd.New("_fillblock", "§bFill an area with a specific block", nil, FillBlock{}),
 		cmd.New("teleport", "§bTeleport to another player", []string{"tp"}, TeleportToPos{}, TeleportToTarget{}, TeleportTargetToTarget{}, TeleportTargetToPos{}),
 		cmd.New("build", "§bUse builder mode", nil, Build{}),
 		cmd.New("world", "§bManage worlds", nil, WorldTeleport{}, WorldList{}, WorldCreate{}),
@@ -69,8 +70,6 @@ func checkConsole(s cmd.Source) bool {
 
 func checkPerms(s cmd.Source, flag uint32) bool {
 	p, ok := s.(*player.Player)
-	if ses := session.Get(p); ses == nil || !ok || !ses.HasFlag(flag) {
-		return false
-	}
-	return true
+	ses := session.Get(p)
+	return ses != nil && ok && ses.HasFlag(flag)
 }
