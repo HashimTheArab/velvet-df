@@ -74,6 +74,13 @@ func (m *WorldManager) LoadWorld(folderName, worldName string, dimension world.D
 	if err != nil {
 		return fmt.Errorf("error loading world: %v", err)
 	}
+	p.SaveSettings(&world.Settings{
+		Name:            worldName,
+		TimeCycle:       false,
+		WeatherCycle:    true,
+		DefaultGameMode: world.GameModeSurvival,
+		Difficulty:      world.DifficultyNormal,
+	})
 
 	w := world.Config{
 		Log:       m.log,
