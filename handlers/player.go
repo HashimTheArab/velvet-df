@@ -193,21 +193,21 @@ func (p *PlayerHandler) HandleCommandExecution(ctx *event.Context, command cmd.C
 }
 
 func (p *PlayerHandler) HandleChat(ctx *event.Context, message *string) {
-	if p.Session.Rank() == nil {
+	rank := p.Session.Rank()
+	defer ctx.Cancel()
+	if rank == nil {
 		p.Session.Cooldowns().Handle(ctx, p.Session.Player, session.CooldownTypeChat)
-		return
 	}
-	ctx.Cancel()
 	if strings.Contains(strings.ToLower(*message), "kkkkkkkk") {
 		p.Session.Player.Message("stop")
 		return
 	}
-
-	rank := p.Session.Rank()
-	if rank != nil {
-		_, _ = fmt.Fprintf(chat.Global, rank.ChatFormat+"\n", p.Session.Player.Name(), *message)
-	} else {
-		_, _ = fmt.Fprintf(chat.Global, utils.Config.Chat.Basic+"\n", p.Session.Player.Name(), *message)
+	if !ctx.Cancelled() {
+		if rank == nil {
+			_, _ = fmt.Fprintf(chat.Global, utils.Config.Chat.Basic+"\n", p.Session.Player.Name(), *message)
+		} else {
+			_, _ = fmt.Fprintf(chat.Global, rank.ChatFormat+"\n", p.Session.Player.Name(), *message)
+		}
 	}
 }
 
