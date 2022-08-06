@@ -58,10 +58,10 @@ func build_kit(p *player.Player) {
 	_ = p.Inventory().SetItem(4, item.NewStack(item.Axe{Tier: item.ToolTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking, item.NewEnchantment(enchantment.Efficiency{}, 3)))
 	_ = p.Inventory().SetItem(5, item.NewStack(item.Pickaxe{Tier: item.ToolTierDiamond}, 1).WithCustomName(name).WithEnchantments(unbreaking, item.NewEnchantment(enchantment.Efficiency{}, 3)))
 	_ = p.Inventory().SetItem(6, item.NewStack(block.Cobblestone{}, 64))
-	_ = p.Inventory().SetItem(7, item.NewStack(block.Planks{}, 64))
+	//_ = p.Inventory().SetItem(7, item.NewStack(block.Planks{}, 64))
+	_ = p.Inventory().SetItem(7, item.NewStack(item.Stick{}, 1).WithCustomName(text.Colourf("<purple>Magic Stick</purple>")))
 	_ = p.Inventory().SetItem(8, item.NewStack(item.Spyglass{}, 1))
-	_ = p.Inventory().SetItem(9, item.NewStack(item.Stick{}, 1).WithCustomName(text.Colourf("<purple>Magic Stick</purple>")))
-	_ = p.Inventory().SetItem(10, item.NewStack(item.Arrow{}, 16))
+	_ = p.Inventory().SetItem(9, item.NewStack(item.Arrow{}, 16))
 
 	p.Armour().SetBoots(item.NewStack(item.Boots{Tier: item.ArmourTierDiamond{}}, 1).WithCustomName(name).WithEnchantments(unbreaking))
 	p.Armour().SetLeggings(item.NewStack(item.Leggings{Tier: item.ArmourTierDiamond{}}, 1).WithCustomName(name).WithEnchantments(unbreaking))
