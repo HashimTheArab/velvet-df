@@ -17,3 +17,12 @@ func (b *buildBlocks) Set(pos cube.Pos) {
 	defer b.Mutex.Unlock()
 	b.Blocks[pos] = struct{}{}
 }
+
+// Remove removes a block from the list and returns if it actually existed.
+func (b *buildBlocks) Remove(pos cube.Pos) bool {
+	b.Mutex.Lock()
+	defer b.Mutex.Unlock()
+	_, ok := b.Blocks[pos]
+	delete(b.Blocks, pos)
+	return ok
+}
