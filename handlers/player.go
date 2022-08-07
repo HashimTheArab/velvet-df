@@ -116,10 +116,8 @@ func (p *PlayerHandler) HandleHurt(ctx *event.Context, _ *float64, attackImmunit
 	}
 }
 
-func (p *PlayerHandler) HandleHeal(ctx *event.Context, _ *float64, _ heal.Source) {
-	if !ctx.Cancelled() {
-		p.Session.UpdateScoreTag(true, false)
-	}
+func (p *PlayerHandler) HandleHeal(_ *event.Context, _ *float64, _ heal.Source) {
+	p.Session.UpdateScoreTag(true, false)
 }
 
 func (*PlayerHandler) HandleFoodLoss(ctx *event.Context, _ int, _ int) {
