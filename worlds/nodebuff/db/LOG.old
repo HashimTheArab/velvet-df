@@ -1,0 +1,17 @@
+2022/08/11-03:13:52.428000 22384 Creating DB Z:/Hashim/Desktop/Old Server Save/pm5/worlds/nodebuff_converted/db since it was missing.
+2022/08/11-03:13:52.608000 22384 Delete type=3 #1
+2022/08/11-03:13:53.135000 25780 Level-0 table #5: started
+2022/08/11-03:13:53.228000 25780 Level-0 table #5: 151232 bytes OK
+2022/08/11-03:13:53.266000 25780 Delete type=0 #3
+2022/08/11-03:13:53.548000 25780 Level-0 table #7: started
+2022/08/11-03:13:53.642000 25780 Level-0 table #7: 193353 bytes OK
+2022/08/11-03:13:53.682000 25780 Delete type=0 #4
+2022/08/11-03:13:53.998000 25780 Level-0 table #9: started
+2022/08/11-03:13:54.105000 25780 Level-0 table #9: 196569 bytes OK
+2022/08/11-03:13:54.141000 25780 Delete type=0 #6
+2022/08/11-03:13:54.160000 25780 Compacting 1@0 + 1@1 files
+2022/08/11-03:13:54.313000 25780 Generated table #10@0: 68262 keys, 392282 bytes
+2022/08/11-03:13:54.313000 25780 Compacted 1@0 + 1@1 files => 392282 bytes
+2022/08/11-03:13:54.348000 25780 compacted to: files[ 0 1 1 0 0 0 0 ]
+2022/08/11-03:13:54.349000 25780 Delete type=2 #7
+2022/08/11-03:13:54.349000 25780 Delete type=2 #9

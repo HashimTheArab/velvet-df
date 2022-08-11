@@ -66,6 +66,7 @@ func startServer() {
 					if w, ok := utils.WorldMG.World(f.Name()); ok {
 						switch f.Name() {
 						case utils.Config.World.NoDebuff:
+							w.SetSpawn(cube.Pos{556, 127, 152})
 							w.StopRaining()
 							w.StopWeatherCycle()
 						case utils.Config.World.Diamond:
