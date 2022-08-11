@@ -41,4 +41,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/df-mc/dragonfly => github.com/GrapeDevs/dragonfly v0.5.2-0.20220811050401-2dc448e1e5bf
+replace github.com/df-mc/dragonfly => github.com/GrapeDevs/dragonfly v0.5.2-0.20220811055312-b891ed5ae355
