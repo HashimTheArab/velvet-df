@@ -4,17 +4,18 @@ go 1.18
 
 require (
 	github.com/df-mc/atomic v1.10.0
-	github.com/df-mc/dragonfly v0.7.4
+	github.com/df-mc/dragonfly v0.8.2-0.20220811042624-bdd143476437
 	github.com/df-mc/goleveldb v1.1.9
 	github.com/df-mc/we v0.0.0-20220708094252-7917469f65d1
 	github.com/go-gl/mathgl v1.0.0
 	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b
+	github.com/oomph-ac/oomph v0.0.0-20220805022722-1425c0eb2879
 	github.com/pelletier/go-toml v1.9.5
-	github.com/sandertv/gophertunnel v1.22.3
+	github.com/sandertv/gophertunnel v1.24.0
 	github.com/sirupsen/logrus v1.9.0
 	github.com/upper/db/v4 v4.5.5-0.20220704022950-82a177100b77
 	go.uber.org/atomic v1.9.0
-	golang.org/x/exp v0.0.0-20220706164943-b4a6d9510983
+	golang.org/x/exp v0.0.0-20220722155223-a9213eeb770e
 )
 
 require (
@@ -39,3 +40,5 @@ require (
 	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/df-mc/dragonfly => github.com/GrapeDevs/dragonfly v0.5.2-0.20220811050401-2dc448e1e5bf
