@@ -51,3 +51,47 @@
 18:01:04.198921 db@open done T·3.835846ms
 18:01:54.247683 db@close closing
 18:01:54.247730 db@close done T·46.572µs
+=============== Aug 6, 2022 (EDT) ===============
+16:08:24.691965 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+16:08:24.708379 version@stat F·[1] S·18KiB[18KiB] Sc·[0.25]
+16:08:24.708379 db@open opening
+16:08:24.708379 journal@recovery F·1
+16:08:24.708908 journal@recovery recovering @9
+16:08:24.709701 version@stat F·[1] S·18KiB[18KiB] Sc·[0.25]
+16:08:25.061861 db@janitor F·3 G·0
+16:08:25.061861 db@open done T·353.4818ms
+16:08:43.920420 db@close closing
+16:08:43.920420 db@close done T·0s
+=============== Aug 6, 2022 (EDT) ===============
+16:08:48.419548 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+16:08:48.419548 version@stat F·[1] S·18KiB[18KiB] Sc·[0.25]
+16:08:48.420079 db@open opening
+16:08:48.420079 journal@recovery F·1
+16:08:48.420079 journal@recovery recovering @11
+16:08:48.420599 version@stat F·[1] S·18KiB[18KiB] Sc·[0.25]
+16:08:48.477337 db@janitor F·3 G·0
+16:08:48.477337 db@open done T·57.2588ms
+16:09:20.849858 db@close closing
+16:09:20.849858 db@close done T·0s
+=============== Aug 6, 2022 (EDT) ===============
+16:11:01.609979 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+16:11:01.610589 version@stat F·[1] S·18KiB[18KiB] Sc·[0.25]
+16:11:01.610589 db@open opening
+16:11:01.610887 journal@recovery F·1
+16:11:01.610887 journal@recovery recovering @13
+16:11:01.611921 version@stat F·[1] S·18KiB[18KiB] Sc·[0.25]
+16:11:01.676191 db@janitor F·3 G·0
+16:11:01.676191 db@open done T·65.602ms
+16:14:10.373043 db@close closing
+16:14:10.373043 db@close done T·0s
+=============== Aug 6, 2022 (EDT) ===============
+16:14:15.871814 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+16:14:15.872338 version@stat F·[1] S·18KiB[18KiB] Sc·[0.25]
+16:14:15.872338 db@open opening
+16:14:15.872338 journal@recovery F·1
+16:14:15.872338 journal@recovery recovering @15
+16:14:15.873701 version@stat F·[1] S·18KiB[18KiB] Sc·[0.25]
+16:14:15.937012 db@janitor F·3 G·0
+16:14:15.937012 db@open done T·64.6745ms
+16:30:58.950141 db@close closing
+16:30:58.950141 db@close done T·0s
