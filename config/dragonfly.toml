@@ -1,10 +1,10 @@
 
 [Network]
-  Address = ":6969"
+  Address = ":19132"
 
 [Oomph]
   Address = ":19132"
-  Enabled = true
+  Enabled = false
 
 [Server]
   AuthEnabled = true

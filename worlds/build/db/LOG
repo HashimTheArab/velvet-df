@@ -276,3 +276,40 @@
 16:14:29.928005 table@remove removed @73
 16:30:58.947964 db@close closing
 16:30:58.947964 db@close done T·0s
+=============== Aug 12, 2022 (UTC) ===============
+23:08:56.827946 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+23:08:56.828044 version@stat F·[0 1] S·143KiB[0B 143KiB] Sc·[0.00 0.00]
+23:08:56.828060 db@open opening
+23:08:56.828106 journal@recovery F·2
+23:08:56.828987 journal@recovery recovering @75
+23:08:56.856302 journal@recovery recovering @109
+23:08:56.875884 memdb@flush created L0@110 N·31494 S·270KiB "\x02\x00\x00..\x00\x00+,v137039":"\x18\x00\x00..\x00\x006,v121206"
+23:08:56.875905 version@stat F·[1 1] S·414KiB[270KiB 143KiB] Sc·[0.25 0.00]
+23:08:56.877503 version@stat F·[1 1] S·414KiB[270KiB 143KiB] Sc·[0.25 0.00]
+23:08:56.877968 db@janitor F·7 G·3
+23:08:56.877974 db@janitor removing manifest-110
+23:08:56.877995 db@janitor removing table-74
+23:08:56.878023 db@janitor removing table-78
+23:08:56.878084 db@open done T·50.019392ms
+=============== Aug 12, 2022 (UTC) ===============
+23:09:26.196675 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+23:09:26.196746 version@stat F·[1 1] S·414KiB[270KiB 143KiB] Sc·[0.25 0.00]
+23:09:26.196754 db@open opening
+23:09:26.196786 journal@recovery F·1
+23:09:26.197090 journal@recovery recovering @112
+23:09:26.201878 version@stat F·[1 1] S·414KiB[270KiB 143KiB] Sc·[0.25 0.00]
+23:09:26.203040 db@janitor F·4 G·0
+23:09:26.203055 db@open done T·6.296539ms
+23:11:05.071826 db@close closing
+23:11:05.071913 db@close done T·85.918µs
+=============== Aug 12, 2022 (UTC) ===============
+23:11:08.484529 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+23:11:08.484620 version@stat F·[1 1] S·414KiB[270KiB 143KiB] Sc·[0.25 0.00]
+23:11:08.484635 db@open opening
+23:11:08.484679 journal@recovery F·1
+23:11:08.484899 journal@recovery recovering @113
+23:11:08.489273 version@stat F·[1 1] S·414KiB[270KiB 143KiB] Sc·[0.25 0.00]
+23:11:08.490493 db@janitor F·4 G·0
+23:11:08.490509 db@open done T·5.868266ms
+23:43:56.520820 db@close closing
+23:43:56.520932 db@close done T·111.494µs

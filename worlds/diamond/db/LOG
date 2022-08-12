@@ -255,3 +255,37 @@
 16:14:15.871308 db@open done T·82.5661ms
 16:30:58.949010 db@close closing
 16:30:58.949010 db@close done T·0s
+=============== Aug 12, 2022 (UTC) ===============
+23:08:56.878301 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+23:08:56.878397 version@stat F·[1 1] S·158KiB[68KiB 90KiB] Sc·[0.25 0.00]
+23:08:56.878414 db@open opening
+23:08:56.878470 journal@recovery F·2
+23:08:56.878589 journal@recovery recovering @2466
+23:08:56.878620 journal@recovery recovering @2499
+23:08:56.878631 version@stat F·[1 1] S·158KiB[68KiB 90KiB] Sc·[0.25 0.00]
+23:08:56.880197 version@stat F·[1 1] S·158KiB[68KiB 90KiB] Sc·[0.25 0.00]
+23:08:56.881110 db@janitor F·5 G·1
+23:08:56.881117 db@janitor removing table-2472
+23:08:56.881180 db@open done T·2.7613ms
+=============== Aug 12, 2022 (UTC) ===============
+23:09:26.203339 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+23:09:26.203434 version@stat F·[1 1] S·158KiB[68KiB 90KiB] Sc·[0.25 0.00]
+23:09:26.203449 db@open opening
+23:09:26.203492 journal@recovery F·1
+23:09:26.203615 journal@recovery recovering @2501
+23:09:26.203924 version@stat F·[1 1] S·158KiB[68KiB 90KiB] Sc·[0.25 0.00]
+23:09:26.205769 db@janitor F·4 G·0
+23:09:26.205787 db@open done T·2.333142ms
+23:11:05.072141 db@close closing
+23:11:05.072206 db@close done T·64.485µs
+=============== Aug 12, 2022 (UTC) ===============
+23:11:08.490716 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+23:11:08.490806 version@stat F·[1 1] S·158KiB[68KiB 90KiB] Sc·[0.25 0.00]
+23:11:08.490827 db@open opening
+23:11:08.490858 journal@recovery F·1
+23:11:08.490967 journal@recovery recovering @2502
+23:11:08.494387 version@stat F·[1 1] S·158KiB[68KiB 90KiB] Sc·[0.25 0.00]
+23:11:08.496813 db@janitor F·4 G·0
+23:11:08.496826 db@open done T·5.994277ms
+23:43:56.521101 db@close closing
+23:43:56.521187 db@close done T·84.786µs
