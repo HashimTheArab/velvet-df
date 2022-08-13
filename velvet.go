@@ -147,11 +147,15 @@ func startBroadcasts() {
 		time.Sleep(time.Minute * 2)
 		t2 := time.NewTicker(time.Minute * 5)
 		for range t2.C {
-			_, _ = chat.Global.WriteString(text.Colourf("<dark-red><b>FOR SLOW KIDS</b></dark-red><red> - The server is in <b>BETA</b>, it is <b>not released</b>, there are obviously <b>bugs</b></red>"))
+			if len(utils.Srv.Players()) > 0 {
+				_, _ = chat.Global.WriteString(text.Colourf("<dark-red><b>FOR SLOW KIDS</b></dark-red><red> - The server is in <b>BETA</b>, it is <b>not released</b>, there are obviously <b>bugs</b></red>"))
+			}
 		}
 	}()
 
 	for range t.C {
-		_, _ = chat.Global.WriteString(text.Colourf("<dark-grey>[<purple>Velvet</purple>]<dark-grey> <purple>%s</purple>", messages[rand.Intn(len(messages))]))
+		if len(utils.Srv.Players()) > 0 {
+			_, _ = chat.Global.WriteString(text.Colourf("<dark-grey>[<purple>Velvet</purple>]<dark-grey> <purple>%s</purple>", messages[rand.Intn(len(messages))]))
+		}
 	}
 }
