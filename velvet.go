@@ -8,8 +8,10 @@ import (
 	"github.com/df-mc/dragonfly/server/player/chat"
 	"github.com/df-mc/dragonfly/server/world"
 	"github.com/oomph-ac/oomph"
+	"github.com/sandertv/gophertunnel/minecraft/text"
 	"github.com/sirupsen/logrus"
 	"log"
+	"math/rand"
 	"os"
 	"time"
 	"velvet/db"
@@ -86,6 +88,8 @@ func startServer() {
 	w.SetTime(0)
 	w.StopTime()
 
+	go startBroadcasts()
+
 	// AntiCheat start
 	if config.Oomph.Enabled {
 		go func() {
@@ -123,4 +127,31 @@ func handleJoin(p *player.Player) {
 		p.Disconnect(fmt.Sprintf("There was an error loading your account, create a ticket at %s\nError: %s", utils.Config.Discord.Invite, err.Error()))
 	}
 	p.Handle(handlers.NewPlayerHandler(p, s))
+}
+
+// startBroadcasts starts the 5 minute broadcasts.
+func startBroadcasts() {
+	t := time.NewTicker(time.Minute * 5)
+
+	var messages = [...]string{
+		"Join the discord at discord.gg/yYpPX3d!",
+		"Make sure to read the rules! /rules.",
+		"Don't 2v1 or interfere, it can lead to a kick or temporary ban if excessive.",
+		"Buy a rank at velvet.tebex.io!",
+		"Simply, the cps limit is 20.",
+		//"Can't see in the dark? /nightvision or /nv!",
+		"Have any suggestions? Use /suggest to have your suggestion sent to the Velvet discord!",
+	}
+
+	go func() {
+		time.Sleep(time.Minute * 2)
+		t2 := time.NewTicker(time.Minute * 5)
+		for range t2.C {
+			_, _ = chat.Global.WriteString(text.Colourf("<dark-red><b>FOR SLOW KIDS</b></dark-red><red> - The server is in BETA, its not <b>released</b>, there are obviously <b>bugs</b></red>"))
+		}
+	}()
+
+	for range t.C {
+		_, _ = chat.Global.WriteString(text.Colourf("<dark-grey>[<purple>Velvet</purple>]<dark-grey> <purple>%s</purple>", messages[rand.Intn(len(messages))]))
+	}
 }
