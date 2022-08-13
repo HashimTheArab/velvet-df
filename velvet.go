@@ -93,9 +93,11 @@ func startServer() {
 			//if err := ac.Listen(srv, config.Server.Name, config.Resources.Required); err != nil {
 			//	panic(err)
 			//}
+			fmt.Println("about to start oomph")
 			if err := ac.Start(config.Network.Address, config.Resources.Folder, config.Resources.Required); err != nil {
 				panic(err)
 			}
+			fmt.Println("started oomph")
 			for {
 				fmt.Println("player joining")
 				p, err := ac.Accept()
