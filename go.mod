@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/df-mc/atomic v1.10.0
-	github.com/df-mc/dragonfly v0.8.2-0.20220811042624-bdd143476437
+	github.com/df-mc/dragonfly v0.8.2-0.20220813022309-3e4c17ac44ab
 	github.com/df-mc/goleveldb v1.1.9
 	github.com/df-mc/we v0.0.0-20220708094252-7917469f65d1
 	github.com/go-gl/mathgl v1.0.0
@@ -41,4 +41,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/df-mc/dragonfly => github.com/grapedevs/dragonfly v0.5.2-0.20220812230500-7cff192cd37d
+//replace github.com/df-mc/dragonfly => github.com/grapedevs/dragonfly v0.5.2-0.20220812230500-7cff192cd37d
