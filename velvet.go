@@ -93,7 +93,7 @@ func startServer() {
 			//if err := ac.Listen(srv, config.Server.Name, config.Resources.Required); err != nil {
 			//	panic(err)
 			//}
-			if err := ac.Start(config.Network.Address); err != nil {
+			if err := ac.Start(config.Network.Address, config.Resources.Folder, config.Resources.Required); err != nil {
 				panic(err)
 			}
 			for {
