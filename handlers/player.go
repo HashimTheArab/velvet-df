@@ -228,6 +228,10 @@ func (p *PlayerHandler) HandleItemUseOnBlock(ctx *event.Context, pos cube.Pos, f
 	if _, ok := held.Value("wand"); ok && pos != cube.PosFromVec3(pos2) {
 		ctx.Cancel()
 		p.Session.SetWandPos2(pos.Vec3())
+		return
+	}
+	if p.Session.Player.World() == utils.Srv.World() {
+		ctx.Cancel()
 	}
 }
 
