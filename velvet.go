@@ -90,7 +90,10 @@ func startServer() {
 	if config.Oomph.Enabled {
 		go func() {
 			ac := oomph.New(logger, config.Oomph.Address)
-			if err := ac.Listen(srv, config.Server.Name, config.Resources.Required); err != nil {
+			//if err := ac.Listen(srv, config.Server.Name, config.Resources.Required); err != nil {
+			//	panic(err)
+			//}
+			if err := ac.Start(config.Network.Address); err != nil {
 				panic(err)
 			}
 			for {
