@@ -3,7 +3,6 @@ package commands
 import (
 	"github.com/df-mc/dragonfly/server/cmd"
 	"github.com/df-mc/dragonfly/server/player"
-	"time"
 )
 
 type Ping struct {
@@ -18,13 +17,13 @@ func (t Ping) Run(source cmd.Source, output *cmd.Output) {
 	}
 	if len(targets) > 0 {
 		if p, ok := targets[0].(*player.Player); ok {
-			output.Printf("§e%v's §dping is §e%v.", p.Name(), p.Latency().Round(time.Millisecond*10).String())
+			output.Printf("§e%v's §dping is §e%vms.", p.Name(), p.Latency().Milliseconds()*2)
 		} else {
 			output.Printf(PlayerNotFound)
 		}
 	} else {
 		if p, ok := source.(*player.Player); ok {
-			output.Printf("§dYour ping is §e%v.", p.Latency().Round(time.Millisecond*10).String())
+			output.Printf("§dYour ping is §e%vms", p.Latency().Milliseconds()*2)
 		} else {
 			c, _ := cmd.ByAlias("ping")
 			output.Printf("§cUsage: §7" + c.Usage())

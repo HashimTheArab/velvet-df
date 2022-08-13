@@ -99,13 +99,10 @@ func startServer() {
 				}
 			}()
 			for {
-				fmt.Println("player joining")
 				p, err := ac.Accept()
-				fmt.Println("player accepted")
 				if err != nil {
 					return
 				}
-				fmt.Println("now handling player")
 				p.Handle(handlers.NewACHandler(p))
 			}
 		}()
