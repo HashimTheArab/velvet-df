@@ -155,7 +155,7 @@ func startBroadcasts() {
 
 	for range t.C {
 		if len(utils.Srv.Players()) > 0 {
-			_, _ = chat.Global.WriteString(text.Colourf("<dark-grey>[<purple>Velvet</purple>]<dark-grey> <purple>%s</purple>", messages[rand.Intn(len(messages))]))
+			_, _ = chat.Global.WriteString(text.Colourf("<dark-grey>[<dark-purple>Velvet</dark-purple>]<dark-grey> <purple>%s</purple>", messages[rand.Intn(len(messages))]))
 		}
 	}
 }
