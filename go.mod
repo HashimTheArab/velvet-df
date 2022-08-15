@@ -4,12 +4,12 @@ go 1.18
 
 require (
 	github.com/df-mc/atomic v1.10.0
-	github.com/df-mc/dragonfly v0.8.2-0.20220814193437-98fdbc368363
+	github.com/df-mc/dragonfly v0.8.2-0.20220814204431-7f7f860fb356
 	github.com/df-mc/goleveldb v1.1.9
 	github.com/df-mc/we v0.0.0-20220708094252-7917469f65d1
 	github.com/go-gl/mathgl v1.0.0
 	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b
-	github.com/oomph-ac/oomph v0.0.0-20220814003427-1be756ad6039
+	github.com/oomph-ac/oomph v0.0.0-20220814231930-e83da5c17b17
 	github.com/pelletier/go-toml v1.9.5
 	github.com/sandertv/gophertunnel v1.24.0
 	github.com/sirupsen/logrus v1.9.0

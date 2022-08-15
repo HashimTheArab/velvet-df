@@ -97,11 +97,6 @@ func startServer() {
 			if err := ac.Listen(srv, config.Server.Name, config.Resources.Required); err != nil {
 				panic(err)
 			}
-			//go func() {
-			//	if err := ac.Start(config.Network.Address, config.Resources.Folder, config.Resources.Required); err != nil {
-			//		panic(err)
-			//	}
-			//}()
 			for {
 				p, err := ac.Accept()
 				if err != nil {
