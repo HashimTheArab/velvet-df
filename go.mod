@@ -9,7 +9,7 @@ require (
 	github.com/df-mc/we v0.0.0-20220708094252-7917469f65d1
 	github.com/go-gl/mathgl v1.0.0
 	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b
-	github.com/oomph-ac/oomph v0.0.0-20220815011537-6a859625dc85
+	github.com/oomph-ac/oomph v0.0.0-20220815023231-6f86fb978f7f
 	github.com/pelletier/go-toml v1.9.5
 	github.com/sandertv/gophertunnel v1.24.0
 	github.com/sirupsen/logrus v1.9.0
