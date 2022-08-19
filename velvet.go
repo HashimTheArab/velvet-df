@@ -103,6 +103,7 @@ func startServer() {
 					return
 				}
 				p.Handle(handlers.NewACHandler(p))
+				p.EnableMovementPredictions(false)
 			}
 		}()
 	}
