@@ -8,7 +8,6 @@ import (
 	"github.com/oomph-ac/oomph/check"
 	"github.com/oomph-ac/oomph/player"
 	"time"
-	"velvet/db"
 	"velvet/discord/webhook"
 	"velvet/session"
 	"velvet/utils"
@@ -31,31 +30,33 @@ func (a AntiCheatHandler) HandlePunishment(ctx *event.Context, ch check.Check, _
 
 	_, autoClickerC := ch.(*check.AutoClickerC)
 	_, autoClickerD := ch.(*check.AutoClickerD)
-	//_, reachA := ch.(*check.ReachA)
-	if autoClickerC || autoClickerD /*|| reachA*/ {
+	if autoClickerC || autoClickerD {
 		// These checks are not always accurate, and shouldn't be punished for.
 		return
 	}
 
 	pl, ok := utils.Srv.PlayerByName(a.p.Name())
 	if !ok {
+		fmt.Println("not a player")
 		return
 	}
-	name, sub := ch.Name()
 	if session.Get(pl).Staff() {
+		fmt.Println("staff")
 		return
 	}
 
+	name, sub := ch.Name()
 	reason := fmt.Sprintf("%s (%s)", name, sub)
 	punishmentString := "Kick"
-	ban := checkBan(ch)
-	if ban {
-		punishmentString = "Ban"
-		db.BanPlayer(pl.Name(), "Oomph", reason, time.Hour*24*14)
-	} else {
-		_, _ = fmt.Fprintf(chat.Global, utils.Config.Kick.Broadcast, pl.Name(), "Oomph", reason)
-		pl.Disconnect(fmt.Sprintf("§6[§bOomph§6] Caught yo ass lackin!\n§6Reason: §b%v", reason))
-	}
+	//if checkBan(ch) {
+	//	punishmentString = "Ban"
+	//	db.BanPlayer(pl.Name(), "Oomph", reason, time.Hour*24*14)
+	//} else {
+	//	_, _ = fmt.Fprintf(chat.Global, utils.Config.Kick.Broadcast, pl.Name(), "Oomph", reason)
+	//	pl.Disconnect(fmt.Sprintf("§6[§bOomph§6] Caught yo ass lackin!\n§6Reason: §b%v", reason))
+	//}
+	_, _ = fmt.Fprintf(chat.Global, utils.Config.Kick.Broadcast, pl.Name(), "Oomph", reason)
+	pl.Disconnect(fmt.Sprintf("§6[§bOomph§6] Caught yo ass lackin!\n§6Reason: §b%v", reason))
 
 	webhook.Send(utils.Config.Discord.Webhook.AntiCheatLogger, webhook.Message{
 		Embeds: []webhook.Embed{{
@@ -74,8 +75,8 @@ func (a AntiCheatHandler) HandlePunishment(ctx *event.Context, ch check.Check, _
 func (a AntiCheatHandler) HandleFlag(ctx *event.Context, c check.Check, params map[string]any) {
 	ctx.Cancel()
 	name, sub := c.Name()
-	_, _ = fmt.Fprintf(chat.Global, "§7[§cOomph§7] §b%v §6flagged §b%v (%v) §6(§cx%v§6) %v", a.p.Name(), name, sub, mgl64.Round(c.Violations(), 2), utils.PrettyParams(params))
-	//session.AllStaff().Messagef("§7[§cOomph§7] §b%v §6flagged §b%v (%v) §6(§cx%v§6) %v", a.p.Name(), name, sub, c.Violations(), utils.PrettyParams(params))
+	//_, _ = fmt.Fprintf(chat.Global, "§7[§cOomph§7] §b%v §6flagged §b%v (%v) §6(§cx%v§6) %v", a.p.Name(), name, sub, mgl64.Round(c.Violations(), 2), utils.PrettyParams(params))
+	session.AllStaff().Messagef("§7[§cOomph§7] §b%v §6flagged §b%v (%v) §6(§cx%v§6) %v", a.p.Name(), name, sub, mgl64.Round(c.Violations(), 2), utils.PrettyParams(params))
 }
 
 // HandleDebug ...
