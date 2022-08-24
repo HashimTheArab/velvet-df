@@ -9,12 +9,12 @@ require (
 	github.com/df-mc/we v0.0.0-20220708094252-7917469f65d1
 	github.com/go-gl/mathgl v1.0.0
 	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b
-	github.com/oomph-ac/oomph v0.0.0-20220823162714-f3339fca2d9c
+	github.com/oomph-ac/oomph v0.0.0-20220824003855-109fb87a1d0d
 	github.com/pelletier/go-toml v1.9.5
-	github.com/sandertv/gophertunnel v1.24.0
+	github.com/sandertv/gophertunnel v1.24.5
 	github.com/sirupsen/logrus v1.9.0
 	github.com/upper/db/v4 v4.5.5-0.20220704022950-82a177100b77
-	go.uber.org/atomic v1.9.0
+	go.uber.org/atomic v1.10.0
 	golang.org/x/exp v0.0.0-20220722155223-a9213eeb770e
 )
 
@@ -28,10 +28,10 @@ require (
 	github.com/muhammadmuzzammil1998/jsonc v1.0.0 // indirect
 	github.com/rogpeppe/go-internal v1.8.1 // indirect
 	github.com/sandertv/go-raknet v1.11.1 // indirect
-	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
+	golang.org/x/crypto v0.0.0-20220817201139-bc19a97f63c8 // indirect
 	golang.org/x/image v0.0.0-20220722155232-062f8c9fd539 // indirect
-	golang.org/x/net v0.0.0-20220809184613-07c6da5e1ced // indirect
-	golang.org/x/oauth2 v0.0.0-20220808172628-8227340efae7 // indirect
+	golang.org/x/net v0.0.0-20220822230855-b0a4917ee28c // indirect
+	golang.org/x/oauth2 v0.0.0-20220822191816-0ebed06d0094 // indirect
 	golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
