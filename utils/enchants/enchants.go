@@ -14,13 +14,16 @@ import (
 	"velvet/session"
 )
 
-func Kaboom(a, t *player.Player) {
+func Kaboom(a, t *player.Player, force, height *float64) {
 	if rand.Intn(50) > 3 {
 		return
 	}
 	t.World().AddParticle(t.Position(), particle.HugeExplosion{})
 	t.World().PlaySound(t.Position(), sound.Explosion{})
-	t.KnockBack(a.Position(), 0.88, 0.88)
+
+	*force += 0.88
+	*height += 0.88
+
 	if t.Health() < 10 {
 		t.Hurt(t.Health()-3.99, damage.SourceExplosion{}) // $enchantmentLevel * 1.33
 	} else {

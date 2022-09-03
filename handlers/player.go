@@ -85,6 +85,40 @@ func (p *PlayerHandler) HandleAttackEntity(_ *event.Context, e world.Entity, h *
 	} else {
 		*h, *v = 0.398, 0.405
 	}
+	if strings.EqualFold(g.Name, utils.Config.World.God) {
+		held, _ := p.Session.Player.HeldItems()
+		_, ok := held.Value("gsword")
+		if !ok {
+			return
+		}
+		t, ok := e.(*player.Player)
+		if !ok || t.AttackImmune() {
+			return
+		}
+		enchants.Kaboom(p.Session.Player, t, h, v)
+		enchants.Zeus(p.Session.Player, t)
+		enchants.Bleed(p.Session.Player, t)
+		enchants.Hades(p.Session.Player, t)
+		enchants.Poison(p.Session.Player, t)
+		enchants.Lifesteal(p.Session.Player, t)
+		//switch rand.Intn(35) {
+		//case 1:
+		//	// todo: kaboom
+		//case 2:
+		//	// $enchants->lightning($player);
+		//	//							$pp = mt_rand(0, 150);
+		//	//							if ($pp == 3) {
+		//	//								$enchants->kaboom($player, $damager);
+		//	//							}
+		//case 3:
+		//	// if(!$player->hasFlag(Flags::BLEEDING)){
+		//	//								$player->setFlag(Flags::BLEEDING);
+		//	//								$this->main->getScheduler()->scheduleRepeatingTask(new BleedTask($this->main, $player), 60);
+		//	//							}
+		//case 4:
+		//	// todo: poison
+		//}
+	}
 }
 
 func (p *PlayerHandler) HandleHurt(ctx *event.Context, _ *float64, attackImmunity *time.Duration, src damage.Source) {
@@ -113,37 +147,6 @@ func (p *PlayerHandler) HandleHurt(ctx *event.Context, _ *float64, attackImmunit
 			}
 			s.Combat().Tag(true)
 			p.Session.Combat().Tag(true)
-
-			if strings.EqualFold(p.Session.Player.World().Name(), utils.Config.World.God) {
-				held, _ := t.HeldItems()
-				_, ok := held.Value("gsword")
-				if !ok {
-					return
-				}
-				enchants.Kaboom(t, p.Session.Player)
-				enchants.Zeus(t, p.Session.Player)
-				enchants.Bleed(t, p.Session.Player)
-				enchants.Hades(t, p.Session.Player)
-				enchants.Poison(t, p.Session.Player)
-				enchants.Lifesteal(t, p.Session.Player)
-				//switch rand.Intn(35) {
-				//case 1:
-				//	// todo: kaboom
-				//case 2:
-				//	// $enchants->lightning($player);
-				//	//							$pp = mt_rand(0, 150);
-				//	//							if ($pp == 3) {
-				//	//								$enchants->kaboom($player, $damager);
-				//	//							}
-				//case 3:
-				//	// if(!$player->hasFlag(Flags::BLEEDING)){
-				//	//								$player->setFlag(Flags::BLEEDING);
-				//	//								$this->main->getScheduler()->scheduleRepeatingTask(new BleedTask($this->main, $player), 60);
-				//	//							}
-				//case 4:
-				//	// todo: poison
-				//}
-			}
 		}
 	}
 }
