@@ -167,13 +167,13 @@ func (p *PlayerHandler) HandleChangeWorld(_, after *world.World) {
 
 	g := game.FromWorld(after.Name())
 	if g != nil {
-		fmt.Println("giving kit: " + g.Name)
 		g.Kit(p.Session.Player)
 	} else if after == utils.Srv.World() {
 		p.Session.Player.Armour().Clear()
 		p.Session.Player.Inventory().Clear()
 		game.DefaultKit(p.Session.Player)
 	}
+	fmt.Println(after.Name())
 }
 
 func (p *PlayerHandler) HandleRespawn(pos *mgl64.Vec3, w **world.World) {
