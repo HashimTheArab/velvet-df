@@ -115,17 +115,17 @@ func (p *PlayerHandler) HandleHurt(ctx *event.Context, _ *float64, attackImmunit
 			p.Session.Combat().Tag(true)
 
 			if strings.EqualFold(p.Session.Player.World().Name(), utils.Config.World.God) {
-				held, _ := p.Session.Player.HeldItems()
+				held, _ := t.HeldItems()
 				_, ok := held.Value("gsword")
 				if !ok {
 					return
 				}
-				enchants.Kaboom(p.Session.Player, t)
-				enchants.Zeus(p.Session.Player, t)
-				enchants.Bleed(p.Session.Player, t)
-				enchants.Hades(p.Session.Player, t)
-				enchants.Poison(p.Session.Player, t)
-				enchants.Lifesteal(p.Session.Player, t)
+				enchants.Kaboom(t, p.Session.Player)
+				enchants.Zeus(t, p.Session.Player)
+				enchants.Bleed(t, p.Session.Player)
+				enchants.Hades(t, p.Session.Player)
+				enchants.Poison(t, p.Session.Player)
+				enchants.Lifesteal(t, p.Session.Player)
 				//switch rand.Intn(35) {
 				//case 1:
 				//	// todo: kaboom
