@@ -122,6 +122,7 @@ func (p *PlayerHandler) HandleHurt(ctx *event.Context, _ *float64, attackImmunit
 				}
 				enchants.Kaboom(p.Session.Player, t)
 				enchants.Zeus(p.Session.Player, t)
+				enchants.Bleed(p.Session.Player, t)
 				enchants.Hades(p.Session.Player, t)
 				enchants.Poison(p.Session.Player, t)
 				enchants.Lifesteal(p.Session.Player, t)

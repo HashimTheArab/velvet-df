@@ -11,6 +11,7 @@ import (
 	"github.com/go-gl/mathgl/mgl64"
 	"math/rand"
 	"time"
+	"velvet/session"
 )
 
 func Kaboom(a, t *player.Player) {
@@ -35,7 +36,14 @@ func Zeus(_, t *player.Player) {
 	t.Hurt(6, damage.SourceLightning{})
 }
 
-// bleed
+func Bleed(_, t *player.Player) {
+	if rand.Intn(40) > 3 {
+		return
+	}
+	if s := session.Get(t); s != nil {
+		s.StartBleeding()
+	}
+}
 
 func Hades(_, t *player.Player) {
 	if rand.Intn(50) > 3 {

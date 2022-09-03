@@ -3,13 +3,16 @@ package session
 import (
 	"fmt"
 	"github.com/df-mc/atomic"
+	"github.com/df-mc/dragonfly/server/block"
 	"github.com/df-mc/dragonfly/server/entity"
+	"github.com/df-mc/dragonfly/server/entity/damage"
 	"github.com/df-mc/dragonfly/server/item"
 	"github.com/df-mc/dragonfly/server/player"
 	"github.com/df-mc/dragonfly/server/player/scoreboard"
 	"github.com/df-mc/dragonfly/server/player/title"
 	"github.com/df-mc/dragonfly/server/session"
 	"github.com/df-mc/dragonfly/server/world"
+	"github.com/df-mc/dragonfly/server/world/particle"
 	"github.com/go-gl/mathgl/mgl64"
 	"github.com/sandertv/gophertunnel/minecraft/text"
 	"strconv"
@@ -53,6 +56,7 @@ type Session struct {
 	deviceID string
 
 	wandPos1, wandPos2 atomic.Value[mgl64.Vec3]
+	bleeding           atomic.Bool
 
 	closed atomic.Bool
 }
@@ -230,6 +234,7 @@ func (s *Session) SaveScoreboard() {
 func (s *Session) UpdateScoreboard(online, kd bool) {
 	if s.scoreboard == nil {
 		s.SaveScoreboard()
+		return
 	}
 	if online {
 		s.scoreboard.Set(1, "§6Online: §b"+utils.OnlineCount.String())
@@ -284,6 +289,29 @@ func (s *Session) SetWandPos1(pos mgl64.Vec3) {
 func (s *Session) SetWandPos2(pos mgl64.Vec3) {
 	s.Player.Message(text.Colourf("<green>Pos2 has been set to %v", pos))
 	s.wandPos2.Store(pos)
+}
+
+// StartBleeding starts bleeding for the bleed custom enchant.
+func (s *Session) StartBleeding() {
+	if s.bleeding.Load() {
+		return
+	}
+	go func() {
+		t := time.NewTicker(time.Second * 3)
+		defer func() {
+			t.Stop()
+			s.bleeding.Store(false)
+		}()
+		runs := 10
+		for range t.C {
+			runs--
+			if runs <= 0 || s.Player.Dead() || s.Offline() || !strings.EqualFold(s.Player.Name(), utils.Config.World.God) {
+				return
+			}
+			s.Player.World().AddParticle(s.Player.Position(), particle.BlockBreak{Block: block.Concrete{Colour: item.ColourRed()}})
+			s.Player.Hurt(1, damage.SourceInstantDamageEffect{})
+		}
+	}()
 }
 
 // Kills returns the kills of the player.
