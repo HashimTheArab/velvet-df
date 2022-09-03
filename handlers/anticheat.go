@@ -39,7 +39,7 @@ func (a AntiCheatHandler) HandlePunishment(ctx *event.Context, ch check.Check, _
 	if !ok {
 		return
 	}
-	if session.Get(pl).Staff() {
+	if s := session.Get(pl); s == nil || s.Staff() {
 		return
 	}
 
