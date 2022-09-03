@@ -30,7 +30,8 @@ func (a AntiCheatHandler) HandlePunishment(ctx *event.Context, ch check.Check, _
 
 	_, autoClickerC := ch.(*check.AutoClickerC)
 	_, autoClickerD := ch.(*check.AutoClickerD)
-	if autoClickerC || autoClickerD {
+	_, timer := ch.(*check.TimerA)
+	if autoClickerC || autoClickerD || timer {
 		// These checks are not always accurate, and shouldn't be punished for.
 		return
 	}
