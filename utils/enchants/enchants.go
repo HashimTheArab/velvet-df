@@ -20,9 +20,7 @@ func Kaboom(a, t *player.Player, force, height *float64) {
 	}
 	t.World().AddParticle(t.Position(), particle.HugeExplosion{})
 	t.World().PlaySound(t.Position(), sound.Explosion{})
-
-	*force += 0.88
-	*height += 0.88
+	t.KnockBack(a.Position(), 0.88, 0.88)
 
 	if t.Health() < 10 {
 		t.Hurt(t.Health()-3.99, damage.SourceExplosion{}) // $enchantmentLevel * 1.33
