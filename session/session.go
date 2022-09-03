@@ -293,11 +293,9 @@ func (s *Session) SetWandPos2(pos mgl64.Vec3) {
 
 // StartBleeding starts bleeding for the bleed custom enchant.
 func (s *Session) StartBleeding() {
-	fmt.Println("start bleeding")
 	if s.bleeding.Load() {
 		return
 	}
-	fmt.Println("start bleeding 2")
 	go func() {
 		t := time.NewTicker(time.Second * 3)
 		defer func() {
@@ -306,14 +304,11 @@ func (s *Session) StartBleeding() {
 		}()
 		runs := 10
 		s.bleeding.Store(true)
-		fmt.Println("start bleeding 3")
 		for range t.C {
 			runs--
-			fmt.Println("start bleeding 4")
-			if runs <= 0 || s.Player.Dead() || s.Offline() || !strings.EqualFold(s.Player.Name(), utils.Config.World.God) {
+			if runs <= 0 || s.Player.Dead() || s.Offline() || !strings.EqualFold(s.Player.World().Name(), utils.Config.World.God) {
 				return
 			}
-			fmt.Println("start bleeding 5")
 			s.Player.World().AddParticle(s.Player.Position(), particle.BlockBreak{Block: block.Concrete{Colour: item.ColourRed()}})
 			s.Player.Hurt(1, damage.SourceInstantDamageEffect{})
 		}
