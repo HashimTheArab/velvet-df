@@ -104,6 +104,8 @@ func (p *PlayerHandler) HandleHurt(ctx *event.Context, _ *float64, attackImmunit
 	p.Session.UpdateScoreTag(true, false)
 	if source, ok := src.(damage.SourceEntityAttack); ok {
 		if t, ok := source.Attacker.(*player.Player); ok {
+			_, _ = chat.Global.WriteString("knockback in handlehurt")
+			t.KnockBack(p.Session.Player.Position(), 3, 3)
 			s := session.Get(t)
 			if !s.Combat().Tagged() {
 				s.Player.Message("§cYou are now in combat.")
