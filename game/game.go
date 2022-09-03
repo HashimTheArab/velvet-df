@@ -50,6 +50,15 @@ var Games = map[string]*Game{
 		},
 		Kit: build_kit,
 	},
+	God: {
+		Name:        "God",
+		DisplayName: "§l§4God",
+		WorldName:   utils.Config.World.God,
+		FormData: form{
+			ResourcePath: "textures/items/enchanted_apple",
+		},
+		Kit: gfight_kit,
+	},
 }
 
 func init() {

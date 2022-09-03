@@ -83,12 +83,17 @@ func (m *WorldManager) LoadWorld(worldName string, dimension world.Dimension, ge
 		Difficulty:      world.DifficultyNormal,
 	})
 
+	readonly := true
+	if strings.EqualFold(worldName, "god") {
+		readonly = false
+	}
+
 	w := world.Config{
 		Log:       m.log,
 		Dim:       dimension,
 		Provider:  p,
 		Generator: generator,
-		ReadOnly:  true,
+		ReadOnly:  readonly,
 	}.New()
 
 	if _, ok := generator.(world.NopGenerator); ok {

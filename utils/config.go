@@ -26,6 +26,7 @@ type config struct {
 		NoDebuff string
 		Build    string
 		Diamond  string
+		God      string
 	}
 	Chat struct {
 		Basic string

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
 	"log"
 	"net/http"
@@ -14,6 +15,7 @@ import (
 )
 
 func main() {
+	gob.Register(struct{}{})
 	go func() {
 		log.Println(http.ListenAndServe(":19133", nil))
 	}()

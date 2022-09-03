@@ -23,6 +23,7 @@ import (
 	vitem "velvet/item"
 	"velvet/session"
 	"velvet/utils"
+	"velvet/utils/enchants"
 )
 
 type PlayerHandler struct {
@@ -76,13 +77,46 @@ func (*PlayerHandler) HandleItemDrop(ctx *event.Context, _ *entity.Item) {
 	ctx.Cancel()
 }
 
-func (p *PlayerHandler) HandleAttackEntity(_ *event.Context, _ world.Entity, h *float64, v *float64, _ *bool) {
+func (p *PlayerHandler) HandleAttackEntity(_ *event.Context, e world.Entity, h *float64, v *float64, _ *bool) {
 	p.Session.Click()
 	g := game.FromWorld(p.Session.Player.World().Name())
 	if g != nil {
 		*h, *v = g.Knockback.Horizontal, g.Knockback.Vertical
 	} else {
 		*h, *v = 0.398, 0.405
+	}
+	if strings.EqualFold(g.Name, utils.Config.World.God) {
+		held, _ := p.Session.Player.HeldItems()
+		_, ok := held.Value("gsword")
+		if !ok {
+			return
+		}
+		t, ok := e.(*player.Player)
+		if !ok {
+			return
+		}
+		enchants.Kaboom(p.Session.Player, t)
+		enchants.Zeus(p.Session.Player, t)
+		enchants.Hades(p.Session.Player, t)
+		enchants.Poison(p.Session.Player, t)
+		enchants.Lifesteal(p.Session.Player, t)
+		//switch rand.Intn(35) {
+		//case 1:
+		//	// todo: kaboom
+		//case 2:
+		//	// $enchants->lightning($player);
+		//	//							$pp = mt_rand(0, 150);
+		//	//							if ($pp == 3) {
+		//	//								$enchants->kaboom($player, $damager);
+		//	//							}
+		//case 3:
+		//	// if(!$player->hasFlag(Flags::BLEEDING)){
+		//	//								$player->setFlag(Flags::BLEEDING);
+		//	//								$this->main->getScheduler()->scheduleRepeatingTask(new BleedTask($this->main, $player), 60);
+		//	//							}
+		//case 4:
+		//	// todo: poison
+		//}
 	}
 }
 

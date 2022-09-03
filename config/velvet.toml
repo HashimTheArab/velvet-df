@@ -17,6 +17,7 @@
   NoDebuff = "nodebuff"
   Diamond = "diamond"
   Build = "build"
+  God = "god"
 
 [Chat]
   Basic = "§a%v§f: %v"

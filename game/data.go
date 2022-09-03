@@ -13,6 +13,7 @@ const (
 	NoDebuff = "nodebuff"
 	Diamond  = "diamond"
 	Build    = "build"
+	God      = "god"
 )
 
 var (

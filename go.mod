@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/df-mc/atomic v1.10.0
-	github.com/df-mc/dragonfly v0.8.4-0.20220827152113-e71fac8e94f9
+	github.com/df-mc/dragonfly v0.8.4-0.20220830194510-9277648df535
 	github.com/df-mc/goleveldb v1.1.9
 	github.com/df-mc/we v0.0.0-20220708094252-7917469f65d1
 	github.com/go-gl/mathgl v1.0.0
