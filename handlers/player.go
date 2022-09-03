@@ -173,7 +173,6 @@ func (p *PlayerHandler) HandleChangeWorld(_, after *world.World) {
 		p.Session.Player.Inventory().Clear()
 		game.DefaultKit(p.Session.Player)
 	}
-	fmt.Println(after.Name())
 }
 
 func (p *PlayerHandler) HandleRespawn(pos *mgl64.Vec3, w **world.World) {
