@@ -3,7 +3,7 @@ package utils
 import (
 	"fmt"
 	"github.com/pelletier/go-toml"
-	"io/ioutil"
+	"os"
 )
 
 type config struct {
@@ -67,7 +67,7 @@ func init() {
 // ReadVelvetConfig reads the configuration from the config/velvet.toml file and sets the proper values.
 func ReadVelvetConfig() {
 	Config = &config{}
-	data, err := ioutil.ReadFile("config/velvet.toml")
+	data, err := os.ReadFile("config/velvet.toml")
 	if err != nil {
 		fmt.Printf("error reading velvet config: %v", err)
 		return

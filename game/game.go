@@ -55,7 +55,7 @@ var Games = map[string]*Game{
 		DisplayName: "§l§4God",
 		WorldName:   utils.Config.World.God,
 		FormData: form{
-			ResourcePath: "textures/items/enchanted_apple",
+			ResourcePath: "textures/items/nether_star",
 		},
 		Kit: gfight_kit,
 	},
@@ -72,22 +72,12 @@ func init() {
 	}
 }
 
-func Get(name string) *Game {
-	return Games[name]
-}
-
 func FromWorld(name string) *Game {
-	switch strings.ToLower(name) {
-	case utils.Config.World.NoDebuff:
-		return Get(NoDebuff)
-	case utils.Config.World.Diamond:
-		return Get(Diamond)
-	case utils.Config.World.Build:
-		return Get(Build)
-	case utils.Config.World.God:
-		return Get(God)
+	g, ok := Games[strings.ToLower(name)]
+	if !ok {
+		return nil
 	}
-	return nil
+	return g
 }
 
 func (g *Game) BroadcastDeathMessage(p, t *player.Player) {

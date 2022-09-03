@@ -3,7 +3,6 @@ package whitelist
 import (
 	"encoding/json"
 	"golang.org/x/exp/slices"
-	"io/ioutil"
 	"os"
 	"strings"
 	"velvet/session"
@@ -18,11 +17,11 @@ func init() {
 	if _, err := os.Stat("whitelist.json"); os.IsNotExist(err) {
 		if data, err := json.Marshal(whitelist); err != nil {
 			panic(err)
-		} else if err := ioutil.WriteFile("whitelist.json", data, 0644); err != nil {
+		} else if err := os.WriteFile("whitelist.json", data, 0644); err != nil {
 			panic(err)
 		}
 	} else {
-		if data, err := ioutil.ReadFile("whitelist.json"); err != nil {
+		if data, err := os.ReadFile("whitelist.json"); err != nil {
 			panic(err)
 		} else if err := json.Unmarshal(data, &whitelist); err != nil {
 			panic(err)

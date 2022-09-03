@@ -8,7 +8,7 @@ import (
 	"github.com/df-mc/dragonfly/server/world/biome"
 	"github.com/df-mc/dragonfly/server/world/generator"
 	"github.com/sandertv/gophertunnel/minecraft/text"
-	"io/ioutil"
+	"os"
 	"strings"
 	"velvet/utils"
 )
@@ -66,7 +66,7 @@ func (t WorldList) Run(_ cmd.Source, output *cmd.Output) {
 	sb := &strings.Builder{}
 	sb.WriteString("§d--World List (%v)--\n")
 	var worlds uint32
-	if files, err := ioutil.ReadDir("worlds"); err == nil {
+	if files, err := os.ReadDir("worlds"); err == nil {
 		def := utils.WorldMG.DefaultWorld().Name()
 		for _, f := range files {
 			sb.WriteString("§e" + f.Name() + " §b" + utils.CoolAssArrow + " ")
@@ -83,7 +83,7 @@ func (t WorldList) Run(_ cmd.Source, output *cmd.Output) {
 
 // Run ...
 func (t WorldCreate) Run(_ cmd.Source, output *cmd.Output) {
-	if files, err := ioutil.ReadDir("worlds"); err == nil {
+	if files, err := os.ReadDir("worlds"); err == nil {
 		for _, f := range files {
 			if strings.EqualFold(f.Name(), t.Name) {
 				output.Error(text.Colourf("<red>The world %s already exists.</red>", t.Name))

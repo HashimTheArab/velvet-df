@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/df-mc/dragonfly/server"
 	"github.com/pelletier/go-toml"
-	"io/ioutil"
 	"os"
 )
 
@@ -41,12 +40,12 @@ func readConfig() (Config, error) {
 		if err != nil {
 			return c, fmt.Errorf("failed encoding default config: %v", err)
 		}
-		if err := ioutil.WriteFile("config/dragonfly.toml", data, 0644); err != nil {
+		if err := os.WriteFile("config/dragonfly.toml", data, 0644); err != nil {
 			return c, fmt.Errorf("failed creating config: %v", err)
 		}
 		return c, nil
 	}
-	data, err := ioutil.ReadFile("config/dragonfly.toml")
+	data, err := os.ReadFile("config/dragonfly.toml")
 	if err != nil {
 		return c, fmt.Errorf("error reading config: %v", err)
 	}
