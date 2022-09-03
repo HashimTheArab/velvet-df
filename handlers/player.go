@@ -167,6 +167,7 @@ func (p *PlayerHandler) HandleChangeWorld(_, after *world.World) {
 
 	g := game.FromWorld(after.Name())
 	if g != nil {
+		fmt.Println("giving kit: " + g.Name)
 		g.Kit(p.Session.Player)
 	} else if after == utils.Srv.World() {
 		p.Session.Player.Armour().Clear()

@@ -89,11 +89,12 @@ func (m *WorldManager) LoadWorld(worldName string, dimension world.Dimension, ge
 	}
 
 	w := world.Config{
-		Log:       m.log,
-		Dim:       dimension,
-		Provider:  p,
-		Generator: generator,
-		ReadOnly:  readonly,
+		Log:             m.log,
+		Dim:             dimension,
+		Provider:        p,
+		Generator:       generator,
+		ReadOnly:        readonly,
+		RandomTickSpeed: -1,
 	}.New()
 
 	if _, ok := generator.(world.NopGenerator); ok {
