@@ -17,7 +17,7 @@ type ffa struct {
 // FFA creates a new FFA form.
 func FFA(p *player.Player) form.Menu {
 	var buttons []form.Button
-	var games = []string{game.NoDebuff, game.Diamond, game.Build}
+	var games = []string{game.NoDebuff, game.Diamond, game.Build, game.God}
 	for _, name := range games {
 		g := game.Games[name]
 		w, ok := utils.WorldMG.World(g.Name)

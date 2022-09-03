@@ -84,6 +84,8 @@ func FromWorld(name string) *Game {
 		return Get(Diamond)
 	case utils.Config.World.Build:
 		return Get(Build)
+	case utils.Config.World.God:
+		return Get(God)
 	}
 	return nil
 }
