@@ -71,7 +71,7 @@ func (m *WorldManager) LoadWorld(worldName string, dimension world.Dimension, ge
 		return fmt.Errorf("world is already loaded")
 	}
 
-	p, err := mcdb.New(m.folderPath+"/"+worldName, opt.DefaultCompressionType)
+	p, err := mcdb.New(m.log, m.folderPath+"/"+worldName, opt.DefaultCompressionType)
 	if err != nil {
 		return fmt.Errorf("error loading world: %v", err)
 	}
