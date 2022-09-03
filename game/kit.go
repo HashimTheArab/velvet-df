@@ -89,6 +89,7 @@ func gfight_kit(p *player.Player) {
 	}
 	armour[3] = armour[3].WithLore("§6Overlord II", "§eGears I", "§2Adrenaline I", "§aScorch V")
 	p.Armour().Set(armour[0], armour[1], armour[2], armour[3])
+	p.AddEffect(effect.New(effect.Speed{}, 1, time.Hour*24))
 }
 
 func DefaultKit(p *player.Player) {

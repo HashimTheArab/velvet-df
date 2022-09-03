@@ -71,3 +71,12 @@ func Lifesteal(a, t *player.Player) {
 		a.Heal(2, healing.SourceInstantHealthEffect{})
 	}
 }
+
+// armor
+
+func Scorch(a, _ *player.Player) {
+	if rand.Intn(50) > 5 {
+		return
+	}
+	a.SetOnFire(time.Second * 5)
+}

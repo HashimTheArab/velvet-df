@@ -101,6 +101,7 @@ func (p *PlayerHandler) HandleAttackEntity(_ *event.Context, e world.Entity, h *
 		enchants.Hades(p.Session.Player, t)
 		enchants.Poison(p.Session.Player, t)
 		enchants.Lifesteal(p.Session.Player, t)
+		enchants.Scorch(p.Session.Player, t)
 		//switch rand.Intn(35) {
 		//case 1:
 		//	// todo: kaboom
