@@ -75,6 +75,7 @@ func (m *WorldManager) LoadWorld(worldName string, dimension world.Dimension, ge
 	if err != nil {
 		return fmt.Errorf("error loading world: %v", err)
 	}
+	fmt.Println(worldName)
 	p.SaveSettings(&world.Settings{
 		Name:            worldName,
 		TimeCycle:       false,
