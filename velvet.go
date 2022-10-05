@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/df-mc/dragonfly/server"
 	"github.com/df-mc/dragonfly/server/block/cube"
 	"github.com/df-mc/dragonfly/server/player"
 	"github.com/df-mc/dragonfly/server/player/chat"
@@ -32,22 +31,21 @@ func startServer() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	config.WorldConfig = func(def world.Config) world.Config {
-		def.ReadOnly = true
-		def.RandomTickSpeed = 0
-		def.Generator = nil
-		def.PortalDestination = nil
-		return def
+	c, err := config.Config(logger)
+	if err != nil {
+		panic(err)
 	}
+	
+	c.Name = "Velvet"
+	c.Allower = allower{}
+	c.Generator = func(dim world.Dimension) world.Generator { return nil }
+	c.RandomTickSpeed = -1
+	// todo: set default world as read only
 
-	srv := server.New(&config.Config, logger)
-	srv.SetName("Velvet")
-	srv.Allow(allower{})
+	srv := c.New()
 	srv.CloseOnProgramEnd()
 	srv.World().SetSpawn(cube.Pos{273, 66, 258})
-	if err := srv.Start(); err != nil {
-		logger.Fatalln(err)
-	}
+	
 	//
 	//if p, err := resource.Compile("resources/pack.zip"); err == nil {
 	//	srv.AddResourcePack(p) // todo: p.WithContentKey
@@ -89,6 +87,8 @@ func startServer() {
 	w.StopTime()
 
 	go startBroadcasts()
+
+	srv.Listen()
 
 	// AntiCheat start
 	if config.Oomph.Enabled {

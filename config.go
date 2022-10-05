@@ -9,7 +9,7 @@ import (
 
 // Config is an extension of the Dragonfly server config to include fields specific to Velvet.
 type Config struct {
-	server.Config
+	server.UserConfig
 	// Pack contains fields related to the pack.
 	Pack struct {
 		// Key is the pack encryption key.
@@ -28,7 +28,7 @@ type Config struct {
 
 // DefaultConfig returns a default config for the server.
 func DefaultConfig() Config {
-	c := Config{Config: server.DefaultConfig()}
+	c := Config{UserConfig: server.DefaultConfig()}
 	return c
 }
 
